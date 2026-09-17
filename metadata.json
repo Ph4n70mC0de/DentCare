@@ -1,0 +1,6 @@
+{
+  "name": "DentCare — Dentist Appointment and Patient Management System",
+  "description": "Production-ready dentist appointment and patient management system with Neumorphic UI, complete appointment lifecycle, real-time availability, exception flows, and role-based portals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
