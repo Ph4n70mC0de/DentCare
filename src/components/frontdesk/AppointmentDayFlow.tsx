@@ -234,7 +234,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="neo-raised p-3.5 rounded-2xl border-t-4 border-slate-400">
           <div className="flex items-center justify-between text-xs font-bold text-slate-500">
-            <span>1. Scheduled</span>
+            <span>Scheduled</span>
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
           </div>
           <p className="text-2xl font-black text-slate-800 mt-2">{stage1Scheduled.length}</p>
@@ -243,7 +243,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
         <div className="neo-raised p-3.5 rounded-2xl border-t-4 border-indigo-500">
           <div className="flex items-center justify-between text-xs font-bold text-indigo-700">
-            <span>2. Waiting Room</span>
+            <span>Waiting Room</span>
             <Clock className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
           </div>
           <p className="text-2xl font-black text-indigo-700 mt-2">{stage2Waiting.length}</p>
@@ -252,7 +252,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
         <div className="neo-raised p-3.5 rounded-2xl border-t-4 border-purple-500">
           <div className="flex items-center justify-between text-xs font-bold text-purple-700">
-            <span>3. In Operatory</span>
+            <span>In Operatory</span>
             <Stethoscope className="w-3.5 h-3.5 text-purple-500" />
           </div>
           <p className="text-2xl font-black text-purple-700 mt-2">{stage3InChair.length}</p>
@@ -261,7 +261,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
         <div className="neo-raised p-3.5 rounded-2xl border-t-4 border-amber-500">
           <div className="flex items-center justify-between text-xs font-bold text-amber-700">
-            <span>4. Checkout Pending</span>
+            <span>Checkout Pending</span>
             <CreditCard className="w-3.5 h-3.5 text-amber-500" />
           </div>
           <p className="text-2xl font-black text-amber-700 mt-2">{stage4PaymentPending.length}</p>
@@ -270,7 +270,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
         <div className="neo-raised p-3.5 rounded-2xl border-t-4 border-emerald-500">
           <div className="flex items-center justify-between text-xs font-bold text-emerald-700">
-            <span>5. Completed</span>
+            <span>Completed</span>
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
           </div>
           <p className="text-2xl font-black text-emerald-700 mt-2">{stage5Completed.length}</p>
@@ -356,7 +356,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-                <h3 className="font-bold text-xs text-slate-700 uppercase tracking-wider">1. Scheduled</h3>
+                <h3 className="font-bold text-xs text-slate-700 uppercase tracking-wider">Scheduled</h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
                 {stage1Scheduled.length}
@@ -379,7 +379,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-indigo-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
-                <h3 className="font-bold text-xs text-indigo-900 uppercase tracking-wider">2. In Waiting Room</h3>
+                <h3 className="font-bold text-xs text-indigo-900 uppercase tracking-wider">In Waiting Room</h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-200 text-indigo-800">
                 {stage2Waiting.length}
@@ -402,7 +402,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-purple-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-                <h3 className="font-bold text-xs text-purple-900 uppercase tracking-wider">3. In Operatory Chair</h3>
+                <h3 className="font-bold text-xs text-purple-900 uppercase tracking-wider">In Operatory Chair</h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-200 text-purple-800">
                 {stage3InChair.length}
@@ -425,7 +425,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-amber-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <h3 className="font-bold text-xs text-amber-900 uppercase tracking-wider">4. Payment & Checkout</h3>
+                <h3 className="font-bold text-xs text-amber-900 uppercase tracking-wider">Payment & Checkout</h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-800">
                 {stage4PaymentPending.length}
@@ -448,7 +448,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-emerald-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <h3 className="font-bold text-xs text-emerald-900 uppercase tracking-wider">5. Completed</h3>
+                <h3 className="font-bold text-xs text-emerald-900 uppercase tracking-wider">Completed</h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-800">
                 {stage5Completed.length}
@@ -626,7 +626,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
         <div className="text-[11px] text-slate-600 space-y-0.5 bg-slate-50 p-2 rounded-xl">
           <div className="flex items-center justify-between font-medium">
             <span className="text-slate-800 font-semibold">{service?.name}</span>
-            <span className="text-blue-700 font-mono font-bold">${service?.price}</span>
+            <span className="text-blue-700 font-mono font-bold">₱{service?.price}</span>
           </div>
           <div className="flex items-center justify-between text-slate-500 text-[10px]">
             <span>{dentist?.fullName}</span>

@@ -250,10 +250,10 @@ export const ConsultationAndExam: React.FC<ConsultationAndExamProps> = ({
 
           <div className="flex flex-wrap gap-2 p-1.5 neo-inset-sm rounded-2xl">
             {[
-              { id: 'exam', label: '1. Examination & Procedure Notes' },
-              { id: 'chart', label: '2. Interactive Odontogram (Universal #1-32)' },
-              { id: 'rx', label: `3. Prescriptions (${prescriptions.length})` },
-              { id: 'history', label: `4. Prior Visits Archive (${patientPastRecords.length})` }
+              { id: 'exam', label: 'Examination & Procedure Notes' },
+              { id: 'chart', label: 'Interactive Odontogram (Universal #1-32)' },
+              { id: 'rx', label: `Prescriptions (${prescriptions.length})` },
+              { id: 'history', label: `Prior Visits Archive (${patientPastRecords.length})` }
             ].map((tab) => (
               <button
                 key={tab.id}

@@ -117,7 +117,7 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
               <p className="text-xs text-slate-600 mt-1 leading-relaxed">{svc.description}</p>
             </div>
             <div className="text-right shrink-0">
-              <span className="text-base font-extrabold text-slate-800">${svc.price}</span>
+              <span className="text-base font-extrabold text-slate-800">₱{svc.price}</span>
               <span className="text-[10px] text-slate-400 block">{svc.durationMinutes} mins</span>
               <button
                 onClick={() => onUpdateService(svc.id, { active: !svc.active })}

@@ -3,7 +3,7 @@ import {
   BarChart3,
   Calendar,
   Clock,
-  DollarSign,
+  PhilippinePeso,
   TrendingUp,
   FileSpreadsheet,
   Printer,
@@ -131,7 +131,7 @@ export const FrontDeskReports: React.FC = () => {
       ['Insurance Direct', insuranceTotal.toFixed(2)],
       ['Online Banking', onlineTotal.toFixed(2)],
       [],
-      ['Doctor Operatory Breakdown', 'Scheduled Visits', 'Completed Visits', 'Revenue Generated ($)'],
+      ['Doctor Operatory Breakdown', 'Scheduled Visits', 'Completed Visits', 'Revenue Generated (₱)'],
       ...dentistStats.map((ds) => [
         ds.dentist.fullName,
         ds.totalApts,
@@ -239,10 +239,10 @@ export const FrontDeskReports: React.FC = () => {
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold text-emerald-600">Front Desk Collections</span>
           <div className="flex items-baseline justify-between mt-2">
-            <span className="text-2xl font-black text-emerald-700">${totalRevenue.toFixed(2)}</span>
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+            <span className="text-2xl font-black text-emerald-700">₱{totalRevenue.toFixed(2)}</span>
+            <PhilippinePeso className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-[11px] text-slate-400 mt-1">Avg ${avgTicket.toFixed(0)} / patient</span>
+          <span className="text-[11px] text-slate-400 mt-1">Avg ₱{avgTicket.toFixed(0)} / patient</span>
         </div>
 
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
@@ -288,7 +288,7 @@ export const FrontDeskReports: React.FC = () => {
                 <div key={m.label} className="space-y-1 text-xs">
                   <div className="flex justify-between font-medium">
                     <span className="text-slate-700">{m.label}</span>
-                    <span className="font-mono font-bold text-slate-900">${m.amount.toFixed(2)} ({pct}%)</span>
+                    <span className="font-mono font-bold text-slate-900">₱{m.amount.toFixed(2)} ({pct}%)</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -303,7 +303,7 @@ export const FrontDeskReports: React.FC = () => {
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-700">
             <span>Total Settlement:</span>
-            <span className="text-emerald-700 font-mono text-sm">${totalRevenue.toFixed(2)}</span>
+            <span className="text-emerald-700 font-mono text-sm">₱{totalRevenue.toFixed(2)}</span>
           </div>
         </NeoCard>
 
@@ -390,7 +390,7 @@ export const FrontDeskReports: React.FC = () => {
                   {ds.completed}
                 </td>
                 <td className="py-3 px-4 text-right font-mono font-black text-blue-700">
-                  ${ds.revenue.toFixed(2)}
+                  ₱{ds.revenue.toFixed(2)}
                 </td>
               </tr>
             ))}

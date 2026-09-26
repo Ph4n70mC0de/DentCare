@@ -66,7 +66,7 @@ export const exportVisitsCSV = (
     'Treatment / Service',
     'Dentist',
     'Duration (mins)',
-    'Est. Fee ($)',
+    'Est. Fee (₱)',
     'Status'
   ];
   const rows = myAppointments.map((apt) => {

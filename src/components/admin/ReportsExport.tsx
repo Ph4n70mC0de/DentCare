@@ -127,7 +127,7 @@ export const ReportsExport: React.FC<ReportsExportProps> = ({
           <NeoCard className="space-y-2">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Total Revenue</span>
             <div className="flex items-baseline justify-between">
-              <span className="text-2xl font-black text-emerald-700">${reportStats.totalRevenue.toFixed(2)}</span>
+              <span className="text-2xl font-black text-emerald-700">₱{reportStats.totalRevenue.toFixed(2)}</span>
             </div>
             <p className="text-[11px] text-slate-500">{payments.length} receipts</p>
           </NeoCard>

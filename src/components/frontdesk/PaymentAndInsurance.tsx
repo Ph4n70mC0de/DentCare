@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   CreditCard,
-  DollarSign,
+  PhilippinePeso,
   ShieldCheck,
   FileSpreadsheet,
   Receipt,
@@ -198,7 +198,7 @@ export const PaymentAndInsurance: React.FC<PaymentAndInsuranceProps> = ({
           <span className="text-[10px] uppercase font-bold text-emerald-600">Today's Patient Receipts</span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-emerald-700">₱{totalCollectedToday.toFixed(2)}</span>
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+            <PhilippinePeso className="w-5 h-5 text-emerald-600" />
           </div>
           <span className="text-[11px] text-slate-400 mt-1">{todayPayments.length} transactions processed</span>
         </div>
