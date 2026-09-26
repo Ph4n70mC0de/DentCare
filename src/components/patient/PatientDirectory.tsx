@@ -919,11 +919,11 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
         {/* Tab Switcher */}
         <div className="flex flex-wrap gap-1.5 p-1 neo-inset-sm rounded-2xl">
           {[
-            { id: 'demographics', label: '1. Demographics & Emergency', icon: Users },
-            { id: 'alerts', label: `2. Medical Alerts & Rx (${patient.medicalAlerts.length + patient.allergies.length})`, icon: HeartPulse },
-            { id: 'appointments', label: `3. Appointments Flow (${patientApts.length})`, icon: Calendar },
-            { id: 'clinical', label: `4. Dental Consultations (${patientConsultations.length})`, icon: Stethoscope },
-            { id: 'billing', label: `5. Payments & Invoices (${patientPayments.length})`, icon: CreditCard }
+            { id: 'demographics', label: 'Demographics & Emergency', icon: Users },
+            { id: 'alerts', label: `Medical Alerts & Rx (${patient.medicalAlerts.length + patient.allergies.length})`, icon: HeartPulse },
+            { id: 'appointments', label: `Appointments Flow (${patientApts.length})`, icon: Calendar },
+            { id: 'clinical', label: `Dental Consultations (${patientConsultations.length})`, icon: Stethoscope },
+            { id: 'billing', label: `Payments & Invoices (${patientPayments.length})`, icon: CreditCard }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1237,13 +1237,13 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                         </span>
                       </div>
                       <p className="text-slate-500 text-[11px] mt-0.5">
-                        Method: <strong>{pmt.paymentMethod}</strong> • Subtotal: ${pmt.subtotal.toFixed(2)} • Ins. Covered: ${pmt.insuranceCoverage.toFixed(2)}
+                        Method: <strong>{pmt.paymentMethod}</strong> • Subtotal: ₱{pmt.subtotal.toFixed(2)} • Ins. Covered: ₱{pmt.insuranceCoverage.toFixed(2)}
                       </p>
                     </div>
 
                     <div className="text-right">
                       <span className="text-[10px] text-slate-400 block">Amount Paid</span>
-                      <span className="text-base font-extrabold text-blue-700">${pmt.amountPaid.toFixed(2)}</span>
+                      <span className="text-base font-extrabold text-blue-700">₱{pmt.amountPaid.toFixed(2)}</span>
                     </div>
                   </div>
                 ))}

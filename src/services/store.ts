@@ -1117,7 +1117,7 @@ class DentalDataStore {
       action: 'Payment Processed',
       entityType: 'payment',
       entityId: newPayment.id,
-      afterValue: `$${data.amountPaid} (${data.paymentStatus})`,
+      afterValue: `₱${data.amountPaid} (${data.paymentStatus})`,
       details: `Receipt #${receiptNumber} via ${data.paymentMethod}`
     });
 
@@ -1128,7 +1128,7 @@ class DentalDataStore {
         patientId: patient.id,
         type: 'payment_receipt',
         title: `Payment Receipt #${receiptNumber}`,
-        message: `Payment of $${data.amountPaid.toFixed(2)} received via ${data.paymentMethod}. Balance remaining: $${data.balance.toFixed(2)}.`,
+        message: `Payment of ₱${data.amountPaid.toFixed(2)} received via ${data.paymentMethod}. Balance remaining: ₱${data.balance.toFixed(2)}.`,
         channel: 'in_app',
         relatedAppointmentId: data.appointmentId
       });

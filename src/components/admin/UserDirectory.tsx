@@ -79,24 +79,24 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Summary Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        <NeoCard className="space-y-1">
+        <NeoCard className="flex flex-col gap-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Total Users</span>
           <span className="text-xl font-black text-slate-800">{totalCount}</span>
           <span className="text-[10px] text-slate-500">{activeCount} active</span>
         </NeoCard>
-        <NeoCard className="space-y-1">
+        <NeoCard className="flex flex-col gap-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Admins</span>
           <span className="text-xl font-black text-blue-700">{roleCounts.admin}</span>
         </NeoCard>
-        <NeoCard className="space-y-1">
+        <NeoCard className="flex flex-col gap-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Front Desk</span>
           <span className="text-xl font-black text-emerald-700">{roleCounts.front_desk}</span>
         </NeoCard>
-        <NeoCard className="space-y-1">
+        <NeoCard className="flex flex-col gap-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Dentists</span>
           <span className="text-xl font-black text-amber-700">{roleCounts.dentist}</span>
         </NeoCard>
-        <NeoCard className="space-y-1">
+        <NeoCard className="flex flex-col gap-1">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Patients</span>
           <span className="text-xl font-black text-slate-700">{roleCounts.patient}</span>
         </NeoCard>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, CheckCircle2, TrendingUp, AlertTriangle } from 'lucide-react';
+import { PhilippinePeso, CheckCircle2, TrendingUp, AlertTriangle } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { Appointment, Patient, Dentist, Payment, WaitlistEntry, SystemSettings } from '../../types';
 
@@ -46,8 +46,8 @@ export const ClinicAnalytics: React.FC<ClinicAnalyticsProps> = ({
             Gross Clinic Revenue
           </span>
           <div className="flex items-baseline justify-between">
-            <span className="text-2xl font-black text-emerald-700">${totalRevenue.toFixed(2)}</span>
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+            <span className="text-2xl font-black text-emerald-700">₱{totalRevenue.toFixed(2)}</span>
+            <PhilippinePeso className="w-5 h-5 text-emerald-600" />
           </div>
           <p className="text-[11px] text-slate-500">From {payments.length} settled patient receipts</p>
         </NeoCard>
