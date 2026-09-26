@@ -43,5 +43,5 @@ Emergency appointments are inserted with priority queue number `0`. The schedule
 - Appointment creation cannot bypass the live availability engine.
 - Booking restrictions from the no-show exception cannot be silently bypassed by a patient account.
 - Follow-up reminder scheduling is persisted on the appointment record.
-- Notification channels represented by the flowchart are implemented as distinct in-app, SMS, and email events.
+- Notification channels represented by the flowchart are implemented as distinct in-app, SMS, and email notification records. Real external delivery requires backend integration with an SMS/email provider.
 - Audit entries are created for booking, cancellation, rescheduling, no-show, emergency scheduling, staff booking confirmation, and reminder scheduling.
