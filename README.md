@@ -8,7 +8,7 @@ Production-ready dentist appointment and patient management system with Neumorph
 - **Appointment Lifecycle** — Full state machine covering check-in, consultation, payment, and follow-up.
 - **Real-Time Availability** — Live slot checking with waitlist entry when no slots are available.
 - **Exception Flows** — Cancellation, rescheduling, no-show gating, and emergency priority scheduling.
-- **Notification Dispatcher** — In-app, SMS, and email notifications for confirmations, delays, and follow-ups.
+- **Notification Dispatcher** — Simulated in-app, SMS, and email notification records for confirmations, delays, and follow-ups.
 - **Follow-Up Reminders** — Automatic 24-hour pre-appointment reminders.
 - **Role-Based Portals** — Separate experiences for patients, front desk, and dentist/staff.
 
