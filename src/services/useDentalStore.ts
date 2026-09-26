@@ -9,7 +9,13 @@ export function useDentalStore() {
     const unsubscribe = dentalStore.subscribe(() => {
       setTick((t) => t + 1);
     });
-    return unsubscribe;
+    const intervalId = setInterval(() => {
+      dentalStore.processScheduledReminders();
+    }, 60000);
+    return () => {
+      unsubscribe();
+      clearInterval(intervalId);
+    };
   }, []);
 
   const activeUser = dentalStore.getActiveUser();
