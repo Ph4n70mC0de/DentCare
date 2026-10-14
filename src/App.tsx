@@ -7,7 +7,6 @@ import { BookingWizard } from './components/patient/BookingWizard';
 import { FrontDeskDashboard } from './components/frontdesk/FrontDeskDashboard';
 import { DentistDashboard } from './components/dentist/DentistDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { UserDirectory } from './components/admin/UserDirectory';
 import { PatientDirectory } from './components/patient/PatientDirectory';
 import { UserRole } from './types';
 
@@ -37,6 +36,12 @@ export default function App() {
   }, [activeUser.role]);
 
   const handleRoleSwitch = (role: UserRole, targetView?: string) => {
+    // DEV ONLY: Role switching is only available in development
+    if (import.meta.env.PROD) {
+      console.warn('[handleRoleSwitch] Role switching is disabled in production');
+      return;
+    }
+
     const u = users.find((user) => user.role === role);
     if (u) {
       setActiveUser(u.id);

@@ -26,7 +26,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { activeUser, users, setActiveUser, resetToSeed } = useDentalStore();
 
+  const isDev = import.meta.env.DEV;
+
   const handleRoleChange = (role: UserRole) => {
+    if (!isDev) {
+      console.warn('[handleRoleChange] Role switching is disabled in production');
+      return;
+    }
     const targetUser = users.find((u) => u.role === role);
     if (targetUser) {
       setActiveUser(targetUser.id);
@@ -37,6 +43,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const handleReset = () => {
+    if (!isDev) {
+      console.warn('[handleReset] Demo reset is disabled in production');
+      return;
+    }
     if (window.confirm('Reset all appointments, queue, and logs back to initial clean demo state?')) {
       resetToSeed();
     }
@@ -98,32 +108,36 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right: Role Switcher & User Meta */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Quick Role Switcher Pill */}
-          <div className="flex items-center gap-1.5 neo-inset-sm px-2.5 py-1 rounded-xl text-xs">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider hidden sm:inline">
-              Role:
-            </span>
-            <select
-              value={activeUser.role}
-              onChange={(e) => handleRoleChange(e.target.value as UserRole)}
-              className="bg-transparent font-bold text-slate-700 text-xs outline-none cursor-pointer hover:text-blue-700"
-              aria-label="Switch User Persona Role"
-            >
-              <option value="patient">👤 Patient</option>
-              <option value="front_desk">🛎️ Front Desk</option>
-              <option value="dentist">🩺 Dentist</option>
-              <option value="admin">🛡️ Admin</option>
-            </select>
-          </div>
+          {/* Quick Role Switcher Pill - DEV ONLY */}
+          {isDev && (
+            <div className="flex items-center gap-1.5 neo-inset-sm px-2.5 py-1 rounded-xl text-xs">
+              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider hidden sm:inline">
+                Role:
+              </span>
+              <select
+                value={activeUser.role}
+                onChange={(e) => handleRoleChange(e.target.value as UserRole)}
+                className="bg-transparent font-bold text-slate-700 text-xs outline-none cursor-pointer hover:text-blue-700"
+                aria-label="Switch User Persona Role"
+              >
+                <option value="patient">👤 Patient</option>
+                <option value="front_desk">🛎️ Front Desk</option>
+                <option value="dentist">🩺 Dentist</option>
+                <option value="admin">🛡️ Admin</option>
+              </select>
+            </div>
+          )}
 
-          <button
-            onClick={handleReset}
-            title="Reset to clean Demo State"
-            className="neo-btn p-2 rounded-xl text-slate-500 hover:text-blue-600 transition-all cursor-pointer hidden sm:flex items-center justify-center"
-            aria-label="Reset Demo State"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-          </button>
+          {isDev && (
+            <button
+              onClick={handleReset}
+              title="Reset to clean Demo State"
+              className="neo-btn p-2 rounded-xl text-slate-500 hover:text-blue-600 transition-all cursor-pointer hidden sm:flex items-center justify-center"
+              aria-label="Reset Demo State"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          )}
 
           <NotificationCenter />
 

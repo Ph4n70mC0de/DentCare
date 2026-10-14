@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 
 interface NeoModalProps {
@@ -10,6 +10,15 @@ interface NeoModalProps {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 }
 
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
 export const NeoModal: React.FC<NeoModalProps> = ({
   isOpen,
   onClose,
@@ -18,17 +27,67 @@ export const NeoModal: React.FC<NeoModalProps> = ({
   children,
   maxWidth = 'lg'
 }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
+    if (!isOpen) return;
+
+    // Remember the element that opened the modal so focus can be restored.
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+
+    const dialog = dialogRef.current;
+
+    // Move focus into the dialog on open.
+    const focusables = dialog?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+    if (focusables && focusables.length > 0) {
+      focusables[0].focus();
+    } else {
+      dialog?.focus();
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Trap Tab focus inside the dialog.
+      if (e.key === 'Tab' && dialog) {
+        const items = dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        if (items.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement;
+
+        if (!dialog.contains(active)) {
+          e.preventDefault();
+          first.focus();
+          return;
+        }
+
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
+      // Restore focus to the triggering element.
+      previouslyFocused.current?.focus();
     };
   }, [isOpen, onClose]);
 
@@ -53,9 +112,12 @@ export const NeoModal: React.FC<NeoModalProps> = ({
       />
 
       <div
+        ref={dialogRef}
         className={`relative w-full ${widthClasses} neo-raised-lg rounded-3xl p-6 sm:p-8 bg-[#E8EEF5] text-slate-800 z-10 my-8 shadow-2xl transition-all max-h-[90vh] flex flex-col`}
         role="dialog"
         aria-modal="true"
+        aria-label={typeof title === 'string' ? title : undefined}
+        tabIndex={-1}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-4 border-b border-slate-300/40 shrink-0">

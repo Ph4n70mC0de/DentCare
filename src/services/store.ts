@@ -1,4 +1,4 @@
-import {
+﻿import {
   User,
   UserRole,
   Patient,
@@ -48,6 +48,23 @@ const STORAGE_KEYS = {
   SETTINGS: 'dentcare_settings',
   ACTIVE_USER_ID: 'dentcare_active_user_id'
 };
+
+// Monotonic counter guarantees uniqueness even when Date.now() repeats
+// within the same millisecond (e.g. two records created in one tick).
+let idCounter = 0;
+
+/**
+ * Generates a collision-safe unique ID.
+ * Combines a monotonic counter with the timestamp so that records created in the
+ * same millisecond never share an ID. Duplicate IDs corrupt lookups such as
+ * `find(a => a.id === id)` and availability exclusion, so this must stay monotonic.
+ */
+function createUniqueId(prefix: string): string {
+  idCounter += 1;
+  const time = Date.now();
+  const random = Math.random().toString(36).substring(2, 8);
+  return `${prefix}-${time.toString(36)}-${idCounter.toString(36)}${random}`;
+}
 
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
@@ -140,6 +157,12 @@ class DentalDataStore {
   }
 
   public setActiveUser(userId: string): void {
+    // DEV ONLY: Role switching is only available in development
+    if (import.meta.env.PROD) {
+      console.warn('[setActiveUser] Role switching is disabled in production');
+      return;
+    }
+
     const user = this.users.find((u) => u.id === userId);
     if (user) {
       this.activeUserId = userId;
@@ -158,6 +181,11 @@ class DentalDataStore {
   }
 
   public resetToSeed(): void {
+    // DEV ONLY: Reset to seed data is only available in development
+    if (import.meta.env.PROD) {
+      console.warn('[resetToSeed] Seed data reset is disabled in production');
+      return;
+    }
     this.users = initialUsers;
     this.patients = initialPatients;
     this.dentists = initialDentists;
@@ -181,7 +209,7 @@ class DentalDataStore {
   public logAudit(entry: Omit<AuditLog, 'id' | 'timestamp'>): void {
     const newLog: AuditLog = {
       ...entry,
-      id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: createUniqueId('log'),
       timestamp: new Date().toISOString()
     };
     this.auditLogs = [newLog, ...this.auditLogs];
@@ -288,7 +316,7 @@ class DentalDataStore {
   public sendNotification(notif: Omit<AppNotification, 'id' | 'sentAt' | 'read'>): AppNotification {
     const newNotif: AppNotification = {
       ...notif,
-      id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: createUniqueId('notif'),
       read: false,
       sentAt: new Date().toISOString()
     };
@@ -320,7 +348,7 @@ class DentalDataStore {
     const patientNumber = `DC-P-${nextNum}`;
     const newPatient: Patient = {
       ...patientData,
-      id: `pat-${Date.now()}`,
+      id: createUniqueId('pat'),
       patientNumber,
       noShowCount: 0,
       requiresStaffReviewForBooking: false,
@@ -468,7 +496,7 @@ class DentalDataStore {
     const appointmentNumber = `DC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newApt: Appointment = {
-      id: `apt-${Date.now()}`,
+      id: createUniqueId('apt'),
       appointmentNumber,
       patientId: data.patientId,
       dentistId: data.dentistId,
@@ -719,7 +747,7 @@ class DentalDataStore {
             userId: waitPatient.userId,
             patientId: waitPatient.id,
             type: 'waitlist_slot_available',
-            title: '🎉 Waitlist Opening Available!',
+            title: 'ðŸŽ‰ Waitlist Opening Available!',
             message: `A time slot on ${apt.date} at ${apt.startTime} just opened up with Dr. ${dentist?.fullName || 'DentCare'}. Please confirm to claim this slot.`,
             channel: 'in_app',
             relatedAppointmentId: apt.id
@@ -767,7 +795,7 @@ class DentalDataStore {
     // Create new appointment
     const newAppointmentNumber = `DC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const newApt: Appointment = {
-      id: `apt-${Date.now()}`,
+      id: createUniqueId('apt'),
       appointmentNumber: newAppointmentNumber,
       patientId: oldApt.patientId,
       dentistId: oldApt.dentistId,
@@ -921,7 +949,7 @@ class DentalDataStore {
     const appointmentNumber = `DC-EMERGENCY-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newApt: Appointment = {
-      id: `apt-emg-${Date.now()}`,
+      id: createUniqueId('apt-emg'),
       appointmentNumber,
       patientId: data.patientId,
       dentistId: data.dentistId,
@@ -967,7 +995,7 @@ class DentalDataStore {
           userId: waitPat.userId,
           patientId: waitPat.id,
           type: 'emergency_schedule_adjustment',
-          title: '🚨 Clinic Schedule Notice: Emergency Delay',
+          title: 'ðŸš¨ Clinic Schedule Notice: Emergency Delay',
           message: `Due to an incoming critical dental emergency, consultations are delayed by approximately ${shiftMinutes} minutes. Your new estimated time is ${shiftedStart}. Thank you for your patience and understanding.`,
           channel: 'in_app',
           relatedAppointmentId: waitingApt.id
@@ -1019,7 +1047,7 @@ class DentalDataStore {
   public joinWaitlist(data: Omit<WaitlistEntry, 'id' | 'createdAt' | 'status'>): WaitlistEntry {
     const newEntry: WaitlistEntry = {
       ...data,
-      id: `wait-${Date.now()}`,
+      id: createUniqueId('wait'),
       status: 'active',
       createdAt: new Date().toISOString()
     };
@@ -1051,7 +1079,7 @@ class DentalDataStore {
   public saveConsultation(data: Omit<Consultation, 'id' | 'createdAt' | 'updatedAt'>): Consultation {
     const newCons: Consultation = {
       ...data,
-      id: `cons-${Date.now()}`,
+      id: createUniqueId('cons'),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -1096,7 +1124,7 @@ class DentalDataStore {
     const receiptNumber = `REC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const newPayment: Payment = {
       ...data,
-      id: `pay-${Date.now()}`,
+      id: createUniqueId('pay'),
       receiptNumber,
       createdAt: new Date().toISOString()
     };
@@ -1117,7 +1145,7 @@ class DentalDataStore {
       action: 'Payment Processed',
       entityType: 'payment',
       entityId: newPayment.id,
-      afterValue: `₱${data.amountPaid} (${data.paymentStatus})`,
+      afterValue: `â‚±${data.amountPaid} (${data.paymentStatus})`,
       details: `Receipt #${receiptNumber} via ${data.paymentMethod}`
     });
 
@@ -1128,7 +1156,7 @@ class DentalDataStore {
         patientId: patient.id,
         type: 'payment_receipt',
         title: `Payment Receipt #${receiptNumber}`,
-        message: `Payment of ₱${data.amountPaid.toFixed(2)} received via ${data.paymentMethod}. Balance remaining: ₱${data.balance.toFixed(2)}.`,
+        message: `Payment of â‚±${data.amountPaid.toFixed(2)} received via ${data.paymentMethod}. Balance remaining: â‚±${data.balance.toFixed(2)}.`,
         channel: 'in_app',
         relatedAppointmentId: data.appointmentId
       });
@@ -1149,7 +1177,7 @@ class DentalDataStore {
   public addService(service: Omit<DentalService, 'id'>): DentalService {
     const newService: DentalService = {
       ...service,
-      id: `serv-${Date.now()}`
+      id: createUniqueId('serv')
     };
     this.services = [...this.services, newService];
     saveToStorage(STORAGE_KEYS.SERVICES, this.services);
@@ -1167,7 +1195,7 @@ class DentalDataStore {
   public addBlockedSchedule(blocked: Omit<BlockedSchedule, 'id'>): BlockedSchedule {
     const newBlocked: BlockedSchedule = {
       ...blocked,
-      id: `block-${Date.now()}`
+      id: createUniqueId('block')
     };
     this.blockedSchedules = [...this.blockedSchedules, newBlocked];
     saveToStorage(STORAGE_KEYS.BLOCKED, this.blockedSchedules);

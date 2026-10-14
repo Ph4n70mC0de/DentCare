@@ -4,7 +4,7 @@ import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoBadge } from '../common/NeoBadge';
-import { DentalService } from '../../types';
+import { DentalService, ServiceCategory } from '../../types';
 
 interface DentalServicesProps {
   services: DentalService[];
@@ -21,7 +21,7 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
   const [newServiceName, setNewServiceName] = useState<string>('');
   const [newServicePrice, setNewServicePrice] = useState<number>(150);
   const [newServiceDuration, setNewServiceDuration] = useState<number>(45);
-  const [newServiceCategory, setNewServiceCategory] = useState<string>('General');
+  const [newServiceCategory, setNewServiceCategory] = useState<ServiceCategory>('General');
   const [newServiceDesc, setNewServiceDesc] = useState<string>('');
 
   const handleCreateService = (e: React.FormEvent) => {
@@ -81,11 +81,24 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
               required
             />
           </div>
-          <NeoInput
-            label="Category (e.g. Preventative, Restorative, Cosmetic)"
-            value={newServiceCategory}
-            onChange={(e) => setNewServiceCategory(e.target.value)}
-          />
+          <div>
+            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1.5">
+              Category *
+            </label>
+            <select
+              value={newServiceCategory}
+              onChange={(e) => setNewServiceCategory(e.target.value as ServiceCategory)}
+              className="w-full p-2.5 rounded-xl neo-inset bg-transparent text-slate-800 outline-none"
+            >
+              <option value="General">General</option>
+              <option value="Restorative">Restorative</option>
+              <option value="Orthodontics">Orthodontics</option>
+              <option value="Endodontics">Endodontics</option>
+              <option value="Periodontics">Periodontics</option>
+              <option value="Cosmetic">Cosmetic</option>
+              <option value="Surgery">Surgery</option>
+            </select>
+          </div>
           <NeoInput
             label="Clinical Description"
             placeholder="Description of clinical protocol and materials..."

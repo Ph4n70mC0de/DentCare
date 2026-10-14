@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      dev-dependencies:
+        patterns:
+          - "@types/*"
+          - "typescript"
+          - "vitest"
+          - "@testing-library/*"
+          - "esbuild"
+          - "tsx"
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@vitejs/plugin-react"
+          - "motion"
+          - "lucide-react"
+      build-tools:
+        patterns:
+          - "vite"
+          - "tailwindcss"
+          - "@tailwindcss/vite"
+          - "autoprefixer"
+      utils:
+        patterns:
+          - "dotenv"
+          - "express"
+          - "@google/genai"

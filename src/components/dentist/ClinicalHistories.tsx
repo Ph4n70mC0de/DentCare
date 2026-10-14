@@ -20,7 +20,7 @@ import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
 import { NeoStatusPill } from '../common/NeoStatusPill';
-import { Patient, Consultation, Appointment } from '../../types';
+import { Patient, Consultation, Appointment, User as UserType } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
 interface ClinicalHistoriesProps {
@@ -40,7 +40,8 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
     appointments,
     consultations,
     activeUser,
-    services
+    services,
+    users
   } = useDentalStore();
 
   const today = getTodayDateString();
@@ -183,7 +184,7 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                 <div className="p-3 rounded-xl neo-inset">
                   <span className="text-slate-400 text-[10px] uppercase font-bold block">Age / Gender</span>
                   <p className="font-bold text-slate-800 text-sm">
-                    {selectedPatient.dateOfBirth ? `${new Date().getFullYear() - new Date(selectedPatient.dateOfBirth).getFullYear()} years` : 'N/A'} • {selectedPatient.gender || 'N/A'}
+                    {selectedPatient.dateOfBirth ? `${new Date().getFullYear() - new Date(selectedPatient.dateOfBirth).getFullYear()} years` : 'N/A'} • {selectedPatient.sex || 'N/A'}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl neo-inset">
@@ -351,13 +352,15 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                 </div>
               ) : (
                 <div className="divide-y divide-slate-300/30 max-h-[600px] overflow-y-auto">
-                  {filteredPatients.map((patient) => {
-                    const patientCons = consultations.filter((c) => c.patientId === patient.id);
-                    const lastVisit = patientCons.length > 0
-                      ? new Date(patientCons[patientCons.length - 1].createdAt).toLocaleDateString()
-                      : 'No visits';
+{filteredPatients.map((patient) => {
+                      const patientCons = consultations.filter((c) => c.patientId === patient.id);
+                      const lastVisit = patientCons.length > 0
+                        ? new Date(patientCons[patientCons.length - 1].createdAt).toLocaleDateString()
+                        : 'No visits';
+                      const patientUser = patient.userId ? users.find((u) => u.id === patient.userId) : null;
+                      const patientStatus = patientUser?.status === 'active' ? 'Confirmed' : 'Pending';
 
-                    return (
+                      return (
                       <div
                         key={patient.id}
                         onClick={() => setSelectedPatient(patient)}
@@ -370,7 +373,7 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                           <div>
                             <div className="flex items-center gap-2">
                               <h4 className="font-bold text-sm text-slate-800">{patient.fullName}</h4>
-                              <NeoStatusPill status={patient.status === 'active' ? 'Confirmed' : 'Pending'} size="sm" />
+                              <NeoStatusPill status={patientStatus} size="sm" />
                             </div>
                             <p className="text-xs text-slate-500 mt-0.5">
                               ID: {patient.patientNumber} • {patient.phone}

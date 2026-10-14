@@ -755,7 +755,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
         <FollowUpModal
           isOpen={Boolean(followUpApt)}
           onClose={() => setFollowUpApt(null)}
-          previousAppointment={followUpApt}
+          originalAppointment={followUpApt}
         />
 
         <CancellationModal

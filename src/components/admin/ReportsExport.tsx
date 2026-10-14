@@ -66,7 +66,7 @@ export const ReportsExport: React.FC<ReportsExportProps> = ({
         pat?.fullName || '',
         String(p.amountPaid),
         p.paymentMethod,
-        p.status,
+        p.paymentStatus,
         apt?.appointmentNumber || ''
       ];
     });
@@ -92,11 +92,14 @@ export const ReportsExport: React.FC<ReportsExportProps> = ({
     const rows = patients.map((p) => {
       const visits = appointments.filter((a) => a.patientId === p.id && a.status === 'Completed').length;
       const noShows = appointments.filter((a) => a.patientId === p.id && a.status === 'No-Show').length;
+      const age = p.dateOfBirth
+        ? new Date().getFullYear() - new Date(p.dateOfBirth).getFullYear()
+        : 'N/A';
       return [
         p.fullName,
         p.phone,
         p.email,
-        String(p.age),
+        String(age),
         String(visits),
         String(noShows),
         p.requiresStaffReviewForBooking ? 'Flagged' : 'Active'

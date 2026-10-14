@@ -732,7 +732,7 @@ export const PaymentAndInsurance: React.FC<PaymentAndInsuranceProps> = ({
           isOpen={Boolean(selectedReceipt)}
           onClose={() => setSelectedReceipt(null)}
           title="Itemized Tax Receipt & Clinical Statement"
-          size="md"
+          maxWidth="md"
         >
           {(() => {
             const pat = patients.find((p) => p.id === selectedReceipt.patientId);

@@ -49,6 +49,7 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
       preferredDate: waitlistDate,
       preferredTimeRange: waitlistTimeRange,
       priority: 'normal',
+      status: 'active',
       notes: `Patient requested waitlist via portal on ${getTodayDateString()}`
     });
 
