@@ -55,5 +55,3 @@ npm run lint
 ## Flowchart Compliance
 
 The DentCare appointment flowchart is treated as the business-process source of truth. The implementation enforces the primary patient journey and the four exception flows through the booking wizard, appointment lifecycle state machine, notification dispatcher, waitlist logic, no-show booking gate, emergency scheduler, and follow-up reminder scheduler.
-
-See [`FLOWCHART_TRACEABILITY.md`](./FLOWCHART_TRACEABILITY.md) for the step-by-step traceability map and implementation controls.
