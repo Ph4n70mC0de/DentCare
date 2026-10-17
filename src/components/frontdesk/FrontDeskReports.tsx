@@ -15,7 +15,7 @@ import {
   ArrowUpRight,
   Filter,
   Download,
-  Stethoscope
+  Stethoscope,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -23,14 +23,7 @@ import { NeoButton } from '../common/NeoButton';
 import { getTodayDateString } from '../../data/seedData';
 
 export const FrontDeskReports: React.FC = () => {
-  const {
-    appointments,
-    patients,
-    dentists,
-    services,
-    payments,
-    settings
-  } = useDentalStore();
+  const { appointments, patients, dentists, services, payments, settings } = useDentalStore();
 
   const today = getTodayDateString();
   const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'all'>('today');
@@ -40,7 +33,9 @@ export const FrontDeskReports: React.FC = () => {
     if (period === 'today') return apt.date === today;
     if (period === 'week') {
       const now = new Date(today);
-      const pastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const pastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
       return apt.date >= pastWeek && apt.date <= today;
     }
     if (period === 'month') {
@@ -55,7 +50,9 @@ export const FrontDeskReports: React.FC = () => {
     if (period === 'today') return p.createdAt.startsWith(today);
     if (period === 'week') {
       const now = new Date(today);
-      const pastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const pastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
       return p.createdAt >= pastWeek;
     }
     if (period === 'month') {
@@ -70,7 +67,9 @@ export const FrontDeskReports: React.FC = () => {
   const completedVisits = filteredAppointments.filter((a) => a.status === 'Completed').length;
   const noShows = filteredAppointments.filter((a) => a.status === 'No-Show').length;
   const cancellations = filteredAppointments.filter((a) => a.status === 'Cancelled').length;
-  const emergencies = filteredAppointments.filter((a) => a.isEmergency || a.status === 'Emergency').length;
+  const emergencies = filteredAppointments.filter(
+    (a) => a.isEmergency || a.status === 'Emergency'
+  ).length;
 
   const completionRate = totalVisits > 0 ? Math.round((completedVisits / totalVisits) * 100) : 0;
   const noShowRate = totalVisits > 0 ? Math.round((noShows / totalVisits) * 100) : 0;
@@ -82,10 +81,18 @@ export const FrontDeskReports: React.FC = () => {
   const avgTicket = filteredPayments.length > 0 ? totalRevenue / filteredPayments.length : 0;
 
   // Payment method breakdowns
-  const cashTotal = filteredPayments.filter((p) => p.paymentMethod === 'Cash').reduce((a, b) => a + b.amountPaid, 0);
-  const cardTotal = filteredPayments.filter((p) => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card').reduce((a, b) => a + b.amountPaid, 0);
-  const insuranceTotal = filteredPayments.filter((p) => p.paymentMethod === 'Insurance').reduce((a, b) => a + b.amountPaid, 0);
-  const onlineTotal = filteredPayments.filter((p) => p.paymentMethod === 'Online Banking').reduce((a, b) => a + b.amountPaid, 0);
+  const cashTotal = filteredPayments
+    .filter((p) => p.paymentMethod === 'Cash')
+    .reduce((a, b) => a + b.amountPaid, 0);
+  const cardTotal = filteredPayments
+    .filter((p) => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card')
+    .reduce((a, b) => a + b.amountPaid, 0);
+  const insuranceTotal = filteredPayments
+    .filter((p) => p.paymentMethod === 'Insurance')
+    .reduce((a, b) => a + b.amountPaid, 0);
+  const onlineTotal = filteredPayments
+    .filter((p) => p.paymentMethod === 'Online Banking')
+    .reduce((a, b) => a + b.amountPaid, 0);
 
   // Doctor load calculations
   const dentistStats = dentists.map((dentist) => {
@@ -101,7 +108,7 @@ export const FrontDeskReports: React.FC = () => {
       dentist,
       totalApts: docApts.length,
       completed: docCompleted,
-      revenue: docRevenue
+      revenue: docRevenue,
     };
   });
 
@@ -131,16 +138,22 @@ export const FrontDeskReports: React.FC = () => {
       ['Insurance Direct', insuranceTotal.toFixed(2)],
       ['Online Banking', onlineTotal.toFixed(2)],
       [],
-      ['Doctor Operatory Breakdown', 'Scheduled Visits', 'Completed Visits', 'Revenue Generated (₱)'],
+      [
+        'Doctor Operatory Breakdown',
+        'Scheduled Visits',
+        'Completed Visits',
+        'Revenue Generated (₱)',
+      ],
       ...dentistStats.map((ds) => [
         ds.dentist.fullName,
         ds.totalApts,
         ds.completed,
-        ds.revenue.toFixed(2)
-      ])
+        ds.revenue.toFixed(2),
+      ]),
     ];
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + reportData.map((row) => row.join(',')).join('\n');
+    const csvContent =
+      'data:text/csv;charset=utf-8,' + reportData.map((row) => row.join(',')).join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -156,13 +169,16 @@ export const FrontDeskReports: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-800 tracking-tight">Front Desk Operational Reports</h1>
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+              Front Desk Operational Reports
+            </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
               Shift Intelligence
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1">
-            Reception performance analytics, patient flow punctuality, payment breakdown, and shift handover reports.
+            Reception performance analytics, patient flow punctuality, payment breakdown, and shift
+            handover reports.
           </p>
         </div>
 
@@ -172,7 +188,9 @@ export const FrontDeskReports: React.FC = () => {
             <button
               onClick={() => setPeriod('today')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                period === 'today' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                period === 'today'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Today
@@ -180,7 +198,9 @@ export const FrontDeskReports: React.FC = () => {
             <button
               onClick={() => setPeriod('week')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                period === 'week' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                period === 'week'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Past 7 Days
@@ -188,7 +208,9 @@ export const FrontDeskReports: React.FC = () => {
             <button
               onClick={() => setPeriod('month')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                period === 'month' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                period === 'month'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               This Month
@@ -196,7 +218,9 @@ export const FrontDeskReports: React.FC = () => {
             <button
               onClick={() => setPeriod('all')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                period === 'all' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                period === 'all'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               All Time
@@ -226,7 +250,9 @@ export const FrontDeskReports: React.FC = () => {
       {/* Primary KPI Highlights */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-500">Scheduled Patient Visits</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500">
+            Scheduled Patient Visits
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-slate-800">{totalVisits}</span>
             <Users className="w-5 h-5 text-slate-400" />
@@ -237,21 +263,29 @@ export const FrontDeskReports: React.FC = () => {
         </div>
 
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-emerald-600">Front Desk Collections</span>
+          <span className="text-[10px] uppercase font-bold text-emerald-600">
+            Front Desk Collections
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-emerald-700">₱{totalRevenue.toFixed(2)}</span>
             <PhilippinePeso className="w-5 h-5 text-emerald-600" />
           </div>
-          <span className="text-[11px] text-slate-400 mt-1">Avg ₱{avgTicket.toFixed(0)} / patient</span>
+          <span className="text-[11px] text-slate-400 mt-1">
+            Avg ₱{avgTicket.toFixed(0)} / patient
+          </span>
         </div>
 
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-indigo-600">Average Waiting Time</span>
+          <span className="text-[10px] uppercase font-bold text-indigo-600">
+            Average Waiting Time
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-indigo-700">11 mins</span>
             <Clock className="w-5 h-5 text-indigo-500" />
           </div>
-          <span className="text-[11px] text-indigo-500 font-medium mt-1">Under target (15 min goal)</span>
+          <span className="text-[11px] text-indigo-500 font-medium mt-1">
+            Under target (15 min goal)
+          </span>
         </div>
 
         <div className="neo-raised p-4 rounded-2xl flex flex-col justify-between">
@@ -260,7 +294,9 @@ export const FrontDeskReports: React.FC = () => {
             <span className="text-2xl font-black text-rose-700">{noShowRate}%</span>
             <AlertTriangle className="w-5 h-5 text-rose-500" />
           </div>
-          <span className="text-[11px] text-slate-400 mt-1">{noShows} no-shows, {cancellations} cancelled</span>
+          <span className="text-[11px] text-slate-400 mt-1">
+            {noShows} no-shows, {cancellations} cancelled
+          </span>
         </div>
       </div>
 
@@ -269,8 +305,12 @@ export const FrontDeskReports: React.FC = () => {
         <NeoCard className="p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200">
             <div>
-              <h2 className="text-base font-bold text-slate-800">Cashier Collections by Payment Method</h2>
-              <p className="text-xs text-slate-500">Breakdown of settled patient co-pays and bills</p>
+              <h2 className="text-base font-bold text-slate-800">
+                Cashier Collections by Payment Method
+              </h2>
+              <p className="text-xs text-slate-500">
+                Breakdown of settled patient co-pays and bills
+              </p>
             </div>
             <CreditCard className="w-5 h-5 text-blue-600" />
           </div>
@@ -280,7 +320,7 @@ export const FrontDeskReports: React.FC = () => {
               { label: 'Credit / Debit Cards', amount: cardTotal, color: 'bg-blue-600' },
               { label: 'Cash Payments', amount: cashTotal, color: 'bg-emerald-600' },
               { label: 'Insurance Direct Co-Pay', amount: insuranceTotal, color: 'bg-indigo-600' },
-              { label: 'Online / Bank Transfers', amount: onlineTotal, color: 'bg-purple-600' }
+              { label: 'Online / Bank Transfers', amount: onlineTotal, color: 'bg-purple-600' },
             ].map((m) => {
               const pct = totalRevenue > 0 ? Math.round((m.amount / totalRevenue) * 100) : 0;
 
@@ -288,7 +328,9 @@ export const FrontDeskReports: React.FC = () => {
                 <div key={m.label} className="space-y-1 text-xs">
                   <div className="flex justify-between font-medium">
                     <span className="text-slate-700">{m.label}</span>
-                    <span className="font-mono font-bold text-slate-900">₱{m.amount.toFixed(2)} ({pct}%)</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      ₱{m.amount.toFixed(2)} ({pct}%)
+                    </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
@@ -311,33 +353,45 @@ export const FrontDeskReports: React.FC = () => {
         <NeoCard className="p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200">
             <div>
-              <h2 className="text-base font-bold text-slate-800">Attendance & Schedule Adherence</h2>
-              <p className="text-xs text-slate-500">Patient arrival reliability and operational exceptions</p>
+              <h2 className="text-base font-bold text-slate-800">
+                Attendance & Schedule Adherence
+              </h2>
+              <p className="text-xs text-slate-500">
+                Patient arrival reliability and operational exceptions
+              </p>
             </div>
             <TrendingUp className="w-5 h-5 text-indigo-600" />
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-2xl neo-flat flex flex-col justify-between">
-              <span className="text-slate-400 font-bold text-[10px] uppercase">Arrival Punctuality</span>
+              <span className="text-slate-400 font-bold text-[10px] uppercase">
+                Arrival Punctuality
+              </span>
               <span className="text-xl font-black text-emerald-700 mt-1">94%</span>
               <span className="text-[10px] text-slate-500">Arrived on or before slot</span>
             </div>
 
             <div className="p-3 rounded-2xl neo-flat flex flex-col justify-between">
-              <span className="text-slate-400 font-bold text-[10px] uppercase">Wait Room Triage Time</span>
+              <span className="text-slate-400 font-bold text-[10px] uppercase">
+                Wait Room Triage Time
+              </span>
               <span className="text-xl font-black text-blue-700 mt-1">3.4 min</span>
               <span className="text-[10px] text-slate-500">Average check-in speed</span>
             </div>
 
             <div className="p-3 rounded-2xl neo-flat flex flex-col justify-between">
-              <span className="text-slate-400 font-bold text-[10px] uppercase">Doctor Operatory Time</span>
+              <span className="text-slate-400 font-bold text-[10px] uppercase">
+                Doctor Operatory Time
+              </span>
               <span className="text-xl font-black text-purple-700 mt-1">38 min</span>
               <span className="text-[10px] text-slate-500">Average exam & procedure</span>
             </div>
 
             <div className="p-3 rounded-2xl neo-flat flex flex-col justify-between">
-              <span className="text-slate-400 font-bold text-[10px] uppercase">Waitlist Salvage Rate</span>
+              <span className="text-slate-400 font-bold text-[10px] uppercase">
+                Waitlist Salvage Rate
+              </span>
               <span className="text-xl font-black text-indigo-700 mt-1">82%</span>
               <span className="text-[10px] text-slate-500">Cancelled slots backfilled</span>
             </div>
@@ -345,7 +399,9 @@ export const FrontDeskReports: React.FC = () => {
 
           <div className="p-3 rounded-xl bg-slate-50 text-[11px] text-slate-600 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Clinic no-show rate ({noShowRate}%) is safely within the target 8% threshold.</span>
+            <span>
+              Clinic no-show rate ({noShowRate}%) is safely within the target 8% threshold.
+            </span>
           </div>
         </NeoCard>
       </div>
@@ -354,8 +410,12 @@ export const FrontDeskReports: React.FC = () => {
       <NeoCard className="p-0 overflow-x-auto">
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-slate-800">Doctor Operatory Load & Revenue Generated</h2>
-            <p className="text-xs text-slate-500">Workload distribution and completed consultations across clinical staff</p>
+            <h2 className="text-base font-bold text-slate-800">
+              Doctor Operatory Load & Revenue Generated
+            </h2>
+            <p className="text-xs text-slate-500">
+              Workload distribution and completed consultations across clinical staff
+            </p>
           </div>
           <span className="text-xs font-bold text-slate-500">Period: {period.toUpperCase()}</span>
         </div>
@@ -374,21 +434,13 @@ export const FrontDeskReports: React.FC = () => {
           <tbody className="divide-y divide-slate-100">
             {dentistStats.map((ds) => (
               <tr key={ds.dentist.id} className="hover:bg-slate-50/60">
-                <td className="py-3 px-4 font-bold text-slate-800">
-                  {ds.dentist.fullName}
-                </td>
-                <td className="py-3 px-4 text-slate-600">
-                  {ds.dentist.specialization}
-                </td>
+                <td className="py-3 px-4 font-bold text-slate-800">{ds.dentist.fullName}</td>
+                <td className="py-3 px-4 text-slate-600">{ds.dentist.specialization}</td>
                 <td className="py-3 px-4 font-mono text-slate-500">
                   Operatory {ds.dentist.id.replace('dent-', '')}
                 </td>
-                <td className="py-3 px-4 text-center font-bold text-slate-700">
-                  {ds.totalApts}
-                </td>
-                <td className="py-3 px-4 text-center font-bold text-emerald-700">
-                  {ds.completed}
-                </td>
+                <td className="py-3 px-4 text-center font-bold text-slate-700">{ds.totalApts}</td>
+                <td className="py-3 px-4 text-center font-bold text-emerald-700">{ds.completed}</td>
                 <td className="py-3 px-4 text-right font-mono font-black text-blue-700">
                   ₱{ds.revenue.toFixed(2)}
                 </td>
@@ -400,18 +452,28 @@ export const FrontDeskReports: React.FC = () => {
 
       {/* Shift Handover Sign-Off Note */}
       <NeoCard className="p-5 space-y-3 bg-slate-50/50 border border-slate-200">
-        <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500">Daily Reception Shift Handover Log</h3>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500">
+          Daily Reception Shift Handover Log
+        </h3>
         <p className="text-xs text-slate-600 leading-relaxed">
-          Front desk staff verified all patient intake forms for today. All scheduled procedures in Operatories 1, 2, and 3
-          were logged. Tomorrow's appointments ({appointments.filter((a) => {
-            const tm = new Date();
-            tm.setDate(tm.getDate() + 1);
-            return a.date === tm.toISOString().split('T')[0];
-          }).length} confirmed) have received automated SMS reminders.
+          Front desk staff verified all patient intake forms for today. All scheduled procedures in
+          Operatories 1, 2, and 3 were logged. Tomorrow's appointments (
+          {
+            appointments.filter((a) => {
+              const tm = new Date();
+              tm.setDate(tm.getDate() + 1);
+              return a.date === tm.toISOString().split('T')[0];
+            }).length
+          }{' '}
+          confirmed) have received automated SMS reminders.
         </p>
         <div className="flex items-center justify-between pt-2 border-t border-slate-200 text-[11px] text-slate-500">
-          <span>Logged by: <strong>Receptionist On Duty (Front Desk)</strong></span>
-          <span>Timestamp: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          <span>
+            Logged by: <strong>Receptionist On Duty (Front Desk)</strong>
+          </span>
+          <span>
+            Timestamp: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
         </div>
       </NeoCard>
     </div>

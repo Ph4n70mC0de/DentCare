@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  FileText, HeartPulse, Pill, Stethoscope, ChevronRight, Printer
-} from 'lucide-react';
+import { FileText, HeartPulse, Pill, Stethoscope, ChevronRight, Printer } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
@@ -13,9 +11,7 @@ interface DentalHistoryAndRxProps {
   onStartBooking?: () => void;
 }
 
-export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
-  onStartBooking,
-}) => {
+export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({ onStartBooking }) => {
   const { consultations, dentists, currentPatient } = useDentalStore();
 
   const [selectedTooth, setSelectedTooth] = useState<number>(14);
@@ -51,7 +47,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Clinical consultation records, interactive tooth odontogram (#1-32), treatment notes, and medication guidance.
+            Clinical consultation records, interactive tooth odontogram (#1-32), treatment notes,
+            and medication guidance.
           </p>
         </div>
 
@@ -72,7 +69,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-300/40 pb-3">
           <div>
             <h3 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-              <HeartPulse className="w-4 h-4 text-blue-600" /> Universal Numbering System Odontogram (#1 - #32)
+              <HeartPulse className="w-4 h-4 text-blue-600" /> Universal Numbering System Odontogram
+              (#1 - #32)
             </h3>
             <p className="text-xs text-slate-500">
               Select any tooth to view its clinical findings, restorations, and dental record notes.
@@ -97,10 +95,12 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
               const isSelected = selectedTooth === toothNum;
 
               let bgStyle = 'bg-white text-slate-700 border border-slate-200';
-              if (condition.status === 'filling') bgStyle = 'bg-blue-600 text-white font-bold shadow-xs';
+              if (condition.status === 'filling')
+                bgStyle = 'bg-blue-600 text-white font-bold shadow-xs';
               if (condition.status === 'caries') bgStyle = 'bg-rose-500 text-white font-bold';
               if (condition.status === 'crown') bgStyle = 'bg-amber-400 text-slate-900 font-bold';
-              if (condition.status === 'missing') bgStyle = 'bg-slate-300 text-slate-500 line-through';
+              if (condition.status === 'missing')
+                bgStyle = 'bg-slate-300 text-slate-500 line-through';
 
               return (
                 <button
@@ -131,10 +131,12 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
               const isSelected = selectedTooth === toothNum;
 
               let bgStyle = 'bg-white text-slate-700 border border-slate-200';
-              if (condition.status === 'filling') bgStyle = 'bg-blue-600 text-white font-bold shadow-xs';
+              if (condition.status === 'filling')
+                bgStyle = 'bg-blue-600 text-white font-bold shadow-xs';
               if (condition.status === 'caries') bgStyle = 'bg-rose-500 text-white font-bold';
               if (condition.status === 'crown') bgStyle = 'bg-amber-400 text-slate-900 font-bold';
-              if (condition.status === 'missing') bgStyle = 'bg-slate-300 text-slate-500 line-through';
+              if (condition.status === 'missing')
+                bgStyle = 'bg-slate-300 text-slate-500 line-through';
 
               return (
                 <button
@@ -160,7 +162,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
             <span className="font-bold text-slate-700 block">Tooth Legend:</span>
             <div className="flex flex-wrap items-center gap-3 text-[11px]">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-white border border-slate-300" /> Healthy / Intact
+                <span className="w-3 h-3 rounded-full bg-white border border-slate-300" /> Healthy /
+                Intact
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-blue-600" /> Restored Filling
@@ -206,7 +209,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
         <div className="flex items-center justify-between border-b border-slate-300/40 pb-3">
           <div>
             <h3 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-              <Pill className="w-4 h-4 text-emerald-600" /> Prescribed Medications & Pharmacy Instructions (Rx)
+              <Pill className="w-4 h-4 text-emerald-600" /> Prescribed Medications & Pharmacy
+              Instructions (Rx)
             </h3>
             <p className="text-xs text-slate-500">
               Doctor-prescribed oral medications, dosages, administration schedule, and precautions.
@@ -227,9 +231,7 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
                   className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] space-y-2 text-xs border-l-4 border-emerald-500"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-extrabold text-slate-800 text-sm">
-                      {rx.medication}
-                    </span>
+                    <span className="font-extrabold text-slate-800 text-sm">{rx.medication}</span>
                     <NeoBadge variant="success" size="sm">
                       {rx.dosage}
                     </NeoBadge>
@@ -265,7 +267,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
             <Stethoscope className="w-4 h-4 text-blue-600" /> Clinical Consultation History
           </h3>
           <p className="text-xs text-slate-500">
-            Detailed clinical exam notes, verified diagnoses, and procedures documented by your dentists.
+            Detailed clinical exam notes, verified diagnoses, and procedures documented by your
+            dentists.
           </p>
         </div>
 
@@ -285,7 +288,8 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
                         Diagnosis: {c.diagnosis}
                       </span>
                       <p className="text-[11px] text-slate-500">
-                        Examined by {dnt?.fullName || 'Dentist'} on {new Date(c.createdAt).toLocaleDateString()}
+                        Examined by {dnt?.fullName || 'Dentist'} on{' '}
+                        {new Date(c.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <NeoBadge variant="info" size="sm">
@@ -316,7 +320,9 @@ export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = ({
 
                     {c.followUpRecommendation?.required && (
                       <div className="text-[11px] text-slate-500">
-                        <strong>Follow-Up:</strong> Recommended in {c.followUpRecommendation.timeframeWeeks} weeks ({c.followUpRecommendation.notes})
+                        <strong>Follow-Up:</strong> Recommended in{' '}
+                        {c.followUpRecommendation.timeframeWeeks} weeks (
+                        {c.followUpRecommendation.notes})
                       </div>
                     )}
                   </div>

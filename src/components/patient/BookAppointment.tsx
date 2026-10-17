@@ -10,7 +10,7 @@ interface BookAppointmentProps {
 export const BookAppointment: React.FC<BookAppointmentProps> = ({
   initialPatientId,
   onCancel,
-  onViewAppointments
+  onViewAppointments,
 }) => {
   return (
     <div className="space-y-6">

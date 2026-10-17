@@ -56,7 +56,9 @@ export interface IAuthService {
   setActiveUser(userId: string): void;
   login(email: string, password: string): Promise<User>;
   logout(): Promise<void>;
-  registerPatient(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient>;
+  registerPatient(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient>;
 }
 
 export interface IAppointmentService {
@@ -64,20 +66,37 @@ export interface IAppointmentService {
   getById(id: string): Promise<Appointment | null>;
   create(data: CreateAppointmentRequest): Promise<Appointment>;
   update(id: string, data: UpdateAppointmentRequest): Promise<Appointment | null>;
-  updateStatus(id: string, status: AppointmentStatus, metadata?: Record<string, unknown>): Promise<Appointment | null>;
+  updateStatus(
+    id: string,
+    status: AppointmentStatus,
+    metadata?: Record<string, unknown>
+  ): Promise<Appointment | null>;
   cancel(id: string, reason: string): Promise<Appointment>;
   reschedule(id: string, newDate: string, newStartTime: string): Promise<Appointment>;
   markNoShow(id: string, reason: string): Promise<Appointment>;
-  createEmergency(data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }): Promise<Appointment>;
-  getAvailableSlots(dentistId: string, date: string, durationMinutes: number): Promise<AvailableSlot[]>;
-  getAlternativeDates(dentistId: string, fromDate: string, durationMinutes: number, count?: number): Promise<AlternativeDate[]>;
+  createEmergency(
+    data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }
+  ): Promise<Appointment>;
+  getAvailableSlots(
+    dentistId: string,
+    date: string,
+    durationMinutes: number
+  ): Promise<AvailableSlot[]>;
+  getAlternativeDates(
+    dentistId: string,
+    fromDate: string,
+    durationMinutes: number,
+    count?: number
+  ): Promise<AlternativeDate[]>;
 }
 
 export interface IPatientService {
   getAll(params?: PatientListParams): Promise<PaginatedResponse<Patient>>;
   getById(id: string): Promise<Patient | null>;
   findByPhoneOrEmail(identifier: string): Promise<Patient | null>;
-  create(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient>;
+  create(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient>;
   update(id: string, data: UpdatePatientRequest): Promise<Patient | null>;
   confirmBookingEligibility(patientId: string): Promise<Patient | null>;
 }
@@ -141,8 +160,16 @@ export interface ISettingsService {
 }
 
 export interface IReportService {
-  generateReport(type: 'appointments' | 'payments' | 'patients' | 'audit' | 'waitlist', format: 'csv' | 'json' | 'pdf', filters?: Record<string, unknown>): Promise<Blob>;
-  downloadReport(type: 'appointments' | 'payments' | 'patients' | 'audit' | 'waitlist', format: 'csv' | 'json' | 'pdf', filters?: Record<string, unknown>): Promise<void>;
+  generateReport(
+    type: 'appointments' | 'payments' | 'patients' | 'audit' | 'waitlist',
+    format: 'csv' | 'json' | 'pdf',
+    filters?: Record<string, unknown>
+  ): Promise<Blob>;
+  downloadReport(
+    type: 'appointments' | 'payments' | 'patients' | 'audit' | 'waitlist',
+    format: 'csv' | 'json' | 'pdf',
+    filters?: Record<string, unknown>
+  ): Promise<void>;
 }
 
 // ============================================

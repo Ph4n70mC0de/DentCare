@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Bell, CheckCheck, Mail, MessageSquare, AlertCircle, Calendar, CreditCard, Sparkles } from 'lucide-react';
+import {
+  Bell,
+  CheckCheck,
+  Mail,
+  MessageSquare,
+  AlertCircle,
+  Calendar,
+  CreditCard,
+  Sparkles,
+} from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
@@ -8,13 +17,15 @@ import { AppNotification } from '../../types';
 export const NotificationCenter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const { notifications, activeUser, markNotificationAsRead, markAllNotificationsAsRead } = useDentalStore();
+  const { notifications, activeUser, markNotificationAsRead, markAllNotificationsAsRead } =
+    useDentalStore();
 
   // Filter notifications for active user or general
   const userNotifications = notifications.filter((n) => !n.userId || n.userId === activeUser.id);
   const unreadCount = userNotifications.filter((n) => !n.read).length;
 
-  const displayList = filter === 'unread' ? userNotifications.filter((n) => !n.read) : userNotifications;
+  const displayList =
+    filter === 'unread' ? userNotifications.filter((n) => !n.read) : userNotifications;
 
   const getNotificationIcon = (type: AppNotification['type']) => {
     switch (type) {
@@ -50,10 +61,7 @@ export const NotificationCenter: React.FC = () => {
 
       {isOpen && (
         <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
-          />
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 mt-3 w-80 sm:w-96 z-50 neo-raised-lg rounded-3xl p-4 bg-[#E8EEF5] text-slate-800 shadow-2xl border border-white/50">
             <div className="flex items-center justify-between pb-3 border-b border-slate-300/60">
               <div className="flex items-center gap-2">
@@ -82,7 +90,9 @@ export const NotificationCenter: React.FC = () => {
               <button
                 onClick={() => setFilter('all')}
                 className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
-                  filter === 'all' ? 'neo-inset text-blue-700' : 'text-slate-500 hover:text-slate-800'
+                  filter === 'all'
+                    ? 'neo-inset text-blue-700'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 All ({userNotifications.length})
@@ -90,7 +100,9 @@ export const NotificationCenter: React.FC = () => {
               <button
                 onClick={() => setFilter('unread')}
                 className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
-                  filter === 'unread' ? 'neo-inset text-blue-700' : 'text-slate-500 hover:text-slate-800'
+                  filter === 'unread'
+                    ? 'neo-inset text-blue-700'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 Unread ({unreadCount})
@@ -109,7 +121,9 @@ export const NotificationCenter: React.FC = () => {
                     key={notif.id}
                     onClick={() => markNotificationAsRead(notif.id)}
                     className={`p-3 rounded-2xl transition-all cursor-pointer ${
-                      notif.read ? 'neo-inset-sm opacity-80' : 'neo-raised bg-[#EDF3FA] border-l-4 border-blue-500'
+                      notif.read
+                        ? 'neo-inset-sm opacity-80'
+                        : 'neo-raised bg-[#EDF3FA] border-l-4 border-blue-500'
                     }`}
                   >
                     <div className="flex items-start gap-2.5">
@@ -120,10 +134,15 @@ export const NotificationCenter: React.FC = () => {
                         <div className="flex items-center justify-between gap-1">
                           <p className="text-xs font-bold text-slate-800 truncate">{notif.title}</p>
                           <span className="text-[10px] text-slate-400 shrink-0">
-                            {new Date(notif.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(notif.sentAt).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-600 mt-1 leading-relaxed">{notif.message}</p>
+                        <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                          {notif.message}
+                        </p>
                         <div className="flex items-center gap-2 mt-2">
                           <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500 bg-slate-200/60 px-2 py-0.5 rounded-md uppercase tracking-wider">
                             {notif.channel === 'sms' && <MessageSquare className="w-2.5 h-2.5" />}

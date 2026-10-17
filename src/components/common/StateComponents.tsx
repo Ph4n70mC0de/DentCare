@@ -1,5 +1,20 @@
 import React from 'react';
-import { Loader2, CheckCircle2, AlertCircle, XCircle, Info, Search, Inbox, FileText, User, Calendar, CreditCard, ShieldCheck, Clock, RefreshCw } from 'lucide-react';
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  XCircle,
+  Info,
+  Search,
+  Inbox,
+  FileText,
+  User,
+  Calendar,
+  CreditCard,
+  ShieldCheck,
+  Clock,
+  RefreshCw,
+} from 'lucide-react';
 
 interface LoadingStateProps {
   message?: string;
@@ -24,7 +39,13 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
   return (
     <div className={containerClasses}>
-      <div className={fullScreen ? 'neo-raised-lg p-8 rounded-3xl max-w-sm w-full mx-4 text-center space-y-4' : 'space-y-3'}>
+      <div
+        className={
+          fullScreen
+            ? 'neo-raised-lg p-8 rounded-3xl max-w-sm w-full mx-4 text-center space-y-4'
+            : 'space-y-3'
+        }
+      >
         <Loader2
           className={`${sizeClasses[size]} text-blue-600 animate-spin mx-auto`}
           aria-hidden="true"
@@ -80,12 +101,7 @@ interface SuccessStateProps {
   action?: React.ReactNode;
 }
 
-export const SuccessState: React.FC<SuccessStateProps> = ({
-  title,
-  message,
-  details,
-  action,
-}) => {
+export const SuccessState: React.FC<SuccessStateProps> = ({ title, message, details, action }) => {
   return (
     <div className="neo-raised p-6 rounded-3xl bg-emerald-50/50 border border-emerald-200 space-y-4">
       <div className="flex items-center justify-center gap-3">
@@ -98,9 +114,7 @@ export const SuccessState: React.FC<SuccessStateProps> = ({
         </div>
       </div>
       {details && (
-        <div className="p-4 rounded-xl neo-inset bg-white/50 text-sm text-slate-700">
-          {details}
-        </div>
+        <div className="p-4 rounded-xl neo-inset bg-white/50 text-sm text-slate-700">{details}</div>
       )}
       {action && <div className="flex justify-center pt-2">{action}</div>}
     </div>
@@ -112,15 +126,21 @@ interface ValidationErrorProps {
   title?: string;
 }
 
-export const ValidationError: React.FC<ValidationErrorProps> = ({ errors, title = 'Please fix the following errors:' }) => {
+export const ValidationError: React.FC<ValidationErrorProps> = ({
+  errors,
+  title = 'Please fix the following errors:',
+}) => {
   const errorList = Array.isArray(errors)
     ? errors
     : typeof errors === 'string'
-    ? [errors]
-    : Object.entries(errors).map(([field, message]) => `${field}: ${message}`);
+      ? [errors]
+      : Object.entries(errors).map(([field, message]) => `${field}: ${message}`);
 
   return (
-    <div className="neo-raised p-4 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-3" role="alert">
+    <div
+      className="neo-raised p-4 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-3"
+      role="alert"
+    >
       <div className="flex items-center gap-2 text-rose-800">
         <AlertCircle className="w-5 h-5 shrink-0" />
         <h4 className="font-bold text-sm">{title}</h4>
@@ -152,22 +172,36 @@ export const ServerError: React.FC<ServerErrorProps> = ({
 }) => {
   const getStatusMessage = (code?: number) => {
     switch (code) {
-      case 400: return 'Bad Request';
-      case 401: return 'Unauthorized';
-      case 403: return 'Forbidden';
-      case 404: return 'Not Found';
-      case 409: return 'Conflict';
-      case 422: return 'Unprocessable Entity';
-      case 429: return 'Too Many Requests';
-      case 500: return 'Internal Server Error';
-      case 502: return 'Bad Gateway';
-      case 503: return 'Service Unavailable';
-      default: return 'Server Error';
+      case 400:
+        return 'Bad Request';
+      case 401:
+        return 'Unauthorized';
+      case 403:
+        return 'Forbidden';
+      case 404:
+        return 'Not Found';
+      case 409:
+        return 'Conflict';
+      case 422:
+        return 'Unprocessable Entity';
+      case 429:
+        return 'Too Many Requests';
+      case 500:
+        return 'Internal Server Error';
+      case 502:
+        return 'Bad Gateway';
+      case 503:
+        return 'Service Unavailable';
+      default:
+        return 'Server Error';
     }
   };
 
   return (
-    <div className="neo-raised p-6 rounded-3xl bg-rose-50/50 border border-rose-200 space-y-4 text-center" role="alert">
+    <div
+      className="neo-raised p-6 rounded-3xl bg-rose-50/50 border border-rose-200 space-y-4 text-center"
+      role="alert"
+    >
       <div className="w-12 h-12 rounded-2xl neo-raised mx-auto flex items-center justify-center bg-rose-100 text-rose-600">
         <AlertCircle className="w-6 h-6" />
       </div>

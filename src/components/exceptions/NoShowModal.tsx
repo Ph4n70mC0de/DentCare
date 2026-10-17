@@ -17,12 +17,16 @@ export const NoShowModal: React.FC<NoShowModalProps> = ({
   isOpen,
   onClose,
   appointment,
-  onSuccess
+  onSuccess,
 }) => {
   const { markNoShow, patients, settings } = useDentalStore();
-  const [reason, setReason] = useState<string>('Patient did not arrive within grace period (15 mins)');
+  const [reason, setReason] = useState<string>(
+    'Patient did not arrive within grace period (15 mins)'
+  );
   const [notes, setNotes] = useState<string>('');
-  const [result, setResult] = useState<{ success: boolean; patientRequiresReview: boolean } | null>(null);
+  const [result, setResult] = useState<{ success: boolean; patientRequiresReview: boolean } | null>(
+    null
+  );
 
   if (!appointment) return null;
 
@@ -62,11 +66,13 @@ export const NoShowModal: React.FC<NoShowModalProps> = ({
               <span>No-Show Recorded in Patient Record</span>
             </div>
             <p className="text-xs text-slate-700">
-              Total Recorded No-Shows for {patient?.fullName}: <strong>{(patient?.noShowCount || 0)}</strong>
+              Total Recorded No-Shows for {patient?.fullName}:{' '}
+              <strong>{patient?.noShowCount || 0}</strong>
             </p>
             {result.patientRequiresReview && (
               <p className="text-xs font-bold text-rose-700">
-                ⚠️ Clinic Threshold Reached (≥ {settings.maxNoShowsBeforeLock}): Patient is now flagged as requiring Staff Review before booking future slots.
+                ⚠️ Clinic Threshold Reached (≥ {settings.maxNoShowsBeforeLock}): Patient is now
+                flagged as requiring Staff Review before booking future slots.
               </p>
             )}
           </div>
@@ -94,7 +100,9 @@ export const NoShowModal: React.FC<NoShowModalProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Threshold for Booking Restriction:</span>
-              <span className="font-bold text-slate-700">{settings.maxNoShowsBeforeLock} strikes</span>
+              <span className="font-bold text-slate-700">
+                {settings.maxNoShowsBeforeLock} strikes
+              </span>
             </div>
           </div>
 
@@ -116,9 +124,7 @@ export const NoShowModal: React.FC<NoShowModalProps> = ({
               <option value="No response to 24h reminder SMS">
                 No response to 24h reminder SMS
               </option>
-              <option value="Other unexcused absence">
-                Other unexcused absence
-              </option>
+              <option value="Other unexcused absence">Other unexcused absence</option>
             </NeoSelect>
 
             <div>

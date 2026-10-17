@@ -53,7 +53,9 @@ export function WithLoading<T>({
     return (
       <ServerError
         message={error.message}
-        statusCode={error instanceof Error && 'statusCode' in error ? (error as any).statusCode : undefined}
+        statusCode={
+          error instanceof Error && 'statusCode' in error ? (error as any).statusCode : undefined
+        }
         onRetry={retry}
         retryLabel="Try Again"
       />
@@ -61,13 +63,7 @@ export function WithLoading<T>({
   }
 
   if (!data) {
-    return (
-      <EmptyState
-        title="No Data"
-        message={emptyMessage}
-        action={emptyAction}
-      />
-    );
+    return <EmptyState title="No Data" message={emptyMessage} action={emptyAction} />;
   }
 
   return <>{children(data)}</>;
@@ -127,7 +123,9 @@ export function WithListLoading<T>({
     return (
       <ServerError
         message={error.message}
-        statusCode={error instanceof Error && 'statusCode' in error ? (error as any).statusCode : undefined}
+        statusCode={
+          error instanceof Error && 'statusCode' in error ? (error as any).statusCode : undefined
+        }
         onRetry={retry}
         retryLabel="Try Again"
       />
@@ -135,13 +133,7 @@ export function WithListLoading<T>({
   }
 
   if (data.length === 0) {
-    return (
-      <EmptyState
-        title="No Items"
-        message={emptyMessage}
-        action={emptyAction}
-      />
-    );
+    return <EmptyState title="No Items" message={emptyMessage} action={emptyAction} />;
   }
 
   return (
@@ -180,7 +172,10 @@ interface WithFormSubmitProps<TData, TVariables> {
   loading: boolean;
   error: Error | null;
   onSubmit: (variables: TVariables) => Promise<TData | null>;
-  children: (submit: (variables: TVariables) => Promise<TData | null>, reset: () => void) => React.ReactNode;
+  children: (
+    submit: (variables: TVariables) => Promise<TData | null>,
+    reset: () => void
+  ) => React.ReactNode;
   onSuccess?: (data: TData) => void;
   onError?: (error: Error) => void;
 }
@@ -239,12 +234,7 @@ export function WithFormSubmit<TData, TVariables>({
           }
         />
       )}
-      {displayError && (
-        <ValidationError
-          errors={displayError.message}
-          title="Submission Error"
-        />
-      )}
+      {displayError && <ValidationError errors={displayError.message} title="Submission Error" />}
       {children(handleSubmit, reset)}
     </>
   );
@@ -262,14 +252,22 @@ interface RetryButtonProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function RetryButton({ onRetry, loading = false, label = 'Retry', variant = 'primary', size = 'md' }: RetryButtonProps) {
+export function RetryButton({
+  onRetry,
+  loading = false,
+  label = 'Retry',
+  variant = 'primary',
+  size = 'md',
+}: RetryButtonProps) {
   return (
     <NeoButton
       variant={variant}
       size={size}
       onClick={onRetry}
       disabled={loading}
-      icon={loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+      icon={
+        loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />
+      }
     >
       {label}
     </NeoButton>
@@ -281,7 +279,9 @@ export function RetryButton({ onRetry, loading = false, label = 'Retry', variant
 // ============================================
 
 export function OfflineIndicator() {
-  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [isOnline, setIsOnline] = useState(
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
 
   useState(() => {
     const handleOnline = () => setIsOnline(true);
@@ -303,11 +303,7 @@ export function OfflineIndicator() {
       title="You're offline"
       message="Changes will be saved locally and synced when connection is restored."
       action={
-        <RetryButton
-          onRetry={() => window.location.reload()}
-          variant="default"
-          label="Reload"
-        />
+        <RetryButton onRetry={() => window.location.reload()} variant="default" label="Reload" />
       }
     />
   );
@@ -329,7 +325,10 @@ interface ApiErrorBoundaryState {
   error: Error | null;
 }
 
-export class ApiErrorBoundary extends React.Component<ApiErrorBoundaryProps, ApiErrorBoundaryState> {
+export class ApiErrorBoundary extends React.Component<
+  ApiErrorBoundaryProps,
+  ApiErrorBoundaryState
+> {
   constructor(props: ApiErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };

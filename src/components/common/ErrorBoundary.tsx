@@ -76,7 +76,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </NeoButton>
               <NeoButton
                 variant="default"
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = '/')}
                 icon={<Home className="w-4 h-4" />}
               >
                 Go Home

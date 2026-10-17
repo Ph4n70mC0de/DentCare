@@ -67,7 +67,7 @@ describe('Front Desk Workflows', () => {
 
     it('confirms patient booking eligibility (removes staff review flag)', () => {
       // pat-005 has requiresStaffReviewForBooking: true
-      const patient = dentalStore.getPatients().find(p => p.id === 'pat-005');
+      const patient = dentalStore.getPatients().find((p) => p.id === 'pat-005');
       expect(patient?.requiresStaffReviewForBooking).toBe(true);
 
       const updated = dentalStore.confirmPatientBookingEligibility('pat-005');
@@ -216,7 +216,7 @@ describe('Front Desk Workflows', () => {
       expect(result.success).toBe(true);
       expect(result.notifiedWaitlistCount).toBeGreaterThanOrEqual(0);
 
-      const cancelled = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const cancelled = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(cancelled?.status).toBe('Cancelled');
     });
 
@@ -245,7 +245,7 @@ describe('Front Desk Workflows', () => {
       expect(result.success).toBe(true);
       expect(result.newAppointment?.rescheduledFromId).toBe(appointment.id);
 
-      const original = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const original = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(original?.status).toBe('Rescheduled');
     });
 
@@ -265,7 +265,7 @@ describe('Front Desk Workflows', () => {
       expect(result.success).toBe(true);
       expect(result.patientRequiresReview).toBe(true);
 
-      const patient = dentalStore.getPatients().find(p => p.id === 'pat-001');
+      const patient = dentalStore.getPatients().find((p) => p.id === 'pat-001');
       expect(patient?.noShowCount).toBe(1);
       expect(patient?.requiresStaffReviewForBooking).toBe(true);
     });
@@ -310,8 +310,8 @@ describe('Front Desk Workflows', () => {
       });
       dentalStore.updateAppointmentStatus(apt2.id, 'Checked-In');
 
-      const originalTime1 = dentalStore.getAppointments().find(a => a.id === apt1.id)?.startTime;
-      const originalTime2 = dentalStore.getAppointments().find(a => a.id === apt2.id)?.startTime;
+      const originalTime1 = dentalStore.getAppointments().find((a) => a.id === apt1.id)?.startTime;
+      const originalTime2 = dentalStore.getAppointments().find((a) => a.id === apt2.id)?.startTime;
 
       dentalStore.createEmergencyAppointment({
         patientId: 'pat-004',
@@ -321,8 +321,8 @@ describe('Front Desk Workflows', () => {
         severity: 'high',
       });
 
-      const shifted1 = dentalStore.getAppointments().find(a => a.id === apt1.id);
-      const shifted2 = dentalStore.getAppointments().find(a => a.id === apt2.id);
+      const shifted1 = dentalStore.getAppointments().find((a) => a.id === apt1.id);
+      const shifted2 = dentalStore.getAppointments().find((a) => a.id === apt2.id);
 
       expect(shifted1?.startTime).not.toBe(originalTime1);
       expect(shifted2?.startTime).not.toBe(originalTime2);
@@ -359,7 +359,7 @@ describe('Front Desk Workflows', () => {
       expect(payment.paymentStatus).toBe('Paid');
       expect(payment.balance).toBe(0);
 
-      const completed = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const completed = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(completed?.status).toBe('Completed');
     });
 
@@ -424,7 +424,7 @@ describe('Front Desk Workflows', () => {
       expect(payment.balance).toBe(45);
 
       // Appointment should remain Payment-Pending
-      const apt = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const apt = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(apt?.status).toBe('Payment-Pending');
     });
   });
@@ -433,7 +433,7 @@ describe('Front Desk Workflows', () => {
     it('filters appointments by date range', () => {
       const appointments = dentalStore.getAppointments();
       const today = new Date().toISOString().split('T')[0];
-      const todaysAppointments = appointments.filter(a => a.date === today);
+      const todaysAppointments = appointments.filter((a) => a.date === today);
 
       expect(todaysAppointments.length).toBeGreaterThan(0);
     });
@@ -441,7 +441,7 @@ describe('Front Desk Workflows', () => {
     it('filters payments by date', () => {
       const payments = dentalStore.getPayments();
       const today = new Date().toISOString().split('T')[0];
-      const todaysPayments = payments.filter(p => p.createdAt.startsWith(today));
+      const todaysPayments = payments.filter((p) => p.createdAt.startsWith(today));
 
       expect(todaysPayments.length).toBeGreaterThanOrEqual(0);
     });
@@ -460,11 +460,15 @@ describe('Front Desk Workflows', () => {
 
     it('filters by payment method', () => {
       const payments = dentalStore.getPayments();
-      const cashPayments = payments.filter(p => p.paymentMethod === 'Cash');
-      const cardPayments = payments.filter(p => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card');
-      const insurancePayments = payments.filter(p => p.paymentMethod === 'Insurance');
+      const cashPayments = payments.filter((p) => p.paymentMethod === 'Cash');
+      const cardPayments = payments.filter(
+        (p) => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card'
+      );
+      const insurancePayments = payments.filter((p) => p.paymentMethod === 'Insurance');
 
-      expect(cashPayments.length + cardPayments.length + insurancePayments.length).toBeLessThanOrEqual(payments.length);
+      expect(
+        cashPayments.length + cardPayments.length + insurancePayments.length
+      ).toBeLessThanOrEqual(payments.length);
     });
   });
 });

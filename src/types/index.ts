@@ -50,7 +50,14 @@ export interface Dentist {
   colorCode: string;
 }
 
-export type ServiceCategory = 'General' | 'Restorative' | 'Orthodontics' | 'Endodontics' | 'Periodontics' | 'Cosmetic' | 'Surgery';
+export type ServiceCategory =
+  | 'General'
+  | 'Restorative'
+  | 'Orthodontics'
+  | 'Endodontics'
+  | 'Periodontics'
+  | 'Cosmetic'
+  | 'Surgery';
 
 export interface DentalService {
   id: string;
@@ -68,16 +75,16 @@ export interface DentistSchedule {
   dentistId: string;
   dayOfWeek: number; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
   startTime: string; // "09:00"
-  endTime: string;   // "17:00"
+  endTime: string; // "17:00"
   breakStart: string; // "12:00"
-  breakEnd: string;   // "13:00"
+  breakEnd: string; // "13:00"
   active: boolean;
 }
 
 export interface BlockedSchedule {
   id: string;
   dentistId?: string; // empty means whole clinic
-  date: string;       // "YYYY-MM-DD"
+  date: string; // "YYYY-MM-DD"
   startTime?: string;
   endTime?: string;
   reason: string;
@@ -109,7 +116,7 @@ export interface Appointment {
   serviceId: string;
   date: string; // YYYY-MM-DD
   startTime: string; // "09:00"
-  endTime: string;   // "09:45"
+  endTime: string; // "09:45"
   status: AppointmentStatus;
   bookingSource: BookingSource;
   notes?: string;
@@ -234,7 +241,16 @@ export interface AuditLog {
   actorName: string;
   actorRole: UserRole;
   action: string;
-  entityType: 'appointment' | 'patient' | 'dentist' | 'service' | 'schedule' | 'payment' | 'consultation' | 'waitlist' | 'settings';
+  entityType:
+    | 'appointment'
+    | 'patient'
+    | 'dentist'
+    | 'service'
+    | 'schedule'
+    | 'payment'
+    | 'consultation'
+    | 'waitlist'
+    | 'settings';
   entityId: string;
   beforeValue?: string;
   afterValue?: string;
@@ -247,7 +263,7 @@ export interface SystemSettings {
   clinicPhone: string;
   clinicEmail: string;
   clinicAddress: string;
-  clinicOpenTime: string;  // "08:00"
+  clinicOpenTime: string; // "08:00"
   clinicCloseTime: string; // "18:00"
   defaultSlotDurationMinutes: number; // 30
   bufferTimeMinutes: number; // 10

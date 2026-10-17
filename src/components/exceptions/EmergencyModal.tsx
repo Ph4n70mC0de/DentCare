@@ -13,27 +13,24 @@ interface EmergencyModalProps {
   onSuccess?: (apt: Appointment) => void;
 }
 
-export const EmergencyModal: React.FC<EmergencyModalProps> = ({
-  isOpen,
-  onClose,
-  onSuccess
-}) => {
-  const {
-    patients,
-    dentists,
-    services,
-    settings,
-    createEmergencyAppointment
-  } = useDentalStore();
+export const EmergencyModal: React.FC<EmergencyModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const { patients, dentists, services, settings, createEmergencyAppointment } = useDentalStore();
 
   const [patientId, setPatientId] = useState<string>(patients[0]?.id || '');
   const [dentistId, setDentistId] = useState<string>(dentists[0]?.id || '');
   const [serviceId, setServiceId] = useState<string>(
-    services.find((s) => s.category === 'General' || s.name.includes('Emergency'))?.id || services[0]?.id || ''
+    services.find((s) => s.category === 'General' || s.name.includes('Emergency'))?.id ||
+      services[0]?.id ||
+      ''
   );
   const [severity, setSeverity] = useState<'high' | 'critical'>('critical');
-  const [emergencyNotes, setEmergencyNotes] = useState<string>('Severe acute pulpitis pain with facial swelling');
-  const [result, setResult] = useState<{ appointment: Appointment; affectedWaitingPatientsCount: number } | null>(null);
+  const [emergencyNotes, setEmergencyNotes] = useState<string>(
+    'Severe acute pulpitis pain with facial swelling'
+  );
+  const [result, setResult] = useState<{
+    appointment: Appointment;
+    affectedWaitingPatientsCount: number;
+  } | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +41,7 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
       dentistId,
       serviceId,
       emergencyNotes: emergencyNotes.trim(),
-      severity
+      severity,
     });
 
     setResult(res);
@@ -77,7 +74,8 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
               <span>Emergency Case Prioritized (Queue #0)</span>
             </div>
             <p className="text-xs text-slate-700">
-              Assigned Emergency Reference <strong>#{result.appointment.appointmentNumber}</strong> to Dr. {dentists.find((d) => d.id === dentistId)?.fullName}.
+              Assigned Emergency Reference <strong>#{result.appointment.appointmentNumber}</strong>{' '}
+              to Dr. {dentists.find((d) => d.id === dentistId)?.fullName}.
             </p>
           </div>
 
@@ -86,14 +84,14 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
               <Users className="w-4 h-4 text-blue-600" /> Automated Schedule Balancing:
             </h5>
             <p>
-              • <strong>{result.affectedWaitingPatientsCount} waiting patient(s)</strong> had their appointments automatically adjusted by +{settings.emergencyBufferShiftMinutes} minutes.
+              • <strong>{result.affectedWaitingPatientsCount} waiting patient(s)</strong> had their
+              appointments automatically adjusted by +{settings.emergencyBufferShiftMinutes}{' '}
+              minutes.
             </p>
             <p>
               • SMS & in-app courtesy delay notifications dispatched to affected waiting patients.
             </p>
-            <p>
-              • Emergency override event logged to immutable clinic audit trail.
-            </p>
+            <p>• Emergency override event logged to immutable clinic audit trail.</p>
           </div>
 
           <div className="flex justify-end pt-2">
@@ -110,7 +108,9 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
               Emergency Protocol Activated
             </p>
             <p>
-              This bypasses normal availability and grants immediate priority. The system will safely recalculate subsequent waiting times by +{settings.emergencyBufferShiftMinutes} minutes without deleting any records.
+              This bypasses normal availability and grants immediate priority. The system will
+              safely recalculate subsequent waiting times by +{settings.emergencyBufferShiftMinutes}{' '}
+              minutes without deleting any records.
             </p>
           </div>
 

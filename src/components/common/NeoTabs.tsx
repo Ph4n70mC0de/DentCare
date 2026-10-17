@@ -20,7 +20,7 @@ export const NeoTabs: React.FC<NeoTabsProps> = ({
   activeTab,
   onChange,
   className = '',
-  size = 'md'
+  size = 'md',
 }) => {
   return (
     <div className={`flex flex-wrap gap-2 p-1.5 neo-inset-sm rounded-2xl ${className}`}>

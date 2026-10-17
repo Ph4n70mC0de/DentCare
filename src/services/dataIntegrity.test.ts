@@ -40,7 +40,7 @@ describe('Data Integrity — Unique ID Generation', () => {
       }
     }
 
-    const ids = created.map(a => a.id);
+    const ids = created.map((a) => a.id);
     expect(new Set(ids).size).toBe(ids.length); // no duplicates
   });
 
@@ -56,7 +56,7 @@ describe('Data Integrity — Unique ID Generation', () => {
       })
     );
 
-    const ids = entries.map(e => e.id);
+    const ids = entries.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
@@ -79,7 +79,7 @@ describe('Data Integrity — Unique ID Generation', () => {
       })
     );
 
-    const ids = payments.map(p => p.id);
+    const ids = payments.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
@@ -107,7 +107,7 @@ describe('Data Integrity — Unique ID Generation', () => {
     dentalStore.cancelAppointment(first.id, 'test');
 
     const after = dentalStore.getAppointments();
-    expect(after.find(a => a.id === first.id)?.status).toBe('Cancelled');
-    expect(after.find(a => a.id === second.id)?.status).toBe('Confirmed');
+    expect(after.find((a) => a.id === first.id)?.status).toBe('Cancelled');
+    expect(after.find((a) => a.id === second.id)?.status).toBe('Confirmed');
   });
 });

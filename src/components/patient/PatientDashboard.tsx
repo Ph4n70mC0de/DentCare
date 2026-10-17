@@ -19,7 +19,7 @@ interface PatientDashboardProps {
 export const PatientDashboard: React.FC<PatientDashboardProps> = ({
   onStartBooking,
   activeTab = 'patient-dashboard',
-  onSelectTab
+  onSelectTab,
 }) => {
   const { currentPatient, joinWaitlist, cancelWaitlistEntry } = useDentalStore();
 
@@ -46,12 +46,12 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
     activeTab === 'patient-book'
       ? 'patient-book'
       : activeTab === 'patient-appointments'
-      ? 'patient-appointments'
-      : activeTab === 'patient-records'
-      ? 'patient-records'
-      : activeTab === 'patient-waitlist'
-      ? 'patient-waitlist'
-      : 'patient-dashboard';
+        ? 'patient-appointments'
+        : activeTab === 'patient-records'
+          ? 'patient-records'
+          : activeTab === 'patient-waitlist'
+            ? 'patient-waitlist'
+            : 'patient-dashboard';
 
   if (currentTabMode === 'patient-book') {
     return (

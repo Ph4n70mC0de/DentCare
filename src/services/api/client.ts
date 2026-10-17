@@ -1,9 +1,7 @@
 // API Client - Centralized HTTP client with interceptors, retry logic, error handling
 // Uses fetch API with TypeScript types
 
-import {
-  defaultApiConfig,
-} from './types';
+import { defaultApiConfig } from './types';
 
 import type {
   ApiConfig,
@@ -202,7 +200,7 @@ interface RetryOptions {
 }
 
 async function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function fetchWithRetry(
@@ -256,12 +254,15 @@ async function fetchWithRetry(
     await sleep(delay);
   }
 
-  throw lastError || new ApiErrorClass({
-    code: 'MAX_RETRIES_EXCEEDED',
-    message: 'Maximum retry attempts exceeded',
-    statusCode: 0,
-    timestamp: new Date().toISOString(),
-  });
+  throw (
+    lastError ||
+    new ApiErrorClass({
+      code: 'MAX_RETRIES_EXCEEDED',
+      message: 'Maximum retry attempts exceeded',
+      statusCode: 0,
+      timestamp: new Date().toISOString(),
+    })
+  );
 }
 
 // ============================================
@@ -355,7 +356,7 @@ export class ApiClient {
       });
 
       if (response.ok) {
-        const data = await response.json() as RefreshTokenResponse;
+        const data = (await response.json()) as RefreshTokenResponse;
         setTokens(data.accessToken, refreshToken, data.expiresIn);
         return true;
       }
@@ -380,14 +381,11 @@ export class ApiClient {
       },
     });
 
-    const response = await fetchWithRetry(
-      () => fetch(url, requestConfig),
-      {
-        attempts: retryOptions?.attempts ?? this.config.retryAttempts,
-        delay: retryOptions?.delay ?? this.config.retryDelay,
-        shouldRetry: retryOptions?.shouldRetry,
-      }
-    );
+    const response = await fetchWithRetry(() => fetch(url, requestConfig), {
+      attempts: retryOptions?.attempts ?? this.config.retryAttempts,
+      delay: retryOptions?.delay ?? this.config.retryDelay,
+      shouldRetry: retryOptions?.shouldRetry,
+    });
 
     const processedResponse = await this.interceptors.runResponseInterceptors(response);
 
@@ -467,7 +465,10 @@ export class ApiClient {
 
   // Appointment methods
   async getAppointments(params?: AppointmentListParams): Promise<PaginatedResponse<Appointment>> {
-    return this.get<PaginatedResponse<Appointment>>('/appointments', params as Record<string, unknown>);
+    return this.get<PaginatedResponse<Appointment>>(
+      '/appointments',
+      params as Record<string, unknown>
+    );
   }
 
   async getAppointment(id: string): Promise<Appointment> {
@@ -486,7 +487,10 @@ export class ApiClient {
     return this.post<Appointment>(`/appointments/${id}/cancel`, { reason });
   }
 
-  async rescheduleAppointment(id: string, data: RescheduleAppointmentRequest): Promise<Appointment> {
+  async rescheduleAppointment(
+    id: string,
+    data: RescheduleAppointmentRequest
+  ): Promise<Appointment> {
     return this.post<Appointment>(`/appointments/${id}/reschedule`, data);
   }
 
@@ -494,11 +498,17 @@ export class ApiClient {
     return this.post<Appointment>(`/appointments/${id}/no-show`, { reason });
   }
 
-  async createEmergencyAppointment(data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }): Promise<Appointment> {
+  async createEmergencyAppointment(
+    data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }
+  ): Promise<Appointment> {
     return this.post<Appointment>('/appointments/emergency', data);
   }
 
-  async getAvailableSlots(dentistId: string, date: string, durationMinutes: number): Promise<AvailableSlot[]> {
+  async getAvailableSlots(
+    dentistId: string,
+    date: string,
+    durationMinutes: number
+  ): Promise<AvailableSlot[]> {
     return this.get<AvailableSlot[]>(`/appointments/available-slots`, {
       dentistId,
       date,
@@ -506,7 +516,12 @@ export class ApiClient {
     });
   }
 
-  async getAlternativeDates(dentistId: string, fromDate: string, durationMinutes: number, count?: number): Promise<AlternativeDate[]> {
+  async getAlternativeDates(
+    dentistId: string,
+    fromDate: string,
+    durationMinutes: number,
+    count?: number
+  ): Promise<AlternativeDate[]> {
     return this.get<AlternativeDate[]>(`/appointments/alternative-dates`, {
       dentistId,
       fromDate,
@@ -558,7 +573,10 @@ export class ApiClient {
     return this.post<DentistSchedule>('/dentists/schedules', data);
   }
 
-  async updateDentistSchedule(id: string, data: Partial<CreateDentistScheduleRequest>): Promise<DentistSchedule> {
+  async updateDentistSchedule(
+    id: string,
+    data: Partial<CreateDentistScheduleRequest>
+  ): Promise<DentistSchedule> {
     return this.patch<DentistSchedule>(`/dentists/schedules/${id}`, data);
   }
 
@@ -602,7 +620,10 @@ export class ApiClient {
 
   // Waitlist methods
   async getWaitlist(params?: WaitlistListParams): Promise<PaginatedResponse<WaitlistEntry>> {
-    return this.get<PaginatedResponse<WaitlistEntry>>('/waitlist', params as Record<string, unknown>);
+    return this.get<PaginatedResponse<WaitlistEntry>>(
+      '/waitlist',
+      params as Record<string, unknown>
+    );
   }
 
   async joinWaitlist(data: CreateWaitlistEntryRequest): Promise<WaitlistEntry> {
@@ -614,8 +635,13 @@ export class ApiClient {
   }
 
   // Consultation methods
-  async getConsultations(params?: ConsultationListParams): Promise<PaginatedResponse<Consultation>> {
-    return this.get<PaginatedResponse<Consultation>>('/consultations', params as Record<string, unknown>);
+  async getConsultations(
+    params?: ConsultationListParams
+  ): Promise<PaginatedResponse<Consultation>> {
+    return this.get<PaginatedResponse<Consultation>>(
+      '/consultations',
+      params as Record<string, unknown>
+    );
   }
 
   async getConsultation(id: string): Promise<Consultation> {
@@ -644,8 +670,13 @@ export class ApiClient {
   }
 
   // Notification methods
-  async getNotifications(params?: NotificationListParams): Promise<PaginatedResponse<AppNotification>> {
-    return this.get<PaginatedResponse<AppNotification>>('/notifications', params as Record<string, unknown>);
+  async getNotifications(
+    params?: NotificationListParams
+  ): Promise<PaginatedResponse<AppNotification>> {
+    return this.get<PaginatedResponse<AppNotification>>(
+      '/notifications',
+      params as Record<string, unknown>
+    );
   }
 
   async markNotificationsRead(data: MarkNotificationsReadRequest): Promise<void> {

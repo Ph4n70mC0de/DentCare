@@ -11,7 +11,7 @@ import {
   Payment,
   AppNotification,
   AuditLog,
-  SystemSettings
+  SystemSettings,
 } from '../types';
 
 export const initialSettings: SystemSettings = {
@@ -28,7 +28,7 @@ export const initialSettings: SystemSettings = {
   requireStaffReviewOnNoShow: true,
   reminderLeadHours: 24,
   autoNotifyWaitlistOnCancel: true,
-  emergencyBufferShiftMinutes: 20
+  emergencyBufferShiftMinutes: 20,
 };
 
 export const initialUsers: User[] = [
@@ -41,7 +41,8 @@ export const initialUsers: User[] = [
     status: 'active',
     createdAt: '2025-01-01T08:00:00Z',
     updatedAt: '2026-09-01T08:00:00Z',
-    avatarUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80'
+    avatarUrl:
+      'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'user-frontdesk',
@@ -52,7 +53,8 @@ export const initialUsers: User[] = [
     status: 'active',
     createdAt: '2025-01-10T08:00:00Z',
     updatedAt: '2026-09-01T08:00:00Z',
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
+    avatarUrl:
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'user-dentist-1',
@@ -63,7 +65,8 @@ export const initialUsers: User[] = [
     status: 'active',
     createdAt: '2025-01-05T08:00:00Z',
     updatedAt: '2026-09-01T08:00:00Z',
-    avatarUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'
+    avatarUrl:
+      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'user-dentist-2',
@@ -74,7 +77,8 @@ export const initialUsers: User[] = [
     status: 'active',
     createdAt: '2025-02-01T08:00:00Z',
     updatedAt: '2026-09-01T08:00:00Z',
-    avatarUrl: 'https://images.unsplash.com/photo-1594824813686-26154b52b362?w=150&auto=format&fit=crop&q=80'
+    avatarUrl:
+      'https://images.unsplash.com/photo-1594824813686-26154b52b362?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'user-patient-1',
@@ -84,7 +88,7 @@ export const initialUsers: User[] = [
     phone: '+1 (555) 321-7890',
     status: 'active',
     createdAt: '2025-03-12T09:30:00Z',
-    updatedAt: '2026-09-05T14:20:00Z'
+    updatedAt: '2026-09-05T14:20:00Z',
   },
   {
     id: 'user-patient-2',
@@ -94,7 +98,7 @@ export const initialUsers: User[] = [
     phone: '+1 (555) 432-8901',
     status: 'active',
     createdAt: '2025-04-18T11:00:00Z',
-    updatedAt: '2026-09-10T10:00:00Z'
+    updatedAt: '2026-09-10T10:00:00Z',
   },
   {
     id: 'user-patient-3',
@@ -104,8 +108,8 @@ export const initialUsers: User[] = [
     phone: '+1 (555) 543-9012',
     status: 'active',
     createdAt: '2025-05-22T13:45:00Z',
-    updatedAt: '2026-09-08T09:15:00Z'
-  }
+    updatedAt: '2026-09-08T09:15:00Z',
+  },
 ];
 
 export const initialDentists: Dentist[] = [
@@ -119,7 +123,8 @@ export const initialDentists: Dentist[] = [
     email: 'marcus.vance@dentcare.com',
     status: 'active',
     colorCode: '#2563EB',
-    avatarUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'
+    avatarUrl:
+      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'dentist-2',
@@ -131,8 +136,9 @@ export const initialDentists: Dentist[] = [
     email: 'sarah.lin@dentcare.com',
     status: 'active',
     colorCode: '#0D9488',
-    avatarUrl: 'https://images.unsplash.com/photo-1594824813686-26154b52b362?w=150&auto=format&fit=crop&q=80'
-  }
+    avatarUrl:
+      'https://images.unsplash.com/photo-1594824813686-26154b52b362?w=150&auto=format&fit=crop&q=80',
+  },
 ];
 
 export const initialPatients: Patient[] = [
@@ -149,7 +155,7 @@ export const initialPatients: Patient[] = [
     emergencyContact: {
       name: 'Sarah Wilson',
       relationship: 'Spouse',
-      phone: '+1 (555) 321-7899'
+      phone: '+1 (555) 321-7899',
     },
     identificationReference: 'ID-992-41-884',
     medicalAlerts: ['Hypertension controlled'],
@@ -157,7 +163,7 @@ export const initialPatients: Patient[] = [
     noShowCount: 0,
     requiresStaffReviewForBooking: false,
     createdAt: '2025-03-12T09:30:00Z',
-    updatedAt: '2026-09-05T14:20:00Z'
+    updatedAt: '2026-09-05T14:20:00Z',
   },
   {
     id: 'pat-002',
@@ -172,7 +178,7 @@ export const initialPatients: Patient[] = [
     emergencyContact: {
       name: 'David Chen',
       relationship: 'Brother',
-      phone: '+1 (555) 432-8911'
+      phone: '+1 (555) 432-8911',
     },
     identificationReference: 'ID-734-82-192',
     medicalAlerts: ['Asthmatic', 'Sensitive Gums'],
@@ -180,7 +186,7 @@ export const initialPatients: Patient[] = [
     noShowCount: 0,
     requiresStaffReviewForBooking: false,
     createdAt: '2025-04-18T11:00:00Z',
-    updatedAt: '2026-09-10T10:00:00Z'
+    updatedAt: '2026-09-10T10:00:00Z',
   },
   {
     id: 'pat-003',
@@ -195,7 +201,7 @@ export const initialPatients: Patient[] = [
     emergencyContact: {
       name: 'Brenda Taylor',
       relationship: 'Wife',
-      phone: '+1 (555) 543-9099'
+      phone: '+1 (555) 543-9099',
     },
     identificationReference: 'ID-482-11-509',
     medicalAlerts: ['Type 2 Diabetes'],
@@ -203,7 +209,7 @@ export const initialPatients: Patient[] = [
     noShowCount: 1,
     requiresStaffReviewForBooking: false,
     createdAt: '2025-05-22T13:45:00Z',
-    updatedAt: '2026-09-08T09:15:00Z'
+    updatedAt: '2026-09-08T09:15:00Z',
   },
   {
     id: 'pat-004',
@@ -217,7 +223,7 @@ export const initialPatients: Patient[] = [
     emergencyContact: {
       name: 'Maria Martinez',
       relationship: 'Mother',
-      phone: '+1 (555) 654-0199'
+      phone: '+1 (555) 654-0199',
     },
     identificationReference: 'ID-619-33-821',
     medicalAlerts: [],
@@ -225,7 +231,7 @@ export const initialPatients: Patient[] = [
     noShowCount: 0,
     requiresStaffReviewForBooking: false,
     createdAt: '2025-06-15T10:00:00Z',
-    updatedAt: '2026-09-09T16:00:00Z'
+    updatedAt: '2026-09-09T16:00:00Z',
   },
   {
     id: 'pat-005',
@@ -239,7 +245,7 @@ export const initialPatients: Patient[] = [
     emergencyContact: {
       name: 'Rachel Ross',
       relationship: 'Sister',
-      phone: '+1 (555) 765-1288'
+      phone: '+1 (555) 765-1288',
     },
     identificationReference: 'ID-881-22-440',
     medicalAlerts: ['Cardiac Pacemaker (2020)'],
@@ -247,81 +253,88 @@ export const initialPatients: Patient[] = [
     noShowCount: 2,
     requiresStaffReviewForBooking: true,
     createdAt: '2025-07-01T08:30:00Z',
-    updatedAt: '2026-09-02T11:00:00Z'
-  }
+    updatedAt: '2026-09-02T11:00:00Z',
+  },
 ];
 
 export const initialServices: DentalService[] = [
   {
     id: 'serv-1',
     name: 'Check-up & Comprehensive Cleaning',
-    description: 'Full oral examination, ultrasonic plaque & tartar scaling, polish, and diagnostic digital X-rays if needed.',
+    description:
+      'Full oral examination, ultrasonic plaque & tartar scaling, polish, and diagnostic digital X-rays if needed.',
     category: 'General',
     durationMinutes: 45,
     price: 95,
     active: true,
-    iconName: 'Sparkles'
+    iconName: 'Sparkles',
   },
   {
     id: 'serv-2',
     name: 'Composite Dental Filling',
-    description: 'Tooth-colored resin filling to restore cavity decay with minimal tooth removal and natural aesthetics.',
+    description:
+      'Tooth-colored resin filling to restore cavity decay with minimal tooth removal and natural aesthetics.',
     category: 'Restorative',
     durationMinutes: 45,
     price: 160,
     active: true,
-    iconName: 'ShieldCheck'
+    iconName: 'ShieldCheck',
   },
   {
     id: 'serv-3',
     name: 'Tooth Extraction (Simple / Surgical)',
-    description: 'Safe extraction of damaged, non-restorable teeth or impacted wisdom teeth with local anaesthesia.',
+    description:
+      'Safe extraction of damaged, non-restorable teeth or impacted wisdom teeth with local anaesthesia.',
     category: 'Surgery',
     durationMinutes: 60,
     price: 210,
     active: true,
-    iconName: 'Activity'
+    iconName: 'Activity',
   },
   {
     id: 'serv-4',
     name: 'Root Canal Therapy (Endodontics)',
-    description: 'Removal of infected pulp, thorough disinfection, shaped canal filling, and temporary restoration seal.',
+    description:
+      'Removal of infected pulp, thorough disinfection, shaped canal filling, and temporary restoration seal.',
     category: 'Endodontics',
     durationMinutes: 90,
     price: 780,
     active: true,
-    iconName: 'HeartPulse'
+    iconName: 'HeartPulse',
   },
   {
     id: 'serv-5',
     name: 'Orthodontic Consultation & Adjustment',
-    description: 'Assessment for clear aligners or traditional braces, progress check-up, archwire replacement, and tightening.',
+    description:
+      'Assessment for clear aligners or traditional braces, progress check-up, archwire replacement, and tightening.',
     category: 'Orthodontics',
     durationMinutes: 30,
     price: 130,
     active: true,
-    iconName: 'Smile'
+    iconName: 'Smile',
   },
   {
     id: 'serv-6',
     name: 'Emergency Dental Exam & Pain Triage',
-    description: 'Same-day urgent assessment for severe dental trauma, acute pulpitis, knocked-out teeth, or facial swelling.',
+    description:
+      'Same-day urgent assessment for severe dental trauma, acute pulpitis, knocked-out teeth, or facial swelling.',
     category: 'General',
     durationMinutes: 30,
     price: 120,
     active: true,
-    iconName: 'AlertTriangle'
+    iconName: 'AlertTriangle',
   },
   {
     id: 'serv-7',
     name: 'Teeth Whitening & Enamel Care',
-    description: 'Professional in-chair light-activated bleaching treatment followed by remineralizing fluoride glaze.',
+    description:
+      'Professional in-chair light-activated bleaching treatment followed by remineralizing fluoride glaze.',
     category: 'Cosmetic',
     durationMinutes: 60,
     price: 290,
     active: true,
-    iconName: 'Sun'
-  }
+    iconName: 'Sun',
+  },
 ];
 
 export const initialSchedules: DentistSchedule[] = [
@@ -334,7 +347,7 @@ export const initialSchedules: DentistSchedule[] = [
     endTime: '17:30',
     breakStart: '12:30',
     breakEnd: '13:30',
-    active: true
+    active: true,
   })),
   // Dr. Sarah Lin: Tue (2) to Sat (6), 09:00 - 17:00
   ...[2, 3, 4, 5, 6].map((dayOfWeek) => ({
@@ -345,8 +358,8 @@ export const initialSchedules: DentistSchedule[] = [
     endTime: '17:00',
     breakStart: '13:00',
     breakEnd: '14:00',
-    active: true
-  }))
+    active: true,
+  })),
 ];
 
 export const initialBlockedSchedules: BlockedSchedule[] = [
@@ -354,8 +367,8 @@ export const initialBlockedSchedules: BlockedSchedule[] = [
     id: 'block-1',
     date: '2026-09-25',
     reason: 'Clinic Staff Continuing Education & Dental Symposium',
-    isAllDay: true
-  }
+    isAllDay: true,
+  },
 ];
 
 // Helper to generate ISO dates relative to current date (e.g. today, tomorrow)
@@ -393,7 +406,7 @@ export const initialAppointments: Appointment[] = [
     updatedAt: `${todayStr}T09:05:00Z`,
     confirmedAt: `${yesterdayStr}T14:00:00Z`,
     arrivedAt: `${todayStr}T08:50:00Z`,
-    consultationStartedAt: `${todayStr}T09:05:00Z`
+    consultationStartedAt: `${todayStr}T09:05:00Z`,
   },
   {
     id: 'apt-002',
@@ -411,7 +424,7 @@ export const initialAppointments: Appointment[] = [
     createdAt: `${yesterdayStr}T11:20:00Z`,
     updatedAt: `${todayStr}T09:40:00Z`,
     confirmedAt: `${yesterdayStr}T15:00:00Z`,
-    arrivedAt: `${todayStr}T09:40:00Z`
+    arrivedAt: `${todayStr}T09:40:00Z`,
   },
   {
     id: 'apt-003',
@@ -429,7 +442,7 @@ export const initialAppointments: Appointment[] = [
     createdAt: `${yesterdayStr}T09:00:00Z`,
     updatedAt: `${todayStr}T10:10:00Z`,
     confirmedAt: `${yesterdayStr}T16:00:00Z`,
-    arrivedAt: `${todayStr}T10:10:00Z`
+    arrivedAt: `${todayStr}T10:10:00Z`,
   },
   {
     id: 'apt-004',
@@ -445,7 +458,7 @@ export const initialAppointments: Appointment[] = [
     notes: 'Aligner check-up tray #12.',
     createdAt: `${yesterdayStr}T15:30:00Z`,
     updatedAt: `${yesterdayStr}T15:30:00Z`,
-    confirmedAt: `${yesterdayStr}T15:30:00Z`
+    confirmedAt: `${yesterdayStr}T15:30:00Z`,
   },
   {
     id: 'apt-005',
@@ -461,7 +474,7 @@ export const initialAppointments: Appointment[] = [
     notes: 'Surgical extraction consultation.',
     createdAt: `${yesterdayStr}T16:00:00Z`,
     updatedAt: `${yesterdayStr}T16:00:00Z`,
-    confirmedAt: `${yesterdayStr}T16:00:00Z`
+    confirmedAt: `${yesterdayStr}T16:00:00Z`,
   },
   // Past completed appointment with full consultation and payment
   {
@@ -481,7 +494,7 @@ export const initialAppointments: Appointment[] = [
     confirmedAt: `${getOffsetDateString(-5)}T10:05:00Z`,
     arrivedAt: `${yesterdayStr}T10:50:00Z`,
     consultationStartedAt: `${yesterdayStr}T11:00:00Z`,
-    completedAt: `${yesterdayStr}T11:45:00Z`
+    completedAt: `${yesterdayStr}T11:45:00Z`,
   },
   // Upcoming tomorrow
   {
@@ -498,8 +511,8 @@ export const initialAppointments: Appointment[] = [
     notes: 'Follow-up cosmetic whitening polish.',
     createdAt: `${todayStr}T08:00:00Z`,
     updatedAt: `${todayStr}T08:00:00Z`,
-    confirmedAt: `${todayStr}T08:00:00Z`
-  }
+    confirmedAt: `${todayStr}T08:00:00Z`,
+  },
 ];
 
 export const initialWaitlist: WaitlistEntry[] = [
@@ -513,7 +526,7 @@ export const initialWaitlist: WaitlistEntry[] = [
     priority: 'normal',
     status: 'active',
     notes: 'Looking for any cancellation between 13:30 and 16:30.',
-    createdAt: `${yesterdayStr}T16:00:00Z`
+    createdAt: `${yesterdayStr}T16:00:00Z`,
   },
   {
     id: 'wait-002',
@@ -525,8 +538,8 @@ export const initialWaitlist: WaitlistEntry[] = [
     priority: 'high',
     status: 'active',
     notes: 'Moderate discomfort on lower molar, requested morning.',
-    createdAt: `${todayStr}T07:30:00Z`
-  }
+    createdAt: `${todayStr}T07:30:00Z`,
+  },
 ];
 
 export const initialConsultations: Consultation[] = [
@@ -535,14 +548,16 @@ export const initialConsultations: Consultation[] = [
     appointmentId: 'apt-000-hist',
     dentistId: 'dentist-1',
     patientId: 'pat-001',
-    examinationFindings: 'Tooth #14 exhibited occlusal surface caries extending into the dentino-enamel junction. Vitality test normal with no lingering percussion sensitivity.',
+    examinationFindings:
+      'Tooth #14 exhibited occlusal surface caries extending into the dentino-enamel junction. Vitality test normal with no lingering percussion sensitivity.',
     diagnosis: 'Class I Dental Caries (#14)',
-    treatmentPlan: 'Composite restoration under localized infiltration, occlusal equilibration, and remineralization counseling.',
+    treatmentPlan:
+      'Composite restoration under localized infiltration, occlusal equilibration, and remineralization counseling.',
     proceduresPerformed: [
       'Local infiltration anaesthesia (2% Lidocaine with 1:100k epinephrine)',
       'Cavity debridement & selective enamel etching',
       'Bonding agent application and incremental micro-hybrid composite placement (#14)',
-      'High-gloss finishing and articulating paper check'
+      'High-gloss finishing and articulating paper check',
     ],
     prescriptions: [
       {
@@ -551,19 +566,20 @@ export const initialConsultations: Consultation[] = [
         dosage: '400mg',
         frequency: 'Every 6-8 hours as needed for mild sensitivity',
         duration: '3 days',
-        instructions: 'Take with food or a glass of milk.'
-      }
+        instructions: 'Take with food or a glass of milk.',
+      },
     ],
-    aftercareInstructions: 'Refrain from eating hard or crunchy foods for the next 24 hours. Normal gentle brushing may resume this evening. Contact clinic if bite feels elevated.',
+    aftercareInstructions:
+      'Refrain from eating hard or crunchy foods for the next 24 hours. Normal gentle brushing may resume this evening. Contact clinic if bite feels elevated.',
     followUpRecommendation: {
       required: true,
       timeframeWeeks: 24,
       recommendedDate: getOffsetDateString(180),
-      notes: 'Routine 6-month preventive cleaning and bitewing check.'
+      notes: 'Routine 6-month preventive cleaning and bitewing check.',
     },
     createdAt: `${yesterdayStr}T11:45:00Z`,
-    updatedAt: `${yesterdayStr}T11:45:00Z`
-  }
+    updatedAt: `${yesterdayStr}T11:45:00Z`,
+  },
 ];
 
 export const initialPayments: Payment[] = [
@@ -582,8 +598,8 @@ export const initialPayments: Payment[] = [
     paymentStatus: 'Paid',
     receiptNumber: 'REC-2026-0419',
     notes: 'Co-pay settled via terminal. Insurance claim submitted.',
-    createdAt: `${yesterdayStr}T11:55:00Z`
-  }
+    createdAt: `${yesterdayStr}T11:55:00Z`,
+  },
 ];
 
 export const initialNotifications: AppNotification[] = [
@@ -597,7 +613,7 @@ export const initialNotifications: AppNotification[] = [
     channel: 'in_app',
     read: false,
     sentAt: `${yesterdayStr}T14:00:00Z`,
-    relatedAppointmentId: 'apt-001'
+    relatedAppointmentId: 'apt-001',
   },
   {
     id: 'notif-2',
@@ -605,11 +621,12 @@ export const initialNotifications: AppNotification[] = [
     patientId: 'pat-002',
     type: 'reminder',
     title: 'Reminder: Upcoming Dental Visit',
-    message: 'Your dental filling procedure is coming up today at 10:00 AM. Please arrive 10 minutes early.',
+    message:
+      'Your dental filling procedure is coming up today at 10:00 AM. Please arrive 10 minutes early.',
     channel: 'sms',
     read: false,
     sentAt: `${todayStr}T07:00:00Z`,
-    relatedAppointmentId: 'apt-002'
+    relatedAppointmentId: 'apt-002',
   },
   {
     id: 'notif-3',
@@ -617,11 +634,12 @@ export const initialNotifications: AppNotification[] = [
     patientId: 'pat-004',
     type: 'waitlist_slot_available',
     title: 'Waitlist Notification',
-    message: 'You have been enrolled in the priority waitlist for today afternoon with Dr. Marcus Vance.',
+    message:
+      'You have been enrolled in the priority waitlist for today afternoon with Dr. Marcus Vance.',
     channel: 'in_app',
     read: true,
-    sentAt: `${yesterdayStr}T16:05:00Z`
-  }
+    sentAt: `${yesterdayStr}T16:05:00Z`,
+  },
 ];
 
 export const initialAuditLogs: AuditLog[] = [
@@ -636,7 +654,7 @@ export const initialAuditLogs: AuditLog[] = [
     beforeValue: 'Confirmed',
     afterValue: 'In-Consultation',
     details: 'Verified patient ID-992-41-884, escorted to Operatory 1 with Dr. Marcus.',
-    timestamp: `${todayStr}T09:05:00Z`
+    timestamp: `${todayStr}T09:05:00Z`,
   },
   {
     id: 'log-2',
@@ -648,6 +666,6 @@ export const initialAuditLogs: AuditLog[] = [
     entityId: 'apt-002',
     afterValue: 'Confirmed',
     details: 'Booked online for Composite Dental Filling.',
-    timestamp: `${yesterdayStr}T11:20:00Z`
-  }
+    timestamp: `${yesterdayStr}T11:20:00Z`,
+  },
 ];

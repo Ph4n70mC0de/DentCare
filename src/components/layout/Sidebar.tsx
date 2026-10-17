@@ -14,7 +14,7 @@ import {
   Settings,
   Sparkles,
   ClipboardList,
-  UserPlus
+  UserPlus,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { UserRole } from '../../types';
@@ -26,12 +26,7 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
-  currentView,
-  onSelectView,
-  isOpen,
-  onClose
-}) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentView, onSelectView, isOpen, onClose }) => {
   const { activeUser, appointments, waitlist, currentPatient } = useDentalStore();
 
   const getNavItems = (role: UserRole) => {
@@ -41,19 +36,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ? appointments.filter(
               (a) =>
                 a.patientId === currentPatient.id &&
-                ['Requested', 'Confirmed', 'Checked-In', 'Waiting', 'In-Consultation'].includes(a.status)
+                ['Requested', 'Confirmed', 'Checked-In', 'Waiting', 'In-Consultation'].includes(
+                  a.status
+                )
             ).length
           : 0;
         const patientWaitlistCount = currentPatient
-          ? waitlist.filter((w) => w.patientId === currentPatient.id && w.status === 'active').length
+          ? waitlist.filter((w) => w.patientId === currentPatient.id && w.status === 'active')
+              .length
           : 0;
 
         return [
           { id: 'patient-dashboard', label: 'My Dashboard', icon: LayoutDashboard },
           { id: 'patient-book', label: 'Book Appointment', icon: CalendarPlus },
-          { id: 'patient-appointments', label: 'My Appointments', icon: CalendarCheck2, badge: patientAptCount || undefined },
+          {
+            id: 'patient-appointments',
+            label: 'My Appointments',
+            icon: CalendarCheck2,
+            badge: patientAptCount || undefined,
+          },
           { id: 'patient-records', label: 'Dental History & Rx', icon: FileText },
-          { id: 'patient-waitlist', label: 'My Waitlist', icon: Clock, badge: patientWaitlistCount || undefined }
+          {
+            id: 'patient-waitlist',
+            label: 'My Waitlist',
+            icon: Clock,
+            badge: patientWaitlistCount || undefined,
+          },
         ];
       }
 
@@ -64,12 +72,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         return [
           { id: 'frontdesk-dashboard', label: 'Reception Overview', icon: LayoutDashboard },
-          { id: 'frontdesk-waiting-room', label: 'Waiting Room Queue', icon: Clock, badge: waitingCount || undefined },
+          {
+            id: 'frontdesk-waiting-room',
+            label: 'Waiting Room Queue',
+            icon: Clock,
+            badge: waitingCount || undefined,
+          },
           { id: 'frontdesk-appointments', label: 'Appointment Day Flow', icon: CalendarCheck2 },
           { id: 'frontdesk-search', label: 'Patient Directory', icon: Users },
           { id: 'frontdesk-billing', label: 'Payments & Insurance', icon: CreditCard },
           { id: 'frontdesk-exceptions', label: 'Exception Flows', icon: AlertTriangle },
-          { id: 'frontdesk-reports', label: 'Front Desk Reports', icon: BarChart3 }
+          { id: 'frontdesk-reports', label: 'Front Desk Reports', icon: BarChart3 },
         ];
       }
 
@@ -78,7 +91,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'dentist-dashboard', label: 'Operatory & Schedule', icon: LayoutDashboard },
           { id: 'dentist-consultation', label: 'Consultation & Exam', icon: Stethoscope },
           { id: 'dentist-records', label: 'Clinical Histories', icon: ClipboardList },
-          { id: 'dentist-schedule', label: 'My Clinic Hours', icon: Clock }
+          { id: 'dentist-schedule', label: 'My Clinic Hours', icon: Clock },
         ];
 
       case 'admin':
@@ -87,10 +100,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'admin-users', label: 'User Directory', icon: Users },
           { id: 'admin-services', label: 'Dental Services', icon: Sparkles },
           { id: 'admin-schedules', label: 'Dentist Schedules', icon: Clock },
-          { id: 'admin-waitlist', label: 'Waitlist Engine', icon: CalendarPlus, badge: waitlist.filter((w) => w.status === 'active').length || undefined },
+          {
+            id: 'admin-waitlist',
+            label: 'Waitlist Engine',
+            icon: CalendarPlus,
+            badge: waitlist.filter((w) => w.status === 'active').length || undefined,
+          },
           { id: 'admin-audit', label: 'Audit Trail', icon: ShieldCheck },
           { id: 'admin-reports', label: 'Reports & Export', icon: BarChart3 },
-          { id: 'admin-settings', label: 'Clinic Settings', icon: Settings }
+          { id: 'admin-settings', label: 'Clinic Settings', icon: Settings },
         ];
     }
   };
@@ -116,10 +134,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {activeUser.role === 'patient'
             ? 'Patient Services'
             : activeUser.role === 'front_desk'
-            ? 'Reception Desk'
-            : activeUser.role === 'dentist'
-            ? 'Clinical Workspace'
-            : 'Administration'}
+              ? 'Reception Desk'
+              : activeUser.role === 'dentist'
+                ? 'Clinical Workspace'
+                : 'Administration'}
         </div>
 
         <nav className="space-y-1.5 flex-1">
@@ -141,7 +159,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
+                  <Icon
+                    className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`}
+                  />
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && (

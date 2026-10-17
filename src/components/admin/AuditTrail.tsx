@@ -32,7 +32,10 @@ export const AuditTrail: React.FC<AuditTrailProps> = ({ auditLogs, onExportCSV }
       <div className="border-b border-slate-300/40 pb-3 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-bold text-slate-800">Immutable Audit Trail</h3>
-          <p className="text-xs text-slate-500">Every state change, reschedule, cancellation, no-show, and payment is permanently timestamped.</p>
+          <p className="text-xs text-slate-500">
+            Every state change, reschedule, cancellation, no-show, and payment is permanently
+            timestamped.
+          </p>
         </div>
         <span className="inline-flex items-center gap-1.5 whitespace-nowrap select-none font-medium px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100/80 text-blue-700 border border-blue-200/60 shadow-xs">
           <span>{filteredLogs.length} Events</span>

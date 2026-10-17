@@ -67,7 +67,7 @@ export const exportVisitsCSV = (
     'Dentist',
     'Duration (mins)',
     'Est. Fee (₱)',
-    'Status'
+    'Status',
   ];
   const rows = myAppointments.map((apt) => {
     const s = services.find((srv) => srv.id === apt.serviceId);
@@ -80,7 +80,7 @@ export const exportVisitsCSV = (
       `"Dr. ${d?.fullName || ''}"`,
       s?.durationMinutes || 30,
       s?.price || 0,
-      apt.status
+      apt.status,
     ].join(',');
   });
 
@@ -88,7 +88,10 @@ export const exportVisitsCSV = (
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement('a');
   link.setAttribute('href', encodedUri);
-  link.setAttribute('download', `DentCare-Records-${currentPatient.patientNumber || 'patient'}.csv`);
+  link.setAttribute(
+    'download',
+    `DentCare-Records-${currentPatient.patientNumber || 'patient'}.csv`
+  );
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -126,7 +129,7 @@ export const toothNames: Record<number, string> = {
   29: 'Lower Right 2nd Premolar',
   30: 'Lower Right 1st Molar',
   31: 'Lower Right 2nd Molar',
-  32: 'Lower Right 3rd Molar (Wisdom)'
+  32: 'Lower Right 3rd Molar (Wisdom)',
 };
 
 export const defaultTeethConditions: Record<
@@ -135,18 +138,19 @@ export const defaultTeethConditions: Record<
 > = {
   14: {
     status: 'filling',
-    notes: 'Class I Occlusal composite restoration placed by Dr. Marcus Vance, DDS. Natural aesthetic shading (A2), marginal seal intact.'
+    notes:
+      'Class I Occlusal composite restoration placed by Dr. Marcus Vance, DDS. Natural aesthetic shading (A2), marginal seal intact.',
   },
   3: {
     status: 'healthy',
-    notes: 'Healthy tooth with intact fissure sealants. No tenderness or mobility.'
+    notes: 'Healthy tooth with intact fissure sealants. No tenderness or mobility.',
   },
   19: {
     status: 'healthy',
-    notes: 'Probing depths within normal 2-3mm physiological limits. No bleeding.'
+    notes: 'Probing depths within normal 2-3mm physiological limits. No bleeding.',
   },
   30: {
     status: 'healthy',
-    notes: 'Superficial anatomical staining on buccal pit, remineralization counseling provided.'
-  }
+    notes: 'Superficial anatomical staining on buccal pit, remineralization counseling provided.',
+  },
 };

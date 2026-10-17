@@ -34,7 +34,7 @@ export const DentistDashboard: React.FC<DentistDashboardProps> = ({
   onNavigateToExceptions,
   onNavigateToReports,
   activeConsultationAptId,
-  onCompleteConsultation
+  onCompleteConsultation,
 }) => {
   const currentView =
     activeTab === 'dentist-consultation'
@@ -69,16 +69,8 @@ export const DentistDashboard: React.FC<DentistDashboardProps> = ({
   }
 
   if (currentView === 'my-clinic-hours') {
-    return (
-      <MyClinicHours
-        onNavigateToOperatory={() => onSelectTab('dentist-dashboard')}
-      />
-    );
+    return <MyClinicHours onNavigateToOperatory={() => onSelectTab('dentist-dashboard')} />;
   }
 
-  return (
-    <OperatoryAndSchedule
-      onStartConsultation={onStartConsultation}
-    />
-  );
+  return <OperatoryAndSchedule onStartConsultation={onStartConsultation} />;
 };

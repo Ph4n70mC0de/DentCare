@@ -24,8 +24,12 @@ export const ClinicSettings: React.FC<ClinicSettingsProps> = ({ settings, onSave
   return (
     <NeoCard className="space-y-6">
       <div className="border-b border-slate-300/40 pb-3">
-        <h3 className="text-sm font-bold text-slate-800">Clinic Operational Rules & Automation Buffers</h3>
-        <p className="text-xs text-slate-500">Fine-tune reminder timings, no-show restriction thresholds, and emergency buffers.</p>
+        <h3 className="text-sm font-bold text-slate-800">
+          Clinic Operational Rules & Automation Buffers
+        </h3>
+        <p className="text-xs text-slate-500">
+          Fine-tune reminder timings, no-show restriction thresholds, and emergency buffers.
+        </p>
       </div>
 
       {settingsSaved && (
@@ -68,21 +72,30 @@ export const ClinicSettings: React.FC<ClinicSettingsProps> = ({ settings, onSave
               label="Advance Reminder Lead Time (Hours)"
               type="number"
               value={settingsForm.reminderLeadHours}
-              onChange={(e) => setSettingsForm({ ...settingsForm, reminderLeadHours: Number(e.target.value) })}
+              onChange={(e) =>
+                setSettingsForm({ ...settingsForm, reminderLeadHours: Number(e.target.value) })
+              }
               helperText="Default: 24h SMS/Email reminder dispatch"
             />
             <NeoInput
               label="No-Show Policy Lock Threshold (Count)"
               type="number"
               value={settingsForm.maxNoShowsBeforeLock}
-              onChange={(e) => setSettingsForm({ ...settingsForm, maxNoShowsBeforeLock: Number(e.target.value) })}
+              onChange={(e) =>
+                setSettingsForm({ ...settingsForm, maxNoShowsBeforeLock: Number(e.target.value) })
+              }
               helperText="Strikes before patient requires staff confirmation"
             />
             <NeoInput
               label="Emergency Buffer Auto-Shift (Minutes)"
               type="number"
               value={settingsForm.emergencyBufferShiftMinutes}
-              onChange={(e) => setSettingsForm({ ...settingsForm, emergencyBufferShiftMinutes: Number(e.target.value) })}
+              onChange={(e) =>
+                setSettingsForm({
+                  ...settingsForm,
+                  emergencyBufferShiftMinutes: Number(e.target.value),
+                })
+              }
               helperText="Time added to waiting patients during emergency"
             />
           </div>

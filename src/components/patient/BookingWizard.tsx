@@ -15,7 +15,7 @@ import {
   Mail,
   HeartPulse,
   Share2,
-  UserCheck
+  UserCheck,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -41,7 +41,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   onViewAppointments,
   initialServiceId,
   initialDentistId,
-  initialPatientId
+  initialPatientId,
 }) => {
   const {
     patients,
@@ -55,7 +55,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     getAlternativeDates,
     currentPatient,
     activeUser,
-    confirmPatientBookingEligibility
+    confirmPatientBookingEligibility,
   } = useDentalStore();
 
   const preselectedPat = initialPatientId
@@ -67,9 +67,13 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
 
   // Form State
   const [isReturning, setIsReturning] = useState<boolean>(true);
-  const [searchQuery, setSearchQuery] = useState<string>(preselectedPat ? preselectedPat.email : '');
+  const [searchQuery, setSearchQuery] = useState<string>(
+    preselectedPat ? preselectedPat.email : ''
+  );
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(preselectedPat || null);
-  const [bookingSource, setBookingSource] = useState<BookingSource>(activeUser.role === 'patient' ? 'app' : 'phone_call');
+  const [bookingSource, setBookingSource] = useState<BookingSource>(
+    activeUser.role === 'patient' ? 'app' : 'phone_call'
+  );
 
   // New Patient Registration Fields
   const [regForm, setRegForm] = useState({
@@ -84,18 +88,24 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     emergencyRelationship: 'Family',
     emergencyPhone: '',
     allergies: '',
-    medicalAlerts: ''
+    medicalAlerts: '',
   });
 
-  const [selectedServiceId, setSelectedServiceId] = useState<string>(initialServiceId || services[0]?.id || '');
-  const [selectedDentistId, setSelectedDentistId] = useState<string>(initialDentistId || dentists[0]?.id || '');
+  const [selectedServiceId, setSelectedServiceId] = useState<string>(
+    initialServiceId || services[0]?.id || ''
+  );
+  const [selectedDentistId, setSelectedDentistId] = useState<string>(
+    initialDentistId || dentists[0]?.id || ''
+  );
   const [selectedDate, setSelectedDate] = useState<string>(getOffsetDateString(1));
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [patientNotes, setPatientNotes] = useState<string>('');
 
   // Waitlist Fallback State
   const [showWaitlistOption, setShowWaitlistOption] = useState<boolean>(false);
-  const [waitlistTimeRange, setWaitlistTimeRange] = useState<'morning' | 'afternoon' | 'any'>('any');
+  const [waitlistTimeRange, setWaitlistTimeRange] = useState<'morning' | 'afternoon' | 'any'>(
+    'any'
+  );
   const [waitlistSubmitted, setWaitlistSubmitted] = useState<boolean>(false);
 
   // Completed appointment
@@ -108,14 +118,16 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   const selectedDentist = dentists.find((d) => d.id === selectedDentistId) || dentists[0];
 
   // Dynamic slot availability calculation
-  const availableSlots = selectedDentistId && selectedDate && selectedService
-    ? getAvailableSlotsForDate(selectedDentistId, selectedDate, selectedService.durationMinutes)
-    : [];
+  const availableSlots =
+    selectedDentistId && selectedDate && selectedService
+      ? getAvailableSlotsForDate(selectedDentistId, selectedDate, selectedService.durationMinutes)
+      : [];
 
   const freeSlotsCount = availableSlots.filter((s) => s.available).length;
-  const alternativeDates = freeSlotsCount === 0 && selectedDentistId && selectedService
-    ? getAlternativeDates(selectedDentistId, selectedDate, selectedService.durationMinutes, 3)
-    : [];
+  const alternativeDates =
+    freeSlotsCount === 0 && selectedDentistId && selectedService
+      ? getAlternativeDates(selectedDentistId, selectedDate, selectedService.durationMinutes, 3)
+      : [];
 
   // Lookup returning patient
   const handleLookupPatient = () => {
@@ -134,12 +146,16 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
 
     if (found) {
       if (found.requiresStaffReviewForBooking) {
-        setErrorMsg(`Notice: Record #${found.patientNumber} has ${found.noShowCount} recorded no-shows. Clinic policy requires front-desk confirmation before the next booking can be finalized.`);
+        setErrorMsg(
+          `Notice: Record #${found.patientNumber} has ${found.noShowCount} recorded no-shows. Clinic policy requires front-desk confirmation before the next booking can be finalized.`
+        );
       }
       setSelectedPatient(found);
       setStep(3); // Proceed directly to service selection!
     } else {
-      setErrorMsg('No existing patient record found with that information. Please register as a new patient.');
+      setErrorMsg(
+        'No existing patient record found with that information. Please register as a new patient.'
+      );
     }
   };
 
@@ -160,14 +176,19 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
         dateOfBirth: regForm.dateOfBirth,
         sex: regForm.sex,
         address: regForm.address || 'Metro Area',
-        identificationReference: regForm.identificationReference || `ID-${Math.floor(100000 + Math.random() * 900000)}`,
+        identificationReference:
+          regForm.identificationReference || `ID-${Math.floor(100000 + Math.random() * 900000)}`,
         emergencyContact: {
           name: regForm.emergencyName || 'Primary Contact',
           relationship: regForm.emergencyRelationship,
-          phone: regForm.emergencyPhone || regForm.phone
+          phone: regForm.emergencyPhone || regForm.phone,
         },
-        allergies: regForm.allergies ? regForm.allergies.split(',').map((s) => s.trim()) : ['None declared'],
-        medicalAlerts: regForm.medicalAlerts ? regForm.medicalAlerts.split(',').map((s) => s.trim()) : []
+        allergies: regForm.allergies
+          ? regForm.allergies.split(',').map((s) => s.trim())
+          : ['None declared'],
+        medicalAlerts: regForm.medicalAlerts
+          ? regForm.medicalAlerts.split(',').map((s) => s.trim())
+          : [],
       });
 
       setSelectedPatient(newPat);
@@ -179,12 +200,20 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
 
   // Confirm booking
   const handleConfirmBooking = () => {
-    if (!selectedPatient || !selectedDentistId || !selectedServiceId || !selectedDate || !selectedTime) {
+    if (
+      !selectedPatient ||
+      !selectedDentistId ||
+      !selectedServiceId ||
+      !selectedDate ||
+      !selectedTime
+    ) {
       setErrorMsg('Missing required booking details. Please verify all steps.');
       return;
     }
     if (selectedPatient.requiresStaffReviewForBooking) {
-      setErrorMsg('This patient requires staff confirmation before the next booking can be finalized.');
+      setErrorMsg(
+        'This patient requires staff confirmation before the next booking can be finalized.'
+      );
       return;
     }
 
@@ -196,7 +225,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
         date: selectedDate,
         startTime: selectedTime,
         notes: patientNotes,
-        bookingSource
+        bookingSource,
       });
 
       setConfirmedAppointment(apt);
@@ -220,7 +249,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
       preferredDate: selectedDate,
       preferredTimeRange: waitlistTimeRange,
       priority: 'normal',
-      notes: `Joined waitlist via booking wizard for ${selectedDate}`
+      notes: `Joined waitlist via booking wizard for ${selectedDate}`,
     });
 
     setWaitlistSubmitted(true);
@@ -264,7 +293,7 @@ END:VCALENDAR`;
             { num: 4, label: 'Dentist' },
             { num: 5, label: 'Date & Time' },
             { num: 6, label: 'Review' },
-            { num: 7, label: 'Confirmed' }
+            { num: 7, label: 'Confirmed' },
           ].map((s) => {
             const isDone = step > s.num;
             const isCurrent = step === s.num;
@@ -272,7 +301,11 @@ END:VCALENDAR`;
               <div
                 key={s.num}
                 className={`flex items-center gap-2 shrink-0 ${
-                  isCurrent ? 'text-blue-700 font-extrabold' : isDone ? 'text-emerald-700' : 'text-slate-400'
+                  isCurrent
+                    ? 'text-blue-700 font-extrabold'
+                    : isDone
+                      ? 'text-emerald-700'
+                      : 'text-slate-400'
                 }`}
               >
                 <div
@@ -280,14 +313,16 @@ END:VCALENDAR`;
                     isCurrent
                       ? 'neo-inset text-blue-700 font-black'
                       : isDone
-                      ? 'bg-emerald-500 text-white shadow-xs'
-                      : 'neo-raised text-slate-400'
+                        ? 'bg-emerald-500 text-white shadow-xs'
+                        : 'neo-raised text-slate-400'
                   }`}
                 >
                   {isDone ? <CheckCircle2 className="w-4 h-4" /> : s.num}
                 </div>
                 <span className="hidden sm:inline">{s.label}</span>
-                {s.num < 7 && <ChevronRight className="w-3.5 h-3.5 text-slate-300 hidden md:block" />}
+                {s.num < 7 && (
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 hidden md:block" />
+                )}
               </div>
             );
           })}
@@ -337,7 +372,8 @@ END:VCALENDAR`;
               </div>
               <h4 className="font-bold text-slate-800 text-base">Returning Patient</h4>
               <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                I have visited before. Pull up my existing medical history, dental records, and profile.
+                I have visited before. Pull up my existing medical history, dental records, and
+                profile.
               </p>
             </div>
 
@@ -362,8 +398,13 @@ END:VCALENDAR`;
           {selectedPatient?.requiresStaffReviewForBooking && (
             <div className="neo-raised p-4 rounded-2xl border-l-4 border-rose-500 bg-rose-50/70 space-y-3">
               <div>
-                <p className="text-sm font-extrabold text-rose-900">Staff confirmation required before the next booking</p>
-                <p className="text-xs text-rose-800 mt-1">This patient has a recorded no-show. The flowchart requires front-desk confirmation before another appointment can be booked.</p>
+                <p className="text-sm font-extrabold text-rose-900">
+                  Staff confirmation required before the next booking
+                </p>
+                <p className="text-xs text-rose-800 mt-1">
+                  This patient has a recorded no-show. The flowchart requires front-desk
+                  confirmation before another appointment can be booked.
+                </p>
               </div>
               {['front_desk', 'admin'].includes(activeUser.role) ? (
                 <NeoButton
@@ -377,7 +418,9 @@ END:VCALENDAR`;
                   Confirm Next Booking Eligibility
                 </NeoButton>
               ) : (
-                <p className="text-xs font-bold text-rose-700">Please contact the front desk to confirm eligibility before booking.</p>
+                <p className="text-xs font-bold text-rose-700">
+                  Please contact the front desk to confirm eligibility before booking.
+                </p>
               )}
             </div>
           )}
@@ -391,20 +434,22 @@ END:VCALENDAR`;
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-800">{selectedPatient.fullName}</span>
-                    <NeoBadge variant="primary" size="sm">Active Profile</NeoBadge>
+                    <span className="text-sm font-bold text-slate-800">
+                      {selectedPatient.fullName}
+                    </span>
+                    <NeoBadge variant="primary" size="sm">
+                      Active Profile
+                    </NeoBadge>
                   </div>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Record ID: {selectedPatient.patientNumber} • {selectedPatient.email} • {selectedPatient.phone}
+                    Record ID: {selectedPatient.patientNumber} • {selectedPatient.email} •{' '}
+                    {selectedPatient.phone}
                   </p>
                 </div>
               </div>
-              <NeoButton
-                variant="primary"
-                size="sm"
-                onClick={() => setStep(3)}
-              >
-                Continue as {selectedPatient.fullName.split(' ')[0]} <ChevronRight className="w-4 h-4 ml-1" />
+              <NeoButton variant="primary" size="sm" onClick={() => setStep(3)}>
+                Continue as {selectedPatient.fullName.split(' ')[0]}{' '}
+                <ChevronRight className="w-4 h-4 ml-1" />
               </NeoButton>
             </div>
           )}
@@ -412,7 +457,9 @@ END:VCALENDAR`;
           {isReturning ? (
             <div className="neo-inset p-5 rounded-2xl space-y-3">
               <h5 className="text-xs font-bold text-slate-700">
-                {selectedPatient ? 'Or Search For Another Patient Record' : 'Find Your Patient Record'}
+                {selectedPatient
+                  ? 'Or Search For Another Patient Record'
+                  : 'Find Your Patient Record'}
               </h5>
               <div className="flex flex-col sm:flex-row gap-3">
                 <NeoInput
@@ -427,7 +474,8 @@ END:VCALENDAR`;
                 </NeoButton>
               </div>
               <p className="text-[11px] text-slate-500">
-                💡 Demo quick test: Search <strong>james.wilson@example.com</strong> or <strong>emily.chen@example.com</strong>
+                💡 Demo quick test: Search <strong>james.wilson@example.com</strong> or{' '}
+                <strong>emily.chen@example.com</strong>
               </p>
             </div>
           ) : (
@@ -489,7 +537,9 @@ END:VCALENDAR`;
                 <NeoSelect
                   label="Biological Sex"
                   value={regForm.sex}
-                  onChange={(e) => setRegForm({ ...regForm, sex: e.target.value as 'Male' | 'Female' | 'Other' })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, sex: e.target.value as 'Male' | 'Female' | 'Other' })
+                  }
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -506,7 +556,9 @@ END:VCALENDAR`;
                 label="Government ID / Reference #"
                 placeholder="e.g. ID-482-19-002"
                 value={regForm.identificationReference}
-                onChange={(e) => setRegForm({ ...regForm, identificationReference: e.target.value })}
+                onChange={(e) =>
+                  setRegForm({ ...regForm, identificationReference: e.target.value })
+                }
               />
             </div>
 
@@ -523,7 +575,9 @@ END:VCALENDAR`;
                 <NeoInput
                   placeholder="Relationship (e.g. Spouse)"
                   value={regForm.emergencyRelationship}
-                  onChange={(e) => setRegForm({ ...regForm, emergencyRelationship: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, emergencyRelationship: e.target.value })
+                  }
                 />
                 <NeoInput
                   placeholder="Emergency Phone"
@@ -568,9 +622,7 @@ END:VCALENDAR`;
               <div className="flex items-center gap-2">
                 <h3 className="text-xl font-bold text-slate-800">Step 3: Select Dental Service</h3>
                 {selectedPatient && (
-                  <NeoBadge variant="primary">
-                    Patient: {selectedPatient.fullName}
-                  </NeoBadge>
+                  <NeoBadge variant="primary">Patient: {selectedPatient.fullName}</NeoBadge>
                 )}
               </div>
               <p className="text-xs text-slate-500 mt-1">
@@ -583,41 +635,49 @@ END:VCALENDAR`;
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {services.filter((s) => s.active).map((service) => {
-              const isSelected = selectedServiceId === service.id;
-              return (
-                <div
-                  key={service.id}
-                  onClick={() => setSelectedServiceId(service.id)}
-                  className={`p-5 rounded-3xl cursor-pointer transition-all ${
-                    isSelected
-                      ? 'neo-inset border-2 border-blue-500/50 bg-[#E8EEF5]'
-                      : 'neo-raised hover:-translate-y-1'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className={`p-2.5 rounded-2xl ${isSelected ? 'bg-blue-600 text-white' : 'neo-raised text-blue-600'}`}>
-                        <Sparkles className="w-5 h-5" />
+            {services
+              .filter((s) => s.active)
+              .map((service) => {
+                const isSelected = selectedServiceId === service.id;
+                return (
+                  <div
+                    key={service.id}
+                    onClick={() => setSelectedServiceId(service.id)}
+                    className={`p-5 rounded-3xl cursor-pointer transition-all ${
+                      isSelected
+                        ? 'neo-inset border-2 border-blue-500/50 bg-[#E8EEF5]'
+                        : 'neo-raised hover:-translate-y-1'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`p-2.5 rounded-2xl ${isSelected ? 'bg-blue-600 text-white' : 'neo-raised text-blue-600'}`}
+                        >
+                          <Sparkles className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-sm">{service.name}</h4>
+                          <span className="text-[11px] font-semibold text-slate-500">
+                            {service.category}
+                          </span>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-sm">{service.name}</h4>
-                        <span className="text-[11px] font-semibold text-slate-500">
-                          {service.category}
+                      <div className="text-right shrink-0">
+                        <span className="text-base font-extrabold text-blue-700">
+                          ₱{service.price}
                         </span>
+                        <p className="text-[10px] text-slate-400 font-semibold">
+                          {service.durationMinutes} mins
+                        </p>
                       </div>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="text-base font-extrabold text-blue-700">₱{service.price}</span>
-                      <p className="text-[10px] text-slate-400 font-semibold">{service.durationMinutes} mins</p>
-                    </div>
+                    <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      {service.description}
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-600 mt-3 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-slate-300/40">
@@ -638,7 +698,8 @@ END:VCALENDAR`;
             <div>
               <h3 className="text-xl font-bold text-slate-800">Step 4: Select Dentist</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Choose your practitioner or select the specialist recommended for {selectedService.name}.
+                Choose your practitioner or select the specialist recommended for{' '}
+                {selectedService.name}.
               </p>
             </div>
             <NeoButton size="sm" variant="default" onClick={() => setStep(3)}>
@@ -661,18 +722,30 @@ END:VCALENDAR`;
                 >
                   <div className="w-14 h-14 rounded-2xl neo-raised overflow-hidden shrink-0 bg-blue-100 flex items-center justify-center">
                     {dentist.avatarUrl ? (
-                      <img src={dentist.avatarUrl} alt={dentist.fullName} className="w-full h-full object-cover" />
+                      <img
+                        src={dentist.avatarUrl}
+                        alt={dentist.fullName}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <User className="w-7 h-7 text-blue-600" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
-                      <h4 className="font-bold text-slate-800 text-sm truncate">{dentist.fullName}</h4>
-                      <NeoBadge variant="success" size="sm">Available</NeoBadge>
+                      <h4 className="font-bold text-slate-800 text-sm truncate">
+                        {dentist.fullName}
+                      </h4>
+                      <NeoBadge variant="success" size="sm">
+                        Available
+                      </NeoBadge>
                     </div>
-                    <p className="text-xs font-semibold text-blue-700 mt-0.5">{dentist.specialization}</p>
-                    <p className="text-[11px] text-slate-500 mt-1">License: {dentist.licenseReference}</p>
+                    <p className="text-xs font-semibold text-blue-700 mt-0.5">
+                      {dentist.specialization}
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      License: {dentist.licenseReference}
+                    </p>
                   </div>
                 </div>
               );
@@ -697,7 +770,8 @@ END:VCALENDAR`;
             <div>
               <h3 className="text-xl font-bold text-slate-800">Step 5: Real-Time Availability</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Checking schedule for {selectedDentist.fullName} ({selectedService.durationMinutes} min procedure).
+                Checking schedule for {selectedDentist.fullName} ({selectedService.durationMinutes}{' '}
+                min procedure).
               </p>
             </div>
             <NeoButton size="sm" variant="default" onClick={() => setStep(4)}>
@@ -747,7 +821,8 @@ END:VCALENDAR`;
                   <Calendar className="w-8 h-8 text-slate-400 mx-auto" />
                   <p className="text-sm font-bold text-slate-700">No Clinic Slots on this Date</p>
                   <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                    The dentist is either off-duty, attending continuing education, or the clinic is closed on {selectedDate}.
+                    The dentist is either off-duty, attending continuing education, or the clinic is
+                    closed on {selectedDate}.
                   </p>
                 </div>
               ) : (
@@ -798,7 +873,9 @@ END:VCALENDAR`;
 
                   {alternativeDates.length > 0 && (
                     <div>
-                      <p className="text-xs text-slate-600 font-medium">Recommended alternative dates with open slots:</p>
+                      <p className="text-xs text-slate-600 font-medium">
+                        Recommended alternative dates with open slots:
+                      </p>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {alternativeDates.map((altDate) => (
                           <button
@@ -818,7 +895,8 @@ END:VCALENDAR`;
 
                   <div className="pt-2 border-t border-slate-300/40">
                     <p className="text-xs text-slate-600">
-                      Or join the priority cancellation waitlist to be automatically notified if a patient cancels:
+                      Or join the priority cancellation waitlist to be automatically notified if a
+                      patient cancels:
                     </p>
                     <NeoButton
                       size="sm"
@@ -853,12 +931,15 @@ END:VCALENDAR`;
               {waitlistSubmitted ? (
                 <div className="p-3 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Successfully enrolled in waitlist! You will receive an SMS and in-app alert when a slot opens.
+                  Successfully enrolled in waitlist! You will receive an SMS and in-app alert when a
+                  slot opens.
                 </div>
               ) : (
                 <div className="space-y-3">
                   <p className="text-xs text-slate-600">
-                    If another patient cancels or reschedules on <strong>{selectedDate}</strong>, our automated triage engine will dispatch immediate alert notifications to your phone and email.
+                    If another patient cancels or reschedules on <strong>{selectedDate}</strong>,
+                    our automated triage engine will dispatch immediate alert notifications to your
+                    phone and email.
                   </p>
                   <div className="flex gap-2">
                     {(['morning', 'afternoon', 'any'] as const).map((range) => (
@@ -887,11 +968,7 @@ END:VCALENDAR`;
             <NeoButton variant="default" onClick={() => setStep(4)}>
               <ChevronLeft className="w-4 h-4 mr-1" /> Back
             </NeoButton>
-            <NeoButton
-              variant="primary"
-              disabled={!selectedTime}
-              onClick={() => setStep(6)}
-            >
+            <NeoButton variant="primary" disabled={!selectedTime} onClick={() => setStep(6)}>
               Review Booking <ChevronRight className="w-4 h-4 ml-1" />
             </NeoButton>
           </div>
@@ -920,8 +997,12 @@ END:VCALENDAR`;
                   Patient Summary
                 </span>
                 <p className="text-sm font-bold text-slate-800">{selectedPatient?.fullName}</p>
-                <p className="text-xs text-slate-600">{selectedPatient?.phone} • {selectedPatient?.email}</p>
-                <p className="text-xs text-slate-500">Record ID: {selectedPatient?.patientNumber}</p>
+                <p className="text-xs text-slate-600">
+                  {selectedPatient?.phone} • {selectedPatient?.email}
+                </p>
+                <p className="text-xs text-slate-500">
+                  Record ID: {selectedPatient?.patientNumber}
+                </p>
               </div>
 
               <div className="p-4 rounded-2xl neo-inset space-y-2">
@@ -931,7 +1012,8 @@ END:VCALENDAR`;
                 <p className="text-sm font-bold text-slate-800">{selectedDentist.fullName}</p>
                 <p className="text-xs text-blue-700 font-semibold">{selectedService.name}</p>
                 <p className="text-xs text-slate-500">
-                  Duration: {selectedService.durationMinutes} mins • Estimated Fee: ₱{selectedService.price}
+                  Duration: {selectedService.durationMinutes} mins • Estimated Fee: ₱
+                  {selectedService.price}
                 </p>
               </div>
             </div>
@@ -967,8 +1049,14 @@ END:VCALENDAR`;
 
           <div className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] text-xs text-slate-600 space-y-1">
             <p className="font-bold text-slate-800">Clinic Cancellation & Arrival Policy:</p>
-            <p>• Please arrive 10 minutes prior to your time slot for check-in and identity verification.</p>
-            <p>• Cancellations must be made at least 24 hours in advance to release the slot for waitlisted patients.</p>
+            <p>
+              • Please arrive 10 minutes prior to your time slot for check-in and identity
+              verification.
+            </p>
+            <p>
+              • Cancellations must be made at least 24 hours in advance to release the slot for
+              waitlisted patients.
+            </p>
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-slate-300/40">
@@ -1017,7 +1105,8 @@ END:VCALENDAR`;
             <div className="flex justify-between border-b border-slate-300/40 pb-2">
               <span className="text-slate-500">Scheduled Time</span>
               <span className="font-bold text-blue-700">
-                {confirmedAppointment.date} at {confirmedAppointment.startTime} - {confirmedAppointment.endTime}
+                {confirmedAppointment.date} at {confirmedAppointment.startTime} -{' '}
+                {confirmedAppointment.endTime}
               </span>
             </div>
             <div className="flex justify-between">

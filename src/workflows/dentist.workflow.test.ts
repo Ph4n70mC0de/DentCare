@@ -21,13 +21,13 @@ describe('Dentist Workflows', () => {
 
   describe('Schedule & Clinic Hours', () => {
     it('verifies assigned schedule for current dentist', () => {
-      const dentist = dentalStore.getDentists().find(d => d.userId === 'user-dentist-1');
+      const dentist = dentalStore.getDentists().find((d) => d.userId === 'user-dentist-1');
       expect(dentist).toBeDefined();
       expect(dentist?.fullName).toBe('Dr. Marcus Vance, DDS');
 
-      const schedules = dentalStore.getSchedules().filter(s => s.dentistId === dentist?.id);
+      const schedules = dentalStore.getSchedules().filter((s) => s.dentistId === dentist?.id);
       expect(schedules.length).toBe(5); // Mon-Fri
-      schedules.forEach(s => {
+      schedules.forEach((s) => {
         expect(s.startTime).toBe('08:30');
         expect(s.endTime).toBe('17:30');
         expect(s.breakStart).toBe('12:30');
@@ -36,20 +36,21 @@ describe('Dentist Workflows', () => {
     });
 
     it('gets available slots for a date', () => {
-      const dentist = dentalStore.getDentists().find(d => d.userId === 'user-dentist-1');
-      const today = new Date().toISOString().split('T')[0];
+      const dentist = dentalStore.getDentists().find((d) => d.userId === 'user-dentist-1');
+      // Use a fixed weekday so the test is deterministic regardless of when it runs.
+      const date = '2026-10-19'; // Monday
 
-      const slots = dentalStore.getAvailableSlotsForDate(dentist!.id, today, 45);
+      const slots = dentalStore.getAvailableSlotsForDate(dentist!.id, date, 45);
 
       expect(slots.length).toBeGreaterThan(0);
-      slots.forEach(slot => {
+      slots.forEach((slot) => {
         expect(slot).toHaveProperty('time');
         expect(slot).toHaveProperty('available');
       });
     });
 
     it('excludes blocked dates from availability', () => {
-      const dentist = dentalStore.getDentists().find(d => d.userId === 'user-dentist-1');
+      const dentist = dentalStore.getDentists().find((d) => d.userId === 'user-dentist-1');
       const blockedDate = '2026-09-25'; // Blocked in seed data
 
       const slots = dentalStore.getAvailableSlotsForDate(dentist!.id, blockedDate, 45);
@@ -57,10 +58,10 @@ describe('Dentist Workflows', () => {
     });
 
     it('finds alternative dates when requested date has no slots', () => {
-      const dentist = dentalStore.getDentists().find(d => d.userId === 'user-dentist-1');
-      const today = new Date().toISOString().split('T')[0];
+      const dentist = dentalStore.getDentists().find((d) => d.userId === 'user-dentist-1');
+      const date = '2026-10-19'; // Monday
 
-      const alternatives = dentalStore.getAlternativeDates(dentist!.id, today, 45, 3);
+      const alternatives = dentalStore.getAlternativeDates(dentist!.id, date, 45, 3);
       expect(alternatives.length).toBeGreaterThan(0);
       expect(alternatives.length).toBeLessThanOrEqual(3);
     });
@@ -68,15 +69,17 @@ describe('Dentist Workflows', () => {
 
   describe('Patient Record Access', () => {
     it('opens only permitted patient records (assigned appointments)', () => {
-      const appointments = dentalStore.getAppointments().filter(
-        a => a.dentistId === 'dentist-1' && a.status !== 'Cancelled' && a.status !== 'No-Show'
-      );
+      const appointments = dentalStore
+        .getAppointments()
+        .filter(
+          (a) => a.dentistId === 'dentist-1' && a.status !== 'Cancelled' && a.status !== 'No-Show'
+        );
 
-      const patientIds = [...new Set(appointments.map(a => a.patientId))];
-      const patients = dentalStore.getPatients().filter(p => patientIds.includes(p.id));
+      const patientIds = [...new Set(appointments.map((a) => a.patientId))];
+      const patients = dentalStore.getPatients().filter((p) => patientIds.includes(p.id));
 
       expect(patients.length).toBeGreaterThan(0);
-      patients.forEach(p => {
+      patients.forEach((p) => {
         expect(p).toHaveProperty('fullName');
         expect(p).toHaveProperty('medicalAlerts');
         expect(p).toHaveProperty('allergies');
@@ -84,7 +87,7 @@ describe('Dentist Workflows', () => {
     });
 
     it('shows patient medical alerts and allergies', () => {
-      const patient = dentalStore.getPatients().find(p => p.id === 'pat-002'); // Emily - has alerts/allergies
+      const patient = dentalStore.getPatients().find((p) => p.id === 'pat-002'); // Emily - has alerts/allergies
       expect(patient?.medicalAlerts).toContain('Asthmatic');
       expect(patient?.medicalAlerts).toContain('Sensitive Gums');
       expect(patient?.allergies).toContain('Penicillin');
@@ -92,11 +95,13 @@ describe('Dentist Workflows', () => {
     });
 
     it('shows patient consultation history', () => {
-      const patient = dentalStore.getPatients().find(p => p.id === 'pat-001');
-      const consultations = dentalStore.getConsultations().filter(c => c.patientId === patient?.id);
+      const patient = dentalStore.getPatients().find((p) => p.id === 'pat-001');
+      const consultations = dentalStore
+        .getConsultations()
+        .filter((c) => c.patientId === patient?.id);
 
       expect(consultations.length).toBeGreaterThan(0);
-      consultations.forEach(c => {
+      consultations.forEach((c) => {
         expect(c).toHaveProperty('diagnosis');
         expect(c).toHaveProperty('treatmentPlan');
         expect(c).toHaveProperty('proceduresPerformed');
@@ -209,7 +214,7 @@ describe('Dentist Workflows', () => {
         followUpRecommendation: { required: false, timeframeWeeks: 0, notes: '' },
       });
 
-      const updated = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const updated = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(updated?.status).toBe('Payment-Pending');
     });
   });
@@ -329,7 +334,7 @@ describe('Dentist Workflows', () => {
 
     it('handles stale records (old appointments)', () => {
       const appointments = dentalStore.getAppointments();
-      const oldAppointments = appointments.filter(a => {
+      const oldAppointments = appointments.filter((a) => {
         const aptDate = new Date(a.date);
         const today = new Date();
         return aptDate < today && a.status === 'Confirmed';
@@ -365,7 +370,7 @@ describe('Dentist Workflows', () => {
     });
 
     it('validates appointment slot availability', () => {
-      const dentist = dentalStore.getDentists().find(d => d.id === 'dentist-1');
+      const dentist = dentalStore.getDentists().find((d) => d.id === 'dentist-1');
       const today = new Date().toISOString().split('T')[0];
 
       const isAvailable = dentalStore.isSlotAvailable('dentist-1', today, '09:00', 45);

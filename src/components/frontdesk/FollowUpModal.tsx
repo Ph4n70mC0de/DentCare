@@ -18,7 +18,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
   isOpen,
   onClose,
   originalAppointment,
-  onSuccess
+  onSuccess,
 }) => {
   const {
     patients,
@@ -27,7 +27,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
     consultations,
     createAppointment,
     scheduleFollowUpReminder,
-    getAvailableSlotsForDate
+    getAvailableSlotsForDate,
   } = useDentalStore();
 
   if (!originalAppointment) return null;
@@ -61,7 +61,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
       date,
       startTime: time,
       notes: `Follow-up from #${originalAppointment.appointmentNumber}: ${notes}`,
-      bookingSource: 'online_form'
+      bookingSource: 'online_form',
     });
 
     const remindedApt = scheduleFollowUpReminder(apt.id) || apt;
@@ -96,7 +96,11 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
 
           <h4 className="text-xl font-bold text-slate-800">Follow-Up Successfully Booked!</h4>
           <p className="text-xs text-slate-600 max-w-sm mx-auto">
-            Appointment reference <strong>#{createdApt.appointmentNumber}</strong> confirmed for <strong>{createdApt.date} at {createdApt.startTime}</strong>.
+            Appointment reference <strong>#{createdApt.appointmentNumber}</strong> confirmed for{' '}
+            <strong>
+              {createdApt.date} at {createdApt.startTime}
+            </strong>
+            .
           </p>
 
           <div className="p-3.5 rounded-2xl neo-inset text-xs space-y-1 text-slate-600">
@@ -105,7 +109,8 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
               <span>Automated 24-Hour Reminder Scheduled</span>
             </div>
             <p className="text-[11px] text-slate-500">
-              The system will dispatch an in-app, SMS, and email reminder to {patient?.phone} 24 hours prior to the appointment.
+              The system will dispatch an in-app, SMS, and email reminder to {patient?.phone} 24
+              hours prior to the appointment.
             </p>
           </div>
 
@@ -121,7 +126,13 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
             <div className="p-3.5 rounded-2xl neo-raised bg-blue-50/50 text-xs space-y-1">
               <span className="font-bold text-blue-900 block">Dentist's Recommendation:</span>
               <p className="text-slate-700">
-                Timeframe: <strong>{consultation.followUpRecommendation?.timeframeWeeks ? `${consultation.followUpRecommendation.timeframeWeeks} week(s)` : 'General follow-up'}</strong> • Notes: {consultation.followUpRecommendation?.notes || 'Follow-up exam'}
+                Timeframe:{' '}
+                <strong>
+                  {consultation.followUpRecommendation?.timeframeWeeks
+                    ? `${consultation.followUpRecommendation.timeframeWeeks} week(s)`
+                    : 'General follow-up'}
+                </strong>{' '}
+                • Notes: {consultation.followUpRecommendation?.notes || 'Follow-up exam'}
               </p>
             </div>
           )}
@@ -179,11 +190,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
             <NeoButton variant="default" onClick={handleClose}>
               Skip For Now
             </NeoButton>
-            <NeoButton
-              variant="primary"
-              disabled={!date || !time}
-              onClick={handleBookFollowUp}
-            >
+            <NeoButton variant="primary" disabled={!date || !time} onClick={handleBookFollowUp}>
               Confirm Follow-Up Appointment
             </NeoButton>
           </div>

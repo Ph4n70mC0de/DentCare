@@ -10,7 +10,7 @@ import {
   Activity,
   ArrowRight,
   ShieldAlert,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -25,16 +25,10 @@ interface OperatoryAndScheduleProps {
 }
 
 export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
-  onStartConsultation
+  onStartConsultation,
 }) => {
-  const {
-    activeUser,
-    dentists,
-    appointments,
-    patients,
-    services,
-    updateAppointmentStatus
-  } = useDentalStore();
+  const { activeUser, dentists, appointments, patients, services, updateAppointmentStatus } =
+    useDentalStore();
 
   const today = getTodayDateString();
 
@@ -47,8 +41,12 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
   const activeInChair = myTodayApts.find((a) => a.status === 'In-Consultation');
   const nextWaiting = myTodayApts.find((a) => a.status === 'Waiting' || a.status === 'Emergency');
 
-  const activePatient = activeInChair ? patients.find((p) => p.id === activeInChair.patientId) : null;
-  const activeService = activeInChair ? services.find((s) => s.id === activeInChair.serviceId) : null;
+  const activePatient = activeInChair
+    ? patients.find((p) => p.id === activeInChair.patientId)
+    : null;
+  const activeService = activeInChair
+    ? services.find((s) => s.id === activeInChair.serviceId)
+    : null;
 
   const handleCallToChair = (apt: Appointment) => {
     updateAppointmentStatus(apt.id, 'In-Consultation');
@@ -61,7 +59,11 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl neo-raised overflow-hidden shrink-0 bg-blue-100 flex items-center justify-center">
             {currentDentist.avatarUrl ? (
-              <img src={currentDentist.avatarUrl} alt={currentDentist.fullName} className="w-full h-full object-cover" />
+              <img
+                src={currentDentist.avatarUrl}
+                alt={currentDentist.fullName}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <Stethoscope className="w-7 h-7 text-blue-600" />
             )}
@@ -72,7 +74,8 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
               <NeoBadge variant="primary">{currentDentist.specialization}</NeoBadge>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              License: {currentDentist.licenseReference} • Operatory Chair 1 • Today's Schedule: {today}
+              License: {currentDentist.licenseReference} • Operatory Chair 1 • Today's Schedule:{' '}
+              {today}
             </p>
           </div>
         </div>
@@ -118,19 +121,27 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 text-xs">
             <div className="p-3 rounded-xl neo-inset">
-              <span className="text-slate-400 text-[10px] uppercase font-bold block">Medical Alerts</span>
+              <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                Medical Alerts
+              </span>
               <p className="font-bold text-rose-700">
-                {activePatient.medicalAlerts.length > 0 ? activePatient.medicalAlerts.join(', ') : 'None registered'}
+                {activePatient.medicalAlerts.length > 0
+                  ? activePatient.medicalAlerts.join(', ')
+                  : 'None registered'}
               </p>
             </div>
             <div className="p-3 rounded-xl neo-inset">
-              <span className="text-slate-400 text-[10px] uppercase font-bold block">Known Allergies</span>
+              <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                Known Allergies
+              </span>
               <p className="font-bold text-rose-700">
                 {activePatient.allergies.join(', ') || 'None declared'}
               </p>
             </div>
             <div className="p-3 rounded-xl neo-inset">
-              <span className="text-slate-400 text-[10px] uppercase font-bold block">Appt Time</span>
+              <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                Appt Time
+              </span>
               <p className="font-bold text-slate-800">
                 {activeInChair.startTime} - {activeInChair.endTime}
               </p>
@@ -144,12 +155,15 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
               #{nextWaiting.queueNumber || '1'}
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-indigo-600">Next Patient in Waiting Room</span>
+              <span className="text-[10px] uppercase font-bold text-indigo-600">
+                Next Patient in Waiting Room
+              </span>
               <h4 className="text-base font-bold text-slate-800">
                 {patients.find((p) => p.id === nextWaiting.patientId)?.fullName}
               </h4>
               <p className="text-xs text-slate-500">
-                {services.find((s) => s.id === nextWaiting.serviceId)?.name} • Scheduled {nextWaiting.startTime}
+                {services.find((s) => s.id === nextWaiting.serviceId)?.name} • Scheduled{' '}
+                {nextWaiting.startTime}
               </p>
             </div>
           </div>
@@ -192,7 +206,9 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
                 >
                   <div className="flex items-center gap-4">
                     <div className="text-center shrink-0 w-16">
-                      <span className="font-extrabold text-xs text-slate-900 block">{apt.startTime}</span>
+                      <span className="font-extrabold text-xs text-slate-900 block">
+                        {apt.startTime}
+                      </span>
                       <span className="text-[10px] text-slate-400">{apt.endTime}</span>
                     </div>
 
@@ -204,21 +220,19 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
                       <p className="text-xs text-slate-600 mt-0.5">
                         {service?.name} ({service?.durationMinutes} mins)
                       </p>
-                      {patient?.allergies && patient.allergies.length > 0 && patient.allergies[0] !== 'None declared' && (
-                        <span className="text-[10px] text-rose-700 font-semibold block mt-0.5">
-                          ⚠️ Allergy Alert: {patient.allergies.join(', ')}
-                        </span>
-                      )}
+                      {patient?.allergies &&
+                        patient.allergies.length > 0 &&
+                        patient.allergies[0] !== 'None declared' && (
+                          <span className="text-[10px] text-rose-700 font-semibold block mt-0.5">
+                            ⚠️ Allergy Alert: {patient.allergies.join(', ')}
+                          </span>
+                        )}
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2 self-end sm:self-center">
                     {apt.status === 'Waiting' || apt.status === 'Emergency' ? (
-                      <NeoButton
-                        size="sm"
-                        variant="primary"
-                        onClick={() => handleCallToChair(apt)}
-                      >
+                      <NeoButton size="sm" variant="primary" onClick={() => handleCallToChair(apt)}>
                         Call to Chair
                       </NeoButton>
                     ) : apt.status === 'In-Consultation' ? (
@@ -235,9 +249,7 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
                         <CheckCircle2 className="w-3.5 h-3.5" /> Finished
                       </span>
                     ) : (
-                      <span className="text-xs text-slate-400 font-medium">
-                        {apt.status}
-                      </span>
+                      <span className="text-xs text-slate-400 font-medium">{apt.status}</span>
                     )}
                   </div>
                 </div>

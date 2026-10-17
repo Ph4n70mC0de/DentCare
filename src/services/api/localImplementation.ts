@@ -67,7 +67,10 @@ import type {
 // HELPER FUNCTIONS
 // ============================================
 
-function paginate<T>(items: T[], params?: { page?: number; pageSize?: number }): PaginatedResponse<T> {
+function paginate<T>(
+  items: T[],
+  params?: { page?: number; pageSize?: number }
+): PaginatedResponse<T> {
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 20;
   const start = (page - 1) * pageSize;
@@ -87,11 +90,8 @@ function paginate<T>(items: T[], params?: { page?: number; pageSize?: number }):
   };
 }
 
-function applyFilters<T>(
-  items: T[],
-  filters: Record<string, unknown>
-): T[] {
-  return items.filter(item => {
+function applyFilters<T>(items: T[], filters: Record<string, unknown>): T[] {
+  return items.filter((item) => {
     return Object.entries(filters).every(([key, value]) => {
       if (value === undefined || value === null || value === '') return true;
       const itemValue = (item as Record<string, unknown>)[key];
@@ -103,15 +103,11 @@ function applyFilters<T>(
   });
 }
 
-function applySearch<T>(
-  items: T[],
-  search?: string,
-  searchFields: string[] = []
-): T[] {
+function applySearch<T>(items: T[], search?: string, searchFields: string[] = []): T[] {
   if (!search || !searchFields.length) return items;
   const term = search.toLowerCase();
-  return items.filter(item =>
-    searchFields.some(field => {
+  return items.filter((item) =>
+    searchFields.some((field) => {
       const value = (item as Record<string, unknown>)[field];
       return value && String(value).toLowerCase().includes(term);
     })
@@ -175,7 +171,7 @@ export class LocalAuthService implements IAuthService {
 
   async login(email: string, password: string): Promise<User> {
     const users = dentalStore.getUsers();
-    const user = users.find(u => u.email === email);
+    const user = users.find((u) => u.email === email);
     if (!user) throw new Error('Invalid credentials');
     dentalStore.setActiveUser(user.id);
     return user;
@@ -185,7 +181,9 @@ export class LocalAuthService implements IAuthService {
     dentalStore.setActiveUser('user-admin');
   }
 
-  async registerPatient(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient> {
+  async registerPatient(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient> {
     return dentalStore.registerPatient(data);
   }
 }
@@ -200,7 +198,7 @@ export class LocalAppointmentService implements IAppointmentService {
   }
 
   async getById(id: string): Promise<Appointment | null> {
-    return dentalStore.getAppointments().find(a => a.id === id) ?? null;
+    return dentalStore.getAppointments().find((a) => a.id === id) ?? null;
   }
 
   async create(data: CreateAppointmentRequest): Promise<Appointment> {
@@ -214,14 +212,18 @@ export class LocalAppointmentService implements IAppointmentService {
     return null;
   }
 
-  async updateStatus(id: string, status: AppointmentStatus, metadata?: Record<string, unknown>): Promise<Appointment | null> {
+  async updateStatus(
+    id: string,
+    status: AppointmentStatus,
+    metadata?: Record<string, unknown>
+  ): Promise<Appointment | null> {
     return dentalStore.updateAppointmentStatus(id, status, metadata);
   }
 
   async cancel(id: string, reason: string): Promise<Appointment> {
     const result = dentalStore.cancelAppointment(id, reason);
     // Return the cancelled appointment
-    const appointment = dentalStore.getAppointments().find(a => a.id === id);
+    const appointment = dentalStore.getAppointments().find((a) => a.id === id);
     if (!appointment) throw new Error('Appointment not found after cancellation');
     return appointment;
   }
@@ -239,19 +241,25 @@ export class LocalAppointmentService implements IAppointmentService {
     if (!result.success) {
       throw new Error('Mark no-show failed');
     }
-    const appointment = dentalStore.getAppointments().find(a => a.id === id);
+    const appointment = dentalStore.getAppointments().find((a) => a.id === id);
     if (!appointment) throw new Error('Appointment not found after no-show');
     return appointment;
   }
 
-  async createEmergency(data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }): Promise<Appointment> {
+  async createEmergency(
+    data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }
+  ): Promise<Appointment> {
     const result = dentalStore.createEmergencyAppointment(data);
     return result.appointment;
   }
 
-  async getAvailableSlots(dentistId: string, date: string, durationMinutes: number): Promise<AvailableSlot[]> {
+  async getAvailableSlots(
+    dentistId: string,
+    date: string,
+    durationMinutes: number
+  ): Promise<AvailableSlot[]> {
     const slots = dentalStore.getAvailableSlotsForDate(dentistId, date, durationMinutes);
-    return slots.map(s => ({
+    return slots.map((s) => ({
       ...s,
       dentistId,
       date,
@@ -259,9 +267,14 @@ export class LocalAppointmentService implements IAppointmentService {
     }));
   }
 
-  async getAlternativeDates(dentistId: string, fromDate: string, durationMinutes: number, count?: number): Promise<AlternativeDate[]> {
+  async getAlternativeDates(
+    dentistId: string,
+    fromDate: string,
+    durationMinutes: number,
+    count?: number
+  ): Promise<AlternativeDate[]> {
     const dates = dentalStore.getAlternativeDates(dentistId, fromDate, durationMinutes, count);
-    return dates.map(date => ({ date, availableSlots: 1 }));
+    return dates.map((date) => ({ date, availableSlots: 1 }));
   }
 }
 
@@ -275,14 +288,16 @@ export class LocalPatientService implements IPatientService {
   }
 
   async getById(id: string): Promise<Patient | null> {
-    return dentalStore.getPatients().find(p => p.id === id) ?? null;
+    return dentalStore.getPatients().find((p) => p.id === id) ?? null;
   }
 
   async findByPhoneOrEmail(identifier: string): Promise<Patient | null> {
     return dentalStore.findPatientByPhoneOrEmail(identifier) ?? null;
   }
 
-  async create(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient> {
+  async create(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient> {
     return dentalStore.registerPatient(data);
   }
 
@@ -301,15 +316,15 @@ export class LocalDentistService implements IDentistService {
   }
 
   async getById(id: string): Promise<Dentist | null> {
-    return dentalStore.getDentists().find(d => d.id === id) ?? null;
+    return dentalStore.getDentists().find((d) => d.id === id) ?? null;
   }
 
   async getByUserId(userId: string): Promise<Dentist | null> {
-    return dentalStore.getDentists().find(d => d.userId === userId) ?? null;
+    return dentalStore.getDentists().find((d) => d.userId === userId) ?? null;
   }
 
   async getSchedules(dentistId: string): Promise<DentistSchedule[]> {
-    return dentalStore.getSchedules().filter(s => s.dentistId === dentistId);
+    return dentalStore.getSchedules().filter((s) => s.dentistId === dentistId);
   }
 
   async createSchedule(data: CreateDentistScheduleRequest): Promise<DentistSchedule> {
@@ -320,7 +335,10 @@ export class LocalDentistService implements IDentistService {
     };
   }
 
-  async updateSchedule(id: string, data: Partial<CreateDentistScheduleRequest>): Promise<DentistSchedule> {
+  async updateSchedule(
+    id: string,
+    data: Partial<CreateDentistScheduleRequest>
+  ): Promise<DentistSchedule> {
     return {
       id,
       dentistId: data.dentistId || '',
@@ -358,7 +376,7 @@ export class LocalServiceService implements IServiceService {
   }
 
   async getById(id: string): Promise<DentalService | null> {
-    return dentalStore.getServices().find(s => s.id === id) ?? null;
+    return dentalStore.getServices().find((s) => s.id === id) ?? null;
   }
 
   async create(data: CreateServiceRequest): Promise<DentalService> {
@@ -367,7 +385,7 @@ export class LocalServiceService implements IServiceService {
 
   async update(id: string, data: UpdateServiceRequest): Promise<DentalService | null> {
     dentalStore.updateService(id, data);
-    return dentalStore.getServices().find(s => s.id === id) ?? null;
+    return dentalStore.getServices().find((s) => s.id === id) ?? null;
   }
 
   async delete(id: string): Promise<void> {
@@ -403,12 +421,12 @@ export class LocalConsultationService implements IConsultationService {
   }
 
   async getById(id: string): Promise<Consultation | null> {
-    return dentalStore.getConsultations().find(c => c.id === id) ?? null;
+    return dentalStore.getConsultations().find((c) => c.id === id) ?? null;
   }
 
   async create(data: CreateConsultationRequest): Promise<Consultation> {
     // Map prescriptions to add IDs
-    const prescriptionsWithIds = data.prescriptions.map(p => ({
+    const prescriptionsWithIds = data.prescriptions.map((p) => ({
       ...p,
       id: `rx-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     }));
@@ -429,7 +447,7 @@ export class LocalPaymentService implements IPaymentService {
   }
 
   async getById(id: string): Promise<Payment | null> {
-    return dentalStore.getPayments().find(p => p.id === id) ?? null;
+    return dentalStore.getPayments().find((p) => p.id === id) ?? null;
   }
 
   async create(data: CreatePaymentRequest): Promise<Payment> {
@@ -437,15 +455,21 @@ export class LocalPaymentService implements IPaymentService {
   }
 
   async getRevenueSummary(dateFrom: string, dateTo: string): Promise<RevenueSummary> {
-    const payments = dentalStore.getPayments().filter(p => {
+    const payments = dentalStore.getPayments().filter((p) => {
       const date = p.createdAt.split('T')[0];
       return date >= dateFrom && date <= dateTo;
     });
 
     const totalRevenue = payments.reduce((sum, p) => sum + p.amountPaid, 0);
-    const cashTotal = payments.filter(p => p.paymentMethod === 'Cash').reduce((sum, p) => sum + p.amountPaid, 0);
-    const cardTotal = payments.filter(p => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card').reduce((sum, p) => sum + p.amountPaid, 0);
-    const insuranceTotal = payments.filter(p => p.paymentMethod === 'Insurance').reduce((sum, p) => sum + p.amountPaid, 0);
+    const cashTotal = payments
+      .filter((p) => p.paymentMethod === 'Cash')
+      .reduce((sum, p) => sum + p.amountPaid, 0);
+    const cardTotal = payments
+      .filter((p) => p.paymentMethod === 'Credit Card' || p.paymentMethod === 'Debit Card')
+      .reduce((sum, p) => sum + p.amountPaid, 0);
+    const insuranceTotal = payments
+      .filter((p) => p.paymentMethod === 'Insurance')
+      .reduce((sum, p) => sum + p.amountPaid, 0);
 
     return {
       totalRevenue,
@@ -524,28 +548,31 @@ export class LocalReportService implements IReportService {
     document.body.removeChild(a);
   }
 
-  private getReportData(type: string, filters?: Record<string, unknown>): Record<string, unknown>[] {
+  private getReportData(
+    type: string,
+    filters?: Record<string, unknown>
+  ): Record<string, unknown>[] {
     switch (type) {
       case 'appointments':
-        return dentalStore.getAppointments().map(a => ({
+        return dentalStore.getAppointments().map((a) => ({
           'Appointment #': a.appointmentNumber,
           Date: a.date,
           Time: `${a.startTime} - ${a.endTime}`,
-          Patient: dentalStore.getPatients().find(p => p.id === a.patientId)?.fullName || '',
-          Dentist: dentalStore.getDentists().find(d => d.id === a.dentistId)?.fullName || '',
+          Patient: dentalStore.getPatients().find((p) => p.id === a.patientId)?.fullName || '',
+          Dentist: dentalStore.getDentists().find((d) => d.id === a.dentistId)?.fullName || '',
           Service: a.serviceId,
           Status: a.status,
           Source: a.bookingSource,
         }));
       case 'payments':
-        return dentalStore.getPayments().map(p => {
-          const apt = dentalStore.getAppointments().find(a => a.id === p.appointmentId);
-          const pat = dentalStore.getPatients().find(pt => pt.id === p.patientId);
+        return dentalStore.getPayments().map((p) => {
+          const apt = dentalStore.getAppointments().find((a) => a.id === p.appointmentId);
+          const pat = dentalStore.getPatients().find((pt) => pt.id === p.patientId);
           return {
             'Receipt #': p.receiptNumber,
             'Date & Time': p.createdAt,
             Patient: pat?.fullName || '',
-            Service: dentalStore.getServices().find(s => s.id === apt?.serviceId)?.name || '',
+            Service: dentalStore.getServices().find((s) => s.id === apt?.serviceId)?.name || '',
             Subtotal: p.subtotal,
             Discount: p.discount,
             Insurance: p.insuranceCoverage,
@@ -556,9 +583,13 @@ export class LocalReportService implements IReportService {
           };
         });
       case 'patients':
-        return dentalStore.getPatients().map(p => {
-          const visits = dentalStore.getAppointments().filter(a => a.patientId === p.id && a.status === 'Completed').length;
-          const noShows = dentalStore.getAppointments().filter(a => a.patientId === p.id && a.status === 'No-Show').length;
+        return dentalStore.getPatients().map((p) => {
+          const visits = dentalStore
+            .getAppointments()
+            .filter((a) => a.patientId === p.id && a.status === 'Completed').length;
+          const noShows = dentalStore
+            .getAppointments()
+            .filter((a) => a.patientId === p.id && a.status === 'No-Show').length;
           const age = p.dateOfBirth
             ? new Date().getFullYear() - new Date(p.dateOfBirth).getFullYear()
             : 'N/A';
@@ -573,7 +604,7 @@ export class LocalReportService implements IReportService {
           };
         });
       case 'audit':
-        return dentalStore.getAuditLogs().map(log => ({
+        return dentalStore.getAuditLogs().map((log) => ({
           Timestamp: log.timestamp,
           Actor: log.actorName,
           Role: log.actorRole,
@@ -583,9 +614,9 @@ export class LocalReportService implements IReportService {
           Details: log.details || '',
         }));
       case 'waitlist':
-        return dentalStore.getWaitlist().map(w => ({
-          Patient: dentalStore.getPatients().find(p => p.id === w.patientId)?.fullName || '',
-          Service: dentalStore.getServices().find(s => s.id === w.serviceId)?.name || '',
+        return dentalStore.getWaitlist().map((w) => ({
+          Patient: dentalStore.getPatients().find((p) => p.id === w.patientId)?.fullName || '',
+          Service: dentalStore.getServices().find((s) => s.id === w.serviceId)?.name || '',
           'Preferred Date': w.preferredDate,
           'Time Range': w.preferredTimeRange,
           Priority: w.priority,
@@ -600,7 +631,9 @@ export class LocalReportService implements IReportService {
   private toCSV(data: Record<string, unknown>[]): string {
     if (!data.length) return '';
     const headers = Object.keys(data[0]);
-    const rows = data.map(row => headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
+    const rows = data.map((row) =>
+      headers.map((h) => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(',')
+    );
     return [headers.join(','), ...rows].join('\n');
   }
 }

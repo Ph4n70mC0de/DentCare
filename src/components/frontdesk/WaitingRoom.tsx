@@ -10,7 +10,7 @@ import {
   UserX,
   Stethoscope,
   ArrowRight,
-  Volume2
+  Volume2,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -27,11 +27,9 @@ interface WaitingRoomProps {
   onOpenCheckIn?: () => void;
 }
 
-export const WaitingRoom: React.FC<WaitingRoomProps> = ({
-  onStartConsultation,
-  onOpenCheckIn
-}) => {
-  const { appointments, patients, dentists, services, updateAppointmentStatus, sendNotification } = useDentalStore();
+export const WaitingRoom: React.FC<WaitingRoomProps> = ({ onStartConsultation, onOpenCheckIn }) => {
+  const { appointments, patients, dentists, services, updateAppointmentStatus, sendNotification } =
+    useDentalStore();
   const [privacyMode, setPrivacyMode] = useState<boolean>(false);
   const [selectedForNoShow, setSelectedForNoShow] = useState<Appointment | null>(null);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
@@ -40,7 +38,11 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
 
   // Active queue appointments for today
   const queueAppointments = appointments
-    .filter((a) => a.date === today && ['Waiting', 'In-Consultation', 'Checked-In', 'Emergency'].includes(a.status))
+    .filter(
+      (a) =>
+        a.date === today &&
+        ['Waiting', 'In-Consultation', 'Checked-In', 'Emergency'].includes(a.status)
+    )
     .sort((a, b) => {
       // Emergency goes first (queue 0)
       if (a.status === 'Emergency') return -1;
@@ -77,7 +79,7 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
         title: '🔔 Please Proceed to Operatory',
         message: `Queue #${apt.queueNumber}: Dr. ${dent?.fullName} is ready for you in Operatory Room.`,
         channel: 'in_app',
-        relatedAppointmentId: apt.id
+        relatedAppointmentId: apt.id,
       });
     }
 
@@ -93,7 +95,9 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-blue-600" />
-            <h3 className="text-xl font-bold text-slate-800">Waiting Room & Live Operatory Queue</h3>
+            <h3 className="text-xl font-bold text-slate-800">
+              Waiting Room & Live Operatory Queue
+            </h3>
           </div>
           <p className="text-xs text-slate-500 mt-1">
             Real-time tracking of seated patients, operatory status, and arrival calls.
@@ -131,7 +135,8 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
               Active Queue Today ({queueAppointments.length})
             </span>
             <span className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Synchronized
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live
+              Synchronized
             </span>
           </div>
           <div className="text-xs font-semibold text-slate-500">
@@ -144,7 +149,8 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
             <Clock className="w-8 h-8 text-slate-400 mx-auto" />
             <p className="font-bold text-slate-700">Waiting Room is Currently Clear</p>
             <p className="text-slate-400 max-w-xs mx-auto">
-              Check in upcoming appointments from the today's schedule to place patients in the queue.
+              Check in upcoming appointments from the today's schedule to place patients in the
+              queue.
             </p>
           </div>
         ) : (
@@ -164,8 +170,8 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
                     isEmergency
                       ? 'bg-rose-50/60 border-l-4 border-rose-600'
                       : isInChair
-                      ? 'bg-purple-50/40 border-l-4 border-purple-500'
-                      : 'hover:bg-slate-100/40'
+                        ? 'bg-purple-50/40 border-l-4 border-purple-500'
+                        : 'hover:bg-slate-100/40'
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -175,8 +181,8 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
                         isEmergency
                           ? 'bg-rose-600 text-white font-black shadow-md'
                           : isInChair
-                          ? 'bg-purple-600 text-white font-black shadow-md'
-                          : 'neo-raised text-blue-700 font-extrabold'
+                            ? 'bg-purple-600 text-white font-black shadow-md'
+                            : 'neo-raised text-blue-700 font-extrabold'
                       }`}
                     >
                       <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80">
@@ -198,9 +204,17 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
                         {service?.name} • Assigned to <strong>{dentist?.fullName}</strong>
                       </p>
                       <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-1">
-                        <span>Scheduled: {apt.startTime} - {apt.endTime}</span>
+                        <span>
+                          Scheduled: {apt.startTime} - {apt.endTime}
+                        </span>
                         {apt.arrivedAt && (
-                          <span>Arrived: {new Date(apt.arrivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                          <span>
+                            Arrived:{' '}
+                            {new Date(apt.arrivedAt).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
                         )}
                         {patient?.medicalAlerts && patient.medicalAlerts.length > 0 && (
                           <span className="text-rose-600 font-bold bg-rose-100 px-1.5 py-0.2 rounded-md">
@@ -213,7 +227,9 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
 
                   {/* Action Buttons */}
                   <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
-                    {apt.status === 'Waiting' || apt.status === 'Checked-In' || apt.status === 'Emergency' ? (
+                    {apt.status === 'Waiting' ||
+                    apt.status === 'Checked-In' ||
+                    apt.status === 'Emergency' ? (
                       <>
                         <button
                           onClick={() => setSelectedForNoShow(apt)}
@@ -257,10 +273,7 @@ export const WaitingRoom: React.FC<WaitingRoomProps> = ({
         appointment={selectedForNoShow}
       />
 
-      <EmergencyModal
-        isOpen={isEmergencyOpen}
-        onClose={() => setIsEmergencyOpen(false)}
-      />
+      <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
     </div>
   );
 };

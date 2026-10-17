@@ -1,5 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Download, ShieldCheck, Users as UsersIcon, UserCheck, Stethoscope } from 'lucide-react';
+import {
+  Search,
+  Download,
+  ShieldCheck,
+  Users as UsersIcon,
+  UserCheck,
+  Stethoscope,
+} from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -8,17 +15,23 @@ import { NeoBadge } from '../common/NeoBadge';
 import { User, UserRole } from '../../types';
 import { useDentalStore } from '../../services/useDentalStore';
 
-const ROLE_META: Record<UserRole, { label: string; variant: 'primary' | 'success' | 'warning' | 'neutral'; icon: React.ReactNode }> = {
+const ROLE_META: Record<
+  UserRole,
+  { label: string; variant: 'primary' | 'success' | 'warning' | 'neutral'; icon: React.ReactNode }
+> = {
   admin: { label: 'Admin', variant: 'primary', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
-  front_desk: { label: 'Front Desk', variant: 'success', icon: <UsersIcon className="w-3.5 h-3.5" /> },
+  front_desk: {
+    label: 'Front Desk',
+    variant: 'success',
+    icon: <UsersIcon className="w-3.5 h-3.5" />,
+  },
   dentist: { label: 'Dentist', variant: 'warning', icon: <Stethoscope className="w-3.5 h-3.5" /> },
-  patient: { label: 'Patient', variant: 'neutral', icon: <UserCheck className="w-3.5 h-3.5" /> }
+  patient: { label: 'Patient', variant: 'neutral', icon: <UserCheck className="w-3.5 h-3.5" /> },
 };
 
 interface UserDirectoryProps {}
 
-export const UserDirectory: React.FC<UserDirectoryProps> = ({
-}) => {
+export const UserDirectory: React.FC<UserDirectoryProps> = ({}) => {
   const { users } = useDentalStore();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
@@ -50,7 +63,9 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
   const activeCount = users.filter((u) => u.status === 'active').length;
   const roleCounts = useMemo(() => {
     const counts: Record<UserRole, number> = { admin: 0, front_desk: 0, dentist: 0, patient: 0 };
-    users.forEach((u) => { counts[u.role]++; });
+    users.forEach((u) => {
+      counts[u.role]++;
+    });
     return counts;
   }, [users]);
 
@@ -62,14 +77,22 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
       u.email,
       u.phone,
       u.status,
-      new Date(u.createdAt).toISOString()
+      new Date(u.createdAt).toISOString(),
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))].join('\n');
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [
+        headers.join(','),
+        ...rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
+      ].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `DentCare-UserDirectory-${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      'download',
+      `DentCare-UserDirectory-${new Date().toISOString().slice(0, 10)}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -80,24 +103,34 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
       {/* Summary Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <NeoCard className="flex flex-col gap-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Total Users</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            Total Users
+          </span>
           <span className="text-xl font-black text-slate-800">{totalCount}</span>
           <span className="text-[10px] text-slate-500">{activeCount} active</span>
         </NeoCard>
         <NeoCard className="flex flex-col gap-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Admins</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            Admins
+          </span>
           <span className="text-xl font-black text-blue-700">{roleCounts.admin}</span>
         </NeoCard>
         <NeoCard className="flex flex-col gap-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Front Desk</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            Front Desk
+          </span>
           <span className="text-xl font-black text-emerald-700">{roleCounts.front_desk}</span>
         </NeoCard>
         <NeoCard className="flex flex-col gap-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Dentists</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            Dentists
+          </span>
           <span className="text-xl font-black text-amber-700">{roleCounts.dentist}</span>
         </NeoCard>
         <NeoCard className="flex flex-col gap-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Patients</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            Patients
+          </span>
           <span className="text-xl font-black text-slate-700">{roleCounts.patient}</span>
         </NeoCard>
       </div>
@@ -106,7 +139,12 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
       <NeoCard className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-slate-700">Users</h3>
-          <NeoButton variant="default" size="sm" onClick={exportUsersCSV} icon={<Download className="w-4 h-4" />}>
+          <NeoButton
+            variant="default"
+            size="sm"
+            onClick={exportUsersCSV}
+            icon={<Download className="w-4 h-4" />}
+          >
             Export CSV
           </NeoButton>
         </div>
@@ -157,18 +195,27 @@ export const UserDirectory: React.FC<UserDirectoryProps> = ({
                     <td className="p-3 pl-5">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full neo-raised bg-[#E8EEF5] flex items-center justify-center text-[10px] font-bold text-slate-700">
-                          {u.fullName.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                          {u.fullName
+                            .split(' ')
+                            .map((n) => n[0])
+                            .slice(0, 2)
+                            .join('')}
                         </div>
                         <span className="font-bold text-slate-800">{u.fullName}</span>
                       </div>
                     </td>
                     <td className="p-3">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                        u.role === 'admin' ? 'bg-blue-100 text-blue-800' :
-                        u.role === 'dentist' ? 'bg-amber-100 text-amber-800' :
-                        u.role === 'front_desk' ? 'bg-emerald-100 text-emerald-800' :
-                        'bg-slate-100 text-slate-700'
-                      }`}>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                          u.role === 'admin'
+                            ? 'bg-blue-100 text-blue-800'
+                            : u.role === 'dentist'
+                              ? 'bg-amber-100 text-amber-800'
+                              : u.role === 'front_desk'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-100 text-slate-700'
+                        }`}
+                      >
                         {meta.icon}
                         {meta.label}
                       </span>

@@ -22,7 +22,10 @@ export const NeoSelect: React.FC<NeoSelectProps> = ({
   return (
     <div className="w-full flex flex-col space-y-1.5">
       {label && (
-        <label htmlFor={selectId} className="text-xs font-semibold tracking-wide text-slate-600 px-1">
+        <label
+          htmlFor={selectId}
+          className="text-xs font-semibold tracking-wide text-slate-600 px-1"
+        >
           {label}
         </label>
       )}

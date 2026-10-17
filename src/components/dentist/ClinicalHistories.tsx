@@ -11,7 +11,7 @@ import {
   ChevronRight,
   ClipboardList,
   Stethoscope,
-  X
+  X,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -32,23 +32,18 @@ interface ClinicalHistoriesProps {
 export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
   onStartBooking,
   onStartConsultation,
-  onNavigateToOperatory
+  onNavigateToOperatory,
 }) => {
-  const {
-    patients,
-    dentists,
-    appointments,
-    consultations,
-    activeUser,
-    services,
-    users
-  } = useDentalStore();
+  const { patients, dentists, appointments, consultations, activeUser, services, users } =
+    useDentalStore();
 
   const today = getTodayDateString();
   const currentDentist = dentists.find((d) => d.userId === activeUser.id) || dentists[0];
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filterCategory, setFilterCategory] = useState<'all' | 'recent' | 'chronic' | 'flagged'>('all');
+  const [filterCategory, setFilterCategory] = useState<'all' | 'recent' | 'chronic' | 'flagged'>(
+    'all'
+  );
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const filteredPatients = useMemo(() => {
@@ -67,7 +62,10 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
 
         if (filterCategory === 'recent') {
           const hasRecent = appointments.some(
-            (a) => a.patientId === p.id && a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
+            (a) =>
+              a.patientId === p.id &&
+              a.date >= today &&
+              !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
           );
           if (!hasRecent) return false;
         }
@@ -165,7 +163,8 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                 <div>
                   <h3 className="text-sm font-bold text-slate-800">{selectedPatient.fullName}</h3>
                   <p className="text-xs text-slate-500">
-                    ID: {selectedPatient.patientNumber} • {selectedPatient.phone} • {selectedPatient.email}
+                    ID: {selectedPatient.patientNumber} • {selectedPatient.phone} •{' '}
+                    {selectedPatient.email}
                   </p>
                 </div>
               </div>
@@ -182,38 +181,55 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
             <div className="p-4 sm:p-5 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-3 rounded-xl neo-inset">
-                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Age / Gender</span>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                    Age / Gender
+                  </span>
                   <p className="font-bold text-slate-800 text-sm">
-                    {selectedPatient.dateOfBirth ? `${new Date().getFullYear() - new Date(selectedPatient.dateOfBirth).getFullYear()} years` : 'N/A'} • {selectedPatient.sex || 'N/A'}
+                    {selectedPatient.dateOfBirth
+                      ? `${new Date().getFullYear() - new Date(selectedPatient.dateOfBirth).getFullYear()} years`
+                      : 'N/A'}{' '}
+                    • {selectedPatient.sex || 'N/A'}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl neo-inset">
-                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Medical Alerts</span>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                    Medical Alerts
+                  </span>
                   <p className="font-bold text-rose-700 text-sm">
-                    {selectedPatient.medicalAlerts.length > 0 && !selectedPatient.medicalAlerts.includes('None declared')
+                    {selectedPatient.medicalAlerts.length > 0 &&
+                    !selectedPatient.medicalAlerts.includes('None declared')
                       ? selectedPatient.medicalAlerts.join(', ')
                       : 'None registered'}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl neo-inset">
-                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Known Allergies</span>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                    Known Allergies
+                  </span>
                   <p className="font-bold text-rose-700 text-sm">
                     {selectedPatient.allergies.join(', ') || 'None declared'}
                   </p>
                 </div>
                 <div className="p-3 rounded-xl neo-inset">
-                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Total Visits</span>
-                  <p className="font-bold text-slate-800 text-sm">{selectedPatientAppointments.length} appointments</p>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">
+                    Total Visits
+                  </span>
+                  <p className="font-bold text-slate-800 text-sm">
+                    {selectedPatientAppointments.length} appointments
+                  </p>
                 </div>
               </div>
 
-              {(selectedPatient.medicalAlerts.length > 0 || selectedPatient.allergies.length > 0) && (
+              {(selectedPatient.medicalAlerts.length > 0 ||
+                selectedPatient.allergies.length > 0) && (
                 <div className="p-4 rounded-2xl neo-raised bg-amber-50/70 border-l-4 border-amber-500 flex items-start gap-3 text-xs text-amber-900">
                   <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Clinical Caution:</span>
                     <p className="mt-0.5 text-amber-800">
-                      Allergies: <strong>{selectedPatient.allergies.join(', ') || 'None'}</strong> • Medical Conditions: <strong>{selectedPatient.medicalAlerts.join(', ') || 'None'}</strong>
+                      Allergies: <strong>{selectedPatient.allergies.join(', ') || 'None'}</strong> •
+                      Medical Conditions:{' '}
+                      <strong>{selectedPatient.medicalAlerts.join(', ') || 'None'}</strong>
                     </p>
                   </div>
                 </div>
@@ -250,36 +266,51 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                               {new Date(cons.createdAt).toLocaleDateString()}
                             </span>
                             <span className="text-slate-400">•</span>
-                            <span className="text-xs text-slate-600">{getDentistName(cons.dentistId)}</span>
+                            <span className="text-xs text-slate-600">
+                              {getDentistName(cons.dentistId)}
+                            </span>
                             {apt && (
                               <>
                                 <span className="text-slate-400">•</span>
-                                <span className="text-xs text-slate-600">{getServiceName(apt.serviceId)}</span>
+                                <span className="text-xs text-slate-600">
+                                  {getServiceName(apt.serviceId)}
+                                </span>
                               </>
                             )}
                           </div>
 
                           <div className="space-y-1.5">
                             <div>
-                              <span className="text-[10px] uppercase font-bold text-slate-400 block">Diagnosis</span>
+                              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                                Diagnosis
+                              </span>
                               <p className="text-sm font-bold text-slate-800">{cons.diagnosis}</p>
                             </div>
                             <div>
-                              <span className="text-[10px] uppercase font-bold text-slate-400 block">Treatment Plan</span>
+                              <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                                Treatment Plan
+                              </span>
                               <p className="text-xs text-slate-700">{cons.treatmentPlan}</p>
                             </div>
                             {cons.examinationFindings && (
                               <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block">Examination Findings</span>
+                                <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                                  Examination Findings
+                                </span>
                                 <p className="text-xs text-slate-600">{cons.examinationFindings}</p>
                               </div>
                             )}
                             {cons.prescriptions.length > 0 && (
                               <div>
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block">Prescriptions</span>
+                                <span className="text-[10px] uppercase font-bold text-slate-400 block">
+                                  Prescriptions
+                                </span>
                                 <div className="flex flex-wrap gap-1.5 mt-1">
                                   {cons.prescriptions.map((rx, idx) => (
-                                    <span key={idx} className="px-2 py-1 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-bold flex items-center gap-1">
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-1 rounded-lg bg-blue-50 text-blue-700 text-[10px] font-bold flex items-center gap-1"
+                                    >
                                       <Pill className="w-3 h-3" />
                                       {rx.medication}
                                     </span>
@@ -289,9 +320,12 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                             )}
                             {cons.followUpRecommendation?.required && (
                               <div className="p-2 rounded-lg neo-inset">
-                                <span className="text-[10px] uppercase font-bold text-blue-700 block">Follow-Up</span>
+                                <span className="text-[10px] uppercase font-bold text-blue-700 block">
+                                  Follow-Up
+                                </span>
                                 <p className="text-xs text-slate-700">
-                                  {cons.followUpRecommendation.timeframeWeeks} weeks • {cons.followUpRecommendation.notes}
+                                  {cons.followUpRecommendation.timeframeWeeks} weeks •{' '}
+                                  {cons.followUpRecommendation.notes}
                                 </p>
                               </div>
                             )}
@@ -352,15 +386,21 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                 </div>
               ) : (
                 <div className="divide-y divide-slate-300/30 max-h-[600px] overflow-y-auto">
-{filteredPatients.map((patient) => {
-                      const patientCons = consultations.filter((c) => c.patientId === patient.id);
-                      const lastVisit = patientCons.length > 0
-                        ? new Date(patientCons[patientCons.length - 1].createdAt).toLocaleDateString()
+                  {filteredPatients.map((patient) => {
+                    const patientCons = consultations.filter((c) => c.patientId === patient.id);
+                    const lastVisit =
+                      patientCons.length > 0
+                        ? new Date(
+                            patientCons[patientCons.length - 1].createdAt
+                          ).toLocaleDateString()
                         : 'No visits';
-                      const patientUser = patient.userId ? users.find((u) => u.id === patient.userId) : null;
-                      const patientStatus = patientUser?.status === 'active' ? 'Confirmed' : 'Pending';
+                    const patientUser = patient.userId
+                      ? users.find((u) => u.id === patient.userId)
+                      : null;
+                    const patientStatus =
+                      patientUser?.status === 'active' ? 'Confirmed' : 'Pending';
 
-                      return (
+                    return (
                       <div
                         key={patient.id}
                         onClick={() => setSelectedPatient(patient)}
@@ -372,7 +412,9 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h4 className="font-bold text-sm text-slate-800">{patient.fullName}</h4>
+                              <h4 className="font-bold text-sm text-slate-800">
+                                {patient.fullName}
+                              </h4>
                               <NeoStatusPill status={patientStatus} size="sm" />
                             </div>
                             <p className="text-xs text-slate-500 mt-0.5">
@@ -380,17 +422,24 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                             </p>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="text-[10px] text-slate-400">Last visit:</span>
-                              <span className="text-[10px] font-bold text-slate-600">{lastVisit}</span>
+                              <span className="text-[10px] font-bold text-slate-600">
+                                {lastVisit}
+                              </span>
                               <span className="text-slate-400">•</span>
-                              <span className="text-[10px] text-slate-500">{patientCons.length} consultations</span>
+                              <span className="text-[10px] text-slate-500">
+                                {patientCons.length} consultations
+                              </span>
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {patient.medicalAlerts.length > 0 && patient.medicalAlerts[0] !== 'None declared' && (
-                            <NeoBadge variant="danger" size="sm">Alert</NeoBadge>
-                          )}
+                          {patient.medicalAlerts.length > 0 &&
+                            patient.medicalAlerts[0] !== 'None declared' && (
+                              <NeoBadge variant="danger" size="sm">
+                                Alert
+                              </NeoBadge>
+                            )}
                           <ChevronRight className="w-4 h-4 text-slate-400" />
                         </div>
                       </div>
