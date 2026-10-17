@@ -23,14 +23,14 @@ describe('Administrator Workflows', () => {
     it('manages users (list all)', () => {
       const users = dentalStore.getUsers();
       expect(users.length).toBe(7); // 1 admin, 1 front_desk, 2 dentists, 3 patients
-      expect(users.filter(u => u.role === 'admin').length).toBe(1);
-      expect(users.filter(u => u.role === 'front_desk').length).toBe(1);
-      expect(users.filter(u => u.role === 'dentist').length).toBe(2);
-      expect(users.filter(u => u.role === 'patient').length).toBe(3);
+      expect(users.filter((u) => u.role === 'admin').length).toBe(1);
+      expect(users.filter((u) => u.role === 'front_desk').length).toBe(1);
+      expect(users.filter((u) => u.role === 'dentist').length).toBe(2);
+      expect(users.filter((u) => u.role === 'patient').length).toBe(3);
     });
 
     it('verifies role changes and permission boundaries', () => {
-      const admin = dentalStore.getUsers().find(u => u.id === 'user-admin');
+      const admin = dentalStore.getUsers().find((u) => u.id === 'user-admin');
       expect(admin?.role).toBe('admin');
 
       // Admin can switch to any role
@@ -47,7 +47,7 @@ describe('Administrator Workflows', () => {
     it('audits role switches', () => {
       dentalStore.setActiveUser('user-frontdesk');
       const logs = dentalStore.getAuditLogs();
-      const roleSwitchLog = logs.find(l => l.action === 'User Switched Role/Session');
+      const roleSwitchLog = logs.find((l) => l.action === 'User Switched Role/Session');
       expect(roleSwitchLog).toBeDefined();
       expect(roleSwitchLog?.details).toContain('front_desk');
     });
@@ -74,7 +74,7 @@ describe('Administrator Workflows', () => {
     it('updates existing service', () => {
       dentalStore.updateService('serv-1', { price: 120, active: false });
 
-      const updated = dentalStore.getServices().find(s => s.id === 'serv-1');
+      const updated = dentalStore.getServices().find((s) => s.id === 'serv-1');
       expect(updated?.price).toBe(120);
       expect(updated?.active).toBe(false);
     });
@@ -99,10 +99,10 @@ describe('Administrator Workflows', () => {
       const schedules = dentalStore.getSchedules();
       expect(schedules.length).toBe(10); // 5 days x 2 dentists
 
-      const dentist1Schedules = schedules.filter(s => s.dentistId === 'dentist-1');
+      const dentist1Schedules = schedules.filter((s) => s.dentistId === 'dentist-1');
       expect(dentist1Schedules.length).toBe(5); // Mon-Fri
 
-      const dentist2Schedules = schedules.filter(s => s.dentistId === 'dentist-2');
+      const dentist2Schedules = schedules.filter((s) => s.dentistId === 'dentist-2');
       expect(dentist2Schedules.length).toBe(5); // Tue-Sat
     });
 
@@ -128,7 +128,7 @@ describe('Administrator Workflows', () => {
       });
 
       dentalStore.removeBlockedSchedule(blocked.id);
-      expect(dentalStore.getBlockedSchedules().find(b => b.id === blocked.id)).toBeUndefined();
+      expect(dentalStore.getBlockedSchedules().find((b) => b.id === blocked.id)).toBeUndefined();
     });
 
     it('blocked schedule prevents appointments', () => {
@@ -238,7 +238,7 @@ describe('Administrator Workflows', () => {
       });
 
       const logs = dentalStore.getAuditLogs();
-      const actions = logs.map(l => l.action);
+      const actions = logs.map((l) => l.action);
 
       expect(actions).toContain('Appointment Booked');
       expect(actions).toContain('Appointment Cancelled');
@@ -263,7 +263,7 @@ describe('Administrator Workflows', () => {
       dentalStore.updatePatient('pat-001', { phone: '+1 (555) 111-1111' });
 
       const logs = dentalStore.getAuditLogs();
-      const updateLog = logs.find(l => l.action === 'Patient Record Updated');
+      const updateLog = logs.find((l) => l.action === 'Patient Record Updated');
 
       expect(updateLog).toBeDefined();
       expect(updateLog?.beforeValue).toBeDefined();
@@ -277,9 +277,9 @@ describe('Administrator Workflows', () => {
       const patients = dentalStore.getPatients();
       const dentists = dentalStore.getDentists();
 
-      const reportData = appointments.map(a => {
-        const pat = patients.find(p => p.id === a.patientId);
-        const dnt = dentists.find(d => d.id === a.dentistId);
+      const reportData = appointments.map((a) => {
+        const pat = patients.find((p) => p.id === a.patientId);
+        const dnt = dentists.find((d) => d.id === a.dentistId);
         return {
           appointmentNumber: a.appointmentNumber,
           date: a.date,
@@ -293,7 +293,7 @@ describe('Administrator Workflows', () => {
       });
 
       expect(reportData.length).toBe(appointments.length);
-      reportData.forEach(row => {
+      reportData.forEach((row) => {
         expect(row).toHaveProperty('appointmentNumber');
         expect(row).toHaveProperty('status');
       });
@@ -304,9 +304,9 @@ describe('Administrator Workflows', () => {
       const appointments = dentalStore.getAppointments();
       const patients = dentalStore.getPatients();
 
-      const reportData = payments.map(p => {
-        const apt = appointments.find(a => a.id === p.appointmentId);
-        const pat = patients.find(pt => pt.id === p.patientId);
+      const reportData = payments.map((p) => {
+        const apt = appointments.find((a) => a.id === p.appointmentId);
+        const pat = patients.find((pt) => pt.id === p.patientId);
         return {
           date: p.createdAt,
           patient: pat?.fullName || '',
@@ -323,7 +323,7 @@ describe('Administrator Workflows', () => {
     it('generates audit report data', () => {
       const logs = dentalStore.getAuditLogs();
 
-      const reportData = logs.map(log => [
+      const reportData = logs.map((log) => [
         log.timestamp,
         log.actorName,
         log.actorRole,
@@ -340,9 +340,13 @@ describe('Administrator Workflows', () => {
       const patients = dentalStore.getPatients();
       const appointments = dentalStore.getAppointments();
 
-      const reportData = patients.map(p => {
-        const visits = appointments.filter(a => a.patientId === p.id && a.status === 'Completed').length;
-        const noShows = appointments.filter(a => a.patientId === p.id && a.status === 'No-Show').length;
+      const reportData = patients.map((p) => {
+        const visits = appointments.filter(
+          (a) => a.patientId === p.id && a.status === 'Completed'
+        ).length;
+        const noShows = appointments.filter(
+          (a) => a.patientId === p.id && a.status === 'No-Show'
+        ).length;
         const age = p.dateOfBirth
           ? new Date().getFullYear() - new Date(p.dateOfBirth).getFullYear()
           : 'N/A';
@@ -392,8 +396,8 @@ describe('Administrator Workflows', () => {
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
-      const todaysAppointments = appointments.filter(a => a.date === today);
-      const tomorrowsAppointments = appointments.filter(a => a.date === tomorrowStr);
+      const todaysAppointments = appointments.filter((a) => a.date === today);
+      const tomorrowsAppointments = appointments.filter((a) => a.date === tomorrowStr);
 
       expect(todaysAppointments.length).toBeGreaterThanOrEqual(0);
       expect(tomorrowsAppointments.length).toBeGreaterThanOrEqual(0);
@@ -401,7 +405,7 @@ describe('Administrator Workflows', () => {
 
     it('restricts unauthorized fields in exports', () => {
       const payments = dentalStore.getPayments();
-      const reportData = payments.map(p => ({
+      const reportData = payments.map((p) => ({
         date: p.createdAt,
         patient: p.patientId, // Not full patient object
         amountPaid: p.amountPaid,
@@ -410,7 +414,7 @@ describe('Administrator Workflows', () => {
         // Should NOT include: insurancePolicyNumber, internal IDs, etc.
       }));
 
-      reportData.forEach(row => {
+      reportData.forEach((row) => {
         expect(row).not.toHaveProperty('insurancePolicyNumber');
         expect(row).not.toHaveProperty('id');
         expect(row).not.toHaveProperty('appointmentId');
@@ -445,7 +449,7 @@ describe('Administrator Workflows', () => {
       expect(result.notifiedWaitlistCount).toBeGreaterThanOrEqual(0);
 
       const waitlist = dentalStore.getWaitlist();
-      const notified = waitlist.find(w => w.status === 'notified');
+      const notified = waitlist.find((w) => w.status === 'notified');
       expect(notified).toBeDefined();
     });
 
@@ -489,8 +493,9 @@ describe('Administrator Workflows', () => {
 
       dentalStore.cancelAppointment(appointment.id, 'Test');
 
-      const waitlist = dentalStore.getWaitlist()
-        .filter(w => w.preferredDate === date && w.status === 'notified')
+      const waitlist = dentalStore
+        .getWaitlist()
+        .filter((w) => w.preferredDate === date && w.status === 'notified')
         .sort((a, b) => {
           const pOrder = { urgent: 3, high: 2, normal: 1 };
           return pOrder[b.priority] - pOrder[a.priority];

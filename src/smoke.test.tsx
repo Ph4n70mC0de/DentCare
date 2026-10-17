@@ -19,7 +19,7 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 // Helper to render App with specific role
 function renderAppWithRole(role: string) {
   dentalStore.resetToSeed();
-  const user = dentalStore.getUsers().find(u => u.role === role);
+  const user = dentalStore.getUsers().find((u) => u.role === role);
   if (user) {
     dentalStore.setActiveUser(user.id);
   }
@@ -95,7 +95,9 @@ describe('Smoke Tests - All Views Render Successfully', () => {
   describe('Navigation Elements', () => {
     it('renders Navbar with role switcher in DEV', () => {
       renderAppWithRole('admin');
-      expect(screen.getByRole('combobox', { name: /switch user persona role/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('combobox', { name: /switch user persona role/i })
+      ).toBeInTheDocument();
     });
 
     it('renders Sidebar with navigation items', () => {

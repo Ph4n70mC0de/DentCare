@@ -15,11 +15,11 @@ export const NeoCard: React.FC<NeoCardProps> = ({
   ...props
 }) => {
   const variantClass = {
-    'raised': 'neo-raised',
+    raised: 'neo-raised',
     'raised-sm': 'neo-raised-sm',
     'raised-lg': 'neo-raised-lg',
-    'inset': 'neo-inset',
-    'inset-sm': 'neo-inset-sm'
+    inset: 'neo-inset',
+    'inset-sm': 'neo-inset-sm',
   }[variant];
 
   const hoverClass = hoverable
@@ -27,10 +27,7 @@ export const NeoCard: React.FC<NeoCardProps> = ({
     : '';
 
   return (
-    <div
-      className={`rounded-2xl p-6 ${variantClass} ${hoverClass} ${className}`}
-      {...props}
-    >
+    <div className={`rounded-2xl p-6 ${variantClass} ${hoverClass} ${className}`} {...props}>
       {children}
     </div>
   );

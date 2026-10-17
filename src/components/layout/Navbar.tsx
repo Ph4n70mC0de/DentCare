@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Activity,
-  RotateCcw,
-  Menu,
-  X
-} from 'lucide-react';
+import { Activity, RotateCcw, Menu, X } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NotificationCenter } from '../notifications/NotificationCenter';
 import { UserRole } from '../../types';
@@ -22,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isSidebarOpen,
   currentView,
   onSelectView,
-  onRoleSwitch
+  onRoleSwitch,
 }) => {
   const { activeUser, users, setActiveUser, resetToSeed } = useDentalStore();
 
@@ -47,17 +42,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       console.warn('[handleReset] Demo reset is disabled in production');
       return;
     }
-    if (window.confirm('Reset all appointments, queue, and logs back to initial clean demo state?')) {
+    if (
+      window.confirm('Reset all appointments, queue, and logs back to initial clean demo state?')
+    ) {
       resetToSeed();
     }
   };
 
   const getRoleLabel = (role: UserRole) => {
     switch (role) {
-      case 'patient': return 'Patient Portal';
-      case 'front_desk': return 'Front Desk';
-      case 'dentist': return 'Dentist Chair';
-      case 'admin': return 'Clinic Admin';
+      case 'patient':
+        return 'Patient Portal';
+      case 'front_desk':
+        return 'Front Desk';
+      case 'dentist':
+        return 'Dentist Chair';
+      case 'admin':
+        return 'Clinic Admin';
     }
   };
 
@@ -94,7 +95,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-base tracking-tight text-slate-800">DentCare</span>
+                <span className="font-extrabold text-base tracking-tight text-slate-800">
+                  DentCare
+                </span>
                 <span className="text-[9px] uppercase tracking-wider font-extrabold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
                   DDS Pro
                 </span>

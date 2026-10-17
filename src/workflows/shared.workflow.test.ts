@@ -44,7 +44,7 @@ describe('Shared Workflows - Timezone & Date Handling', () => {
       '2026-11-01', // US DST ends
     ];
 
-    dstDates.forEach(date => {
+    dstDates.forEach((date) => {
       const slots = dentalStore.getAvailableSlotsForDate('dentist-1', date, 45);
       expect(Array.isArray(slots)).toBe(true);
     });
@@ -170,7 +170,7 @@ describe('Shared Workflows - Edge Cases & Error Handling', () => {
       }
     }
 
-    const successful = results.filter(r => r !== null);
+    const successful = results.filter((r) => r !== null);
     expect(successful.length).toBe(1); // Only first succeeds
   });
 
@@ -184,7 +184,7 @@ describe('Shared Workflows - Edge Cases & Error Handling', () => {
     });
 
     // Simulate async delay
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
     const updated = dentalStore.updateAppointmentStatus(appointment.id, 'Checked-In');
     expect(updated).not.toBeNull();
@@ -232,7 +232,7 @@ describe('Shared Workflows - Edge Cases & Error Handling', () => {
     dentalStore.updateAppointmentStatus(appointment.id, 'Checked-In');
 
     // State should be preserved in store
-    const stored = dentalStore.getAppointments().find(a => a.id === appointment.id);
+    const stored = dentalStore.getAppointments().find((a) => a.id === appointment.id);
     expect(stored?.status).toBe('Waiting');
   });
 });
@@ -250,15 +250,15 @@ describe('Shared Workflows - Accessibility & Mobile', () => {
     const services = dentalStore.getServices();
 
     // All data should have IDs for keyboard navigation
-    appointments.forEach(a => expect(a.id).toBeDefined());
-    patients.forEach(p => expect(p.id).toBeDefined());
-    services.forEach(s => expect(s.id).toBeDefined());
+    appointments.forEach((a) => expect(a.id).toBeDefined());
+    patients.forEach((p) => expect(p.id).toBeDefined());
+    services.forEach((s) => expect(s.id).toBeDefined());
   });
 
   it('provides focusable elements in data', () => {
     // Services have names for screen readers
     const services = dentalStore.getServices();
-    services.forEach(s => {
+    services.forEach((s) => {
       expect(s.name).toBeDefined();
       expect(typeof s.name).toBe('string');
     });
@@ -274,14 +274,24 @@ describe('Shared Workflows - Accessibility & Mobile', () => {
 
   it('handles contrast requirements (data for UI)', () => {
     // Status values should be consistent for CSS styling
-    const statuses = dentalStore.getAppointments().map(a => a.status);
+    const statuses = dentalStore.getAppointments().map((a) => a.status);
     const validStatuses = [
-      'Requested', 'Pending', 'Confirmed', 'Waitlisted', 'Rescheduled',
-      'Cancelled', 'Checked-In', 'Waiting', 'In-Consultation',
-      'Payment-Pending', 'Completed', 'No-Show', 'Emergency'
+      'Requested',
+      'Pending',
+      'Confirmed',
+      'Waitlisted',
+      'Rescheduled',
+      'Cancelled',
+      'Checked-In',
+      'Waiting',
+      'In-Consultation',
+      'Payment-Pending',
+      'Completed',
+      'No-Show',
+      'Emergency',
     ];
 
-    statuses.forEach(s => {
+    statuses.forEach((s) => {
       expect(validStatuses).toContain(s);
     });
   });
@@ -298,8 +308,8 @@ describe('Shared Workflows - Accessibility & Mobile', () => {
 
     // Available actions based on status
     const validTransitions = {
-      'Confirmed': ['Checked-In', 'Cancelled', 'Rescheduled', 'No-Show'],
-      'Waiting': ['In-Consultation'],
+      Confirmed: ['Checked-In', 'Cancelled', 'Rescheduled', 'No-Show'],
+      Waiting: ['In-Consultation'],
       'In-Consultation': ['Payment-Pending'],
       'Payment-Pending': ['Completed'],
     };
@@ -408,10 +418,10 @@ describe('Shared Workflows - Data Integrity', () => {
     const dentists = dentalStore.getDentists();
     const services = dentalStore.getServices();
 
-    appointments.forEach(a => {
-      expect(patients.find(p => p.id === a.patientId)).toBeDefined();
-      expect(dentists.find(d => d.id === a.dentistId)).toBeDefined();
-      expect(services.find(s => s.id === a.serviceId)).toBeDefined();
+    appointments.forEach((a) => {
+      expect(patients.find((p) => p.id === a.patientId)).toBeDefined();
+      expect(dentists.find((d) => d.id === a.dentistId)).toBeDefined();
+      expect(services.find((s) => s.id === a.serviceId)).toBeDefined();
     });
   });
 
@@ -428,8 +438,12 @@ describe('Shared Workflows - Data Integrity', () => {
 
     dentalStore.updatePatient('pat-001', { phone: '+1 (555) 999-9999' });
     dentalStore.addService({
-      name: 'Test', description: 'Test', category: 'General',
-      durationMinutes: 30, price: 50, active: true,
+      name: 'Test',
+      description: 'Test',
+      category: 'General',
+      durationMinutes: 30,
+      price: 50,
+      active: true,
     });
 
     const finalLogs = dentalStore.getAuditLogs().length;
@@ -457,8 +471,8 @@ describe('Shared Workflows - Data Integrity', () => {
     });
     dentalStore.updateAppointmentStatus(apt2.id, 'Checked-In');
 
-    const original1 = dentalStore.getAppointments().find(a => a.id === apt1.id)?.startTime;
-    const original2 = dentalStore.getAppointments().find(a => a.id === apt2.id)?.startTime;
+    const original1 = dentalStore.getAppointments().find((a) => a.id === apt1.id)?.startTime;
+    const original2 = dentalStore.getAppointments().find((a) => a.id === apt2.id)?.startTime;
 
     dentalStore.createEmergencyAppointment({
       patientId: 'pat-004',
@@ -468,8 +482,8 @@ describe('Shared Workflows - Data Integrity', () => {
       severity: 'high',
     });
 
-    const shifted1 = dentalStore.getAppointments().find(a => a.id === apt1.id);
-    const shifted2 = dentalStore.getAppointments().find(a => a.id === apt2.id);
+    const shifted1 = dentalStore.getAppointments().find((a) => a.id === apt1.id);
+    const shifted2 = dentalStore.getAppointments().find((a) => a.id === apt2.id);
 
     expect(shifted1?.startTime).not.toBe(original1);
     expect(shifted2?.startTime).not.toBe(original2);

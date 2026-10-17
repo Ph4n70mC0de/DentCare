@@ -19,12 +19,15 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  preselectedAppointmentId
+  preselectedAppointmentId,
 }) => {
-  const { appointments, patients, dentists, services, updateAppointmentStatus, updatePatient } = useDentalStore();
+  const { appointments, patients, dentists, services, updateAppointmentStatus, updatePatient } =
+    useDentalStore();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedApt, setSelectedApt] = useState<Appointment | null>(
-    preselectedAppointmentId ? appointments.find((a) => a.id === preselectedAppointmentId) || null : null
+    preselectedAppointmentId
+      ? appointments.find((a) => a.id === preselectedAppointmentId) || null
+      : null
   );
 
   const [idVerified, setIdVerified] = useState<boolean>(false);
@@ -66,7 +69,9 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
     if (pat) {
       updatePatient(pat.id, {
         address: updatedAddress,
-        allergies: updatedAllergies ? updatedAllergies.split(',').map((s) => s.trim()) : ['None declared']
+        allergies: updatedAllergies
+          ? updatedAllergies.split(',').map((s) => s.trim())
+          : ['None declared'],
       });
     }
 
@@ -110,16 +115,15 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
 
           <div className="space-y-1">
             <h4 className="text-xl font-bold text-slate-800">Patient Checked In!</h4>
-            <p className="text-xs text-slate-500">
-              Assigned to Waiting Room with Queue Position:
-            </p>
+            <p className="text-xs text-slate-500">Assigned to Waiting Room with Queue Position:</p>
             <div className="inline-block px-6 py-2 rounded-2xl neo-inset bg-[#E8EEF5] text-blue-700 font-extrabold text-2xl my-2">
               Queue #{checkedInResult.queueNumber}
             </div>
           </div>
 
           <p className="text-xs text-slate-600">
-            Dentist {dentist?.fullName} has been notified that {patient?.fullName} has arrived and is waiting.
+            Dentist {dentist?.fullName} has been notified that {patient?.fullName} has arrived and
+            is waiting.
           </p>
 
           <div className="flex justify-center pt-2">
@@ -198,15 +202,21 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Patient:</span>
-              <span className="font-bold text-slate-800">{patient?.fullName} ({patient?.patientNumber})</span>
+              <span className="font-bold text-slate-800">
+                {patient?.fullName} ({patient?.patientNumber})
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Dentist & Service:</span>
-              <span className="font-bold text-slate-800">{dentist?.fullName} — {service?.name}</span>
+              <span className="font-bold text-slate-800">
+                {dentist?.fullName} — {service?.name}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">ID Reference on File:</span>
-              <span className="font-bold text-slate-800">{patient?.identificationReference || 'None on file'}</span>
+              <span className="font-bold text-slate-800">
+                {patient?.identificationReference || 'None on file'}
+              </span>
             </div>
           </div>
 
@@ -224,7 +234,9 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
               />
               <div className="text-xs">
                 <span className="font-bold text-slate-800">Physical ID Verified</span>
-                <p className="text-slate-500">Front desk staff verified photo ID or National/Insurance ID.</p>
+                <p className="text-slate-500">
+                  Front desk staff verified photo ID or National/Insurance ID.
+                </p>
               </div>
             </label>
 
@@ -245,11 +257,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
             <NeoButton variant="default" onClick={() => setSelectedApt(null)}>
               Change Patient
             </NeoButton>
-            <NeoButton
-              variant="primary"
-              disabled={!idVerified}
-              onClick={handleConfirmCheckIn}
-            >
+            <NeoButton variant="primary" disabled={!idVerified} onClick={handleConfirmCheckIn}>
               Confirm Check-In & Issue Queue Ticket
             </NeoButton>
           </div>

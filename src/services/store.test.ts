@@ -116,7 +116,10 @@ describe('DentalDataStore', () => {
       expect(inConsultation?.status).toBe('In-Consultation');
 
       // In-Consultation -> Payment-Pending
-      const paymentPending = dentalStore.updateAppointmentStatus(inConsultation!.id, 'Payment-Pending');
+      const paymentPending = dentalStore.updateAppointmentStatus(
+        inConsultation!.id,
+        'Payment-Pending'
+      );
       expect(paymentPending?.status).toBe('Payment-Pending');
 
       // Payment-Pending -> Completed
@@ -169,7 +172,10 @@ describe('DentalDataStore', () => {
       // Move through valid transitions: Confirmed -> Checked-In -> Waiting -> In-Consultation -> Payment-Pending
       dentalStore.updateAppointmentStatus(appointment.id, 'Checked-In'); // becomes Waiting
       dentalStore.updateAppointmentStatus(appointment.id, 'In-Consultation');
-      const paymentPendingApt = dentalStore.updateAppointmentStatus(appointment.id, 'Payment-Pending');
+      const paymentPendingApt = dentalStore.updateAppointmentStatus(
+        appointment.id,
+        'Payment-Pending'
+      );
       expect(paymentPendingApt?.status).toBe('Payment-Pending');
 
       const payment = dentalStore.processPayment({
@@ -188,7 +194,7 @@ describe('DentalDataStore', () => {
       expect(payment.balance).toBe(0);
 
       // Verify appointment is now Completed
-      const updatedApt = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const updatedApt = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(updatedApt?.status).toBe('Completed');
     });
   });

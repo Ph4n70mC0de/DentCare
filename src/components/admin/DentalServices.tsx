@@ -15,7 +15,7 @@ interface DentalServicesProps {
 export const DentalServices: React.FC<DentalServicesProps> = ({
   services,
   onAddService,
-  onUpdateService
+  onUpdateService,
 }) => {
   const [isAddingService, setIsAddingService] = useState<boolean>(false);
   const [newServiceName, setNewServiceName] = useState<string>('');
@@ -34,7 +34,7 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
       durationMinutes: Number(newServiceDuration),
       price: Number(newServicePrice),
       description: newServiceDesc.trim() || 'Professional dental care treatment.',
-      active: true
+      active: true,
     });
 
     setIsAddingService(false);
@@ -47,7 +47,9 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
       <div className="flex items-center justify-between border-b border-slate-300/40 pb-4">
         <div>
           <h3 className="text-sm font-bold text-slate-800">Clinic Dental Services & Pricing</h3>
-          <p className="text-xs text-slate-500">Manage dental catalog, procedure duration, and fees.</p>
+          <p className="text-xs text-slate-500">
+            Manage dental catalog, procedure duration, and fees.
+          </p>
         </div>
         <NeoButton size="sm" variant="primary" onClick={() => setIsAddingService(!isAddingService)}>
           <Plus className="w-3.5 h-3.5 mr-1" /> Add New Service
@@ -56,7 +58,9 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
 
       {isAddingService && (
         <form onSubmit={handleCreateService} className="p-5 rounded-2xl neo-inset space-y-4">
-          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">New Procedure Form</h4>
+          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            New Procedure Form
+          </h4>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <NeoInput
               label="Service Name *"
@@ -106,7 +110,12 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
             onChange={(e) => setNewServiceDesc(e.target.value)}
           />
           <div className="flex justify-end gap-2">
-            <NeoButton type="button" size="sm" variant="default" onClick={() => setIsAddingService(false)}>
+            <NeoButton
+              type="button"
+              size="sm"
+              variant="default"
+              onClick={() => setIsAddingService(false)}
+            >
               Cancel
             </NeoButton>
             <NeoButton type="submit" size="sm" variant="primary">
@@ -118,7 +127,10 @@ export const DentalServices: React.FC<DentalServicesProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {services.map((svc) => (
-          <div key={svc.id} className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-start justify-between gap-3">
+          <div
+            key={svc.id}
+            className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-start justify-between gap-3"
+          >
             <div>
               <div className="flex items-center gap-2">
                 <h5 className="font-bold text-slate-800 text-sm">{svc.name}</h5>

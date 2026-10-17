@@ -18,9 +18,10 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
   isOpen,
   onClose,
   appointment,
-  onSuccess
+  onSuccess,
 }) => {
-  const { rescheduleAppointment, getAvailableSlotsForDate, services, dentists, patients } = useDentalStore();
+  const { rescheduleAppointment, getAvailableSlotsForDate, services, dentists, patients } =
+    useDentalStore();
   const [newDate, setNewDate] = useState<string>('');
   const [newTime, setNewTime] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
@@ -33,9 +34,8 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
   const service = services.find((s) => s.id === appointment.serviceId);
 
   const duration = service ? service.durationMinutes : 45;
-  const availableSlots = newDate && dentist
-    ? getAvailableSlotsForDate(dentist.id, newDate, duration)
-    : [];
+  const availableSlots =
+    newDate && dentist ? getAvailableSlotsForDate(dentist.id, newDate, duration) : [];
 
   const handleReschedule = () => {
     setErrorMsg('');
@@ -82,12 +82,19 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
               <span>Reschedule Confirmed</span>
             </div>
             <p className="text-xs text-slate-600">
-              New Appointment <strong>#{newApt.appointmentNumber}</strong> confirmed for <strong>{newApt.date} at {newApt.startTime}</strong>.
+              New Appointment <strong>#{newApt.appointmentNumber}</strong> confirmed for{' '}
+              <strong>
+                {newApt.date} at {newApt.startTime}
+              </strong>
+              .
             </p>
           </div>
 
           <div className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] text-xs space-y-2 text-slate-600">
-            <p>• Historical record <strong>#{appointment.appointmentNumber}</strong> preserved with status 'Rescheduled'.</p>
+            <p>
+              • Historical record <strong>#{appointment.appointmentNumber}</strong> preserved with
+              status 'Rescheduled'.
+            </p>
             <p>• Live availability check passed and slot reserved.</p>
             <p>• Updated SMS & In-app notifications dispatched to {patient?.fullName}.</p>
             <p>• Dentist schedule updated.</p>
@@ -103,13 +110,21 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
         <div className="space-y-4">
           <div className="p-3.5 rounded-2xl neo-inset text-xs flex items-center justify-between">
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">Current Slot</span>
-              <span className="font-bold text-slate-700">{appointment.date} @ {appointment.startTime}</span>
+              <span className="text-slate-400 block text-[10px] uppercase font-bold">
+                Current Slot
+              </span>
+              <span className="font-bold text-slate-700">
+                {appointment.date} @ {appointment.startTime}
+              </span>
             </div>
             <ArrowRight className="w-4 h-4 text-blue-500" />
             <div>
-              <span className="text-slate-400 block text-[10px] uppercase font-bold">Dentist & Procedure</span>
-              <span className="font-bold text-slate-700">{dentist?.fullName} ({service?.name})</span>
+              <span className="text-slate-400 block text-[10px] uppercase font-bold">
+                Dentist & Procedure
+              </span>
+              <span className="font-bold text-slate-700">
+                {dentist?.fullName} ({service?.name})
+              </span>
             </div>
           </div>
 
@@ -139,7 +154,8 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
                 </label>
                 {availableSlots.length === 0 ? (
                   <p className="text-xs text-slate-500 italic p-3 neo-inset rounded-xl text-center">
-                    No slots available on {newDate} for {dentist?.fullName}. Please pick another date.
+                    No slots available on {newDate} for {dentist?.fullName}. Please pick another
+                    date.
                   </p>
                 ) : (
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-48 overflow-y-auto p-1">
@@ -180,11 +196,7 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
             <NeoButton variant="default" onClick={handleClose}>
               Cancel
             </NeoButton>
-            <NeoButton
-              variant="primary"
-              disabled={!newDate || !newTime}
-              onClick={handleReschedule}
-            >
+            <NeoButton variant="primary" disabled={!newDate || !newTime} onClick={handleReschedule}>
               Confirm Reschedule
             </NeoButton>
           </div>

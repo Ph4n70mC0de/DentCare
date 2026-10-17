@@ -51,7 +51,7 @@ describe('Patient Workflows', () => {
 
     it('links patient to existing user if userId provided', () => {
       const users = dentalStore.getUsers();
-      const existingUser = users.find(u => u.role === 'patient');
+      const existingUser = users.find((u) => u.role === 'patient');
 
       const patient = dentalStore.registerPatient({
         fullName: 'Linked Patient',
@@ -159,7 +159,7 @@ describe('Patient Workflows', () => {
 
     it('rejects booking for patient requiring staff review (after no-show)', () => {
       // First, mark patient as requiring review
-      const patient = dentalStore.getPatients().find(p => p.id === 'pat-005'); // Has noShowCount: 2
+      const patient = dentalStore.getPatients().find((p) => p.id === 'pat-005'); // Has noShowCount: 2
       expect(patient?.requiresStaffReviewForBooking).toBe(true);
 
       // Try to book as patient (not front_desk/admin)
@@ -195,10 +195,10 @@ describe('Patient Workflows', () => {
     it('views only signed-in patient appointments', () => {
       dentalStore.setActiveUser('user-patient-1'); // pat-001
       const appointments = dentalStore.getAppointments();
-      const patientAppointments = appointments.filter(a => a.patientId === 'pat-001');
+      const patientAppointments = appointments.filter((a) => a.patientId === 'pat-001');
 
       expect(patientAppointments.length).toBeGreaterThan(0);
-      patientAppointments.forEach(apt => {
+      patientAppointments.forEach((apt) => {
         expect(apt.patientId).toBe('pat-001');
       });
     });
@@ -212,10 +212,13 @@ describe('Patient Workflows', () => {
         startTime: '09:00',
       });
 
-      const result = dentalStore.cancelAppointment(appointment.id, 'Patient requested cancellation');
+      const result = dentalStore.cancelAppointment(
+        appointment.id,
+        'Patient requested cancellation'
+      );
 
       expect(result.success).toBe(true);
-      const cancelled = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const cancelled = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(cancelled?.status).toBe('Cancelled');
       expect(cancelled?.cancellationReason).toBe('Patient requested cancellation');
     });
@@ -248,7 +251,7 @@ describe('Patient Workflows', () => {
       expect(result.newAppointment?.rescheduledFromId).toBe(appointment.id);
 
       // Original should be marked Rescheduled
-      const original = dentalStore.getAppointments().find(a => a.id === appointment.id);
+      const original = dentalStore.getAppointments().find((a) => a.id === appointment.id);
       expect(original?.status).toBe('Rescheduled');
     });
 
@@ -278,8 +281,8 @@ describe('Patient Workflows', () => {
 
       // Verify both appointments exist and have Confirmed status
       const appointments = dentalStore.getAppointments();
-      const a1 = appointments.find(a => a.id === apt1.id);
-      const a2 = appointments.find(a => a.id === apt2.id);
+      const a1 = appointments.find((a) => a.id === apt1.id);
+      const a2 = appointments.find((a) => a.id === apt2.id);
       expect(a1?.status).toBe('Confirmed');
       expect(a2?.status).toBe('Confirmed');
 
@@ -321,7 +324,7 @@ describe('Patient Workflows', () => {
       dentalStore.leaveWaitlist(entry.id);
 
       const waitlist = dentalStore.getWaitlist();
-      const cancelledEntry = waitlist.find(w => w.id === entry.id);
+      const cancelledEntry = waitlist.find((w) => w.id === entry.id);
       expect(cancelledEntry?.status).toBe('cancelled');
     });
 
@@ -339,7 +342,8 @@ describe('Patient Workflows', () => {
       // But we can verify the behavior
       const waitlist = dentalStore.getWaitlist();
       const entries = waitlist.filter(
-        w => w.patientId === 'pat-001' && w.serviceId === 'serv-1' && w.preferredDate === '2026-10-20'
+        (w) =>
+          w.patientId === 'pat-001' && w.serviceId === 'serv-1' && w.preferredDate === '2026-10-20'
       );
       expect(entries.length).toBeGreaterThanOrEqual(1);
     });
@@ -348,22 +352,26 @@ describe('Patient Workflows', () => {
   describe('Patient Records Access', () => {
     it('views only own dental history', () => {
       dentalStore.setActiveUser('user-patient-1');
-      const patient = dentalStore.getPatients().find(p => p.userId === 'user-patient-1');
-      const consultations = dentalStore.getConsultations().filter(c => c.patientId === patient?.id);
+      const patient = dentalStore.getPatients().find((p) => p.userId === 'user-patient-1');
+      const consultations = dentalStore
+        .getConsultations()
+        .filter((c) => c.patientId === patient?.id);
 
       expect(consultations.length).toBeGreaterThanOrEqual(0);
-      consultations.forEach(c => {
+      consultations.forEach((c) => {
         expect(c.patientId).toBe(patient?.id);
       });
     });
 
     it('views only own prescriptions', () => {
       dentalStore.setActiveUser('user-patient-1');
-      const patient = dentalStore.getPatients().find(p => p.userId === 'user-patient-1');
-      const consultations = dentalStore.getConsultations().filter(c => c.patientId === patient?.id);
-      const prescriptions = consultations.flatMap(c => c.prescriptions);
+      const patient = dentalStore.getPatients().find((p) => p.userId === 'user-patient-1');
+      const consultations = dentalStore
+        .getConsultations()
+        .filter((c) => c.patientId === patient?.id);
+      const prescriptions = consultations.flatMap((c) => c.prescriptions);
 
-      prescriptions.forEach(rx => {
+      prescriptions.forEach((rx) => {
         expect(rx).toHaveProperty('medication');
         expect(rx).toHaveProperty('dosage');
       });
@@ -371,17 +379,21 @@ describe('Patient Workflows', () => {
 
     it('views only own notifications', () => {
       dentalStore.setActiveUser('user-patient-1');
-      const notifications = dentalStore.getNotifications().filter(n => n.userId === 'user-patient-1');
+      const notifications = dentalStore
+        .getNotifications()
+        .filter((n) => n.userId === 'user-patient-1');
 
-      notifications.forEach(n => {
+      notifications.forEach((n) => {
         expect(n.userId).toBe('user-patient-1');
       });
     });
 
     it('cannot view other patients records', () => {
       dentalStore.setActiveUser('user-patient-1');
-      const otherPatient = dentalStore.getPatients().find(p => p.id === 'pat-002');
-      const consultations = dentalStore.getConsultations().filter(c => c.patientId === otherPatient?.id);
+      const otherPatient = dentalStore.getPatients().find((p) => p.id === 'pat-002');
+      const consultations = dentalStore
+        .getConsultations()
+        .filter((c) => c.patientId === otherPatient?.id);
 
       // In a real app with API, this would be enforced server-side
       // Here we verify the store returns all data (client-side filtering is UI responsibility)

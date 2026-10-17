@@ -32,7 +32,7 @@ export const FrontDeskDashboard: React.FC<FrontDeskDashboardProps> = ({
   onNavigateToDayFlow,
   onNavigateToBilling,
   onNavigateToExceptions,
-  onNavigateToReports
+  onNavigateToReports,
 }) => {
   const currentView =
     activeTab === 'frontdesk-waiting-room'
@@ -81,19 +81,11 @@ export const FrontDeskDashboard: React.FC<FrontDeskDashboardProps> = ({
   }
 
   if (currentView === 'payments-insurance') {
-    return (
-      <PaymentAndInsurance
-        onNavigateToDayFlow={onNavigateToDayFlow}
-      />
-    );
+    return <PaymentAndInsurance onNavigateToDayFlow={onNavigateToDayFlow} />;
   }
 
   if (currentView === 'exception-flows') {
-    return (
-      <ExceptionFlows
-        onStartBooking={onStartBookingWithPatientId}
-      />
-    );
+    return <ExceptionFlows onStartBooking={onStartBookingWithPatientId} />;
   }
 
   if (currentView === 'reports') {

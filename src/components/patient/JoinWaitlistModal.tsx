@@ -22,16 +22,20 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
   dentists,
   currentPatientId,
   onJoinWaitlist,
-  initialServiceId
+  initialServiceId,
 }) => {
-  const [waitlistServiceId, setWaitlistServiceId] = useState(initialServiceId || services[0]?.id || '');
+  const [waitlistServiceId, setWaitlistServiceId] = useState(
+    initialServiceId || services[0]?.id || ''
+  );
   const [waitlistDentistId, setWaitlistDentistId] = useState('');
   const [waitlistDate, setWaitlistDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split('T')[0];
   });
-  const [waitlistTimeRange, setWaitlistTimeRange] = useState<'morning' | 'afternoon' | 'any'>('any');
+  const [waitlistTimeRange, setWaitlistTimeRange] = useState<'morning' | 'afternoon' | 'any'>(
+    'any'
+  );
   const [waitlistSuccessMsg, setWaitlistSuccessMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -50,10 +54,12 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
       preferredTimeRange: waitlistTimeRange,
       priority: 'normal',
       status: 'active',
-      notes: `Patient requested waitlist via portal on ${getTodayDateString()}`
+      notes: `Patient requested waitlist via portal on ${getTodayDateString()}`,
     });
 
-    setWaitlistSuccessMsg('Successfully joined the cancellation waitlist! You will be notified instantly when a slot opens.');
+    setWaitlistSuccessMsg(
+      'Successfully joined the cancellation waitlist! You will be notified instantly when a slot opens.'
+    );
     setTimeout(() => {
       setWaitlistSuccessMsg('');
       setSubmitting(false);
@@ -83,7 +89,9 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
-              <label className="font-bold text-slate-700 block mb-1">Dental Treatment / Procedure</label>
+              <label className="font-bold text-slate-700 block mb-1">
+                Dental Treatment / Procedure
+              </label>
               <select
                 value={waitlistServiceId}
                 onChange={(e) => setWaitlistServiceId(e.target.value)}
@@ -99,7 +107,9 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
             </div>
 
             <div>
-              <label className="font-bold text-slate-700 block mb-1">Preferred Dentist (Optional)</label>
+              <label className="font-bold text-slate-700 block mb-1">
+                Preferred Dentist (Optional)
+              </label>
               <select
                 value={waitlistDentistId}
                 onChange={(e) => setWaitlistDentistId(e.target.value)}
@@ -131,7 +141,9 @@ export const JoinWaitlistModal: React.FC<JoinWaitlistModalProps> = ({
                 <label className="font-bold text-slate-700 block mb-1">Time Range</label>
                 <select
                   value={waitlistTimeRange}
-                  onChange={(e) => setWaitlistTimeRange(e.target.value as 'morning' | 'afternoon' | 'any')}
+                  onChange={(e) =>
+                    setWaitlistTimeRange(e.target.value as 'morning' | 'afternoon' | 'any')
+                  }
                   className="w-full p-2.5 rounded-xl neo-inset bg-transparent text-slate-800 outline-none"
                 >
                   <option value="any">Any Time</option>

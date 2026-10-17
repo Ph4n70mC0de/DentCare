@@ -71,12 +71,15 @@ function useApi<T>(
       onSuccess?.(result);
       return result;
     } catch (err) {
-      const apiError = err instanceof ApiErrorClass ? err : new ApiErrorClass({
-        code: 'UNKNOWN_ERROR',
-        message: err instanceof Error ? err.message : 'Unknown error',
-        statusCode: 0,
-        timestamp: new Date().toISOString(),
-      });
+      const apiError =
+        err instanceof ApiErrorClass
+          ? err
+          : new ApiErrorClass({
+              code: 'UNKNOWN_ERROR',
+              message: err instanceof Error ? err.message : 'Unknown error',
+              statusCode: 0,
+              timestamp: new Date().toISOString(),
+            });
       setError(apiError);
       onError?.(apiError);
       throw apiError;
@@ -119,39 +122,45 @@ function useApiList<T>(
   const [error, setError] = useState<ApiErrorClass | null>(null);
   const isMounted = useRef(true);
 
-  const fetch = useCallback(async (p: ListFetcherParams, append = false) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await fetcher(p);
-      if (!isMounted.current) return;
+  const fetch = useCallback(
+    async (p: ListFetcherParams, append = false) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await fetcher(p);
+        if (!isMounted.current) return;
 
-      if (append) {
-        setData(prev => [...prev, ...result.data]);
-      } else {
-        setData(result.data);
+        if (append) {
+          setData((prev) => [...prev, ...result.data]);
+        } else {
+          setData(result.data);
+        }
+        setMeta({
+          page: result.meta.page,
+          pageSize: result.meta.pageSize,
+          totalItems: result.meta.totalItems,
+          totalPages: result.meta.totalPages,
+          hasNextPage: result.meta.hasNextPage,
+          hasPreviousPage: result.meta.hasPreviousPage,
+        });
+      } catch (err) {
+        if (!isMounted.current) return;
+        const apiError =
+          err instanceof ApiErrorClass
+            ? err
+            : new ApiErrorClass({
+                code: 'UNKNOWN_ERROR',
+                message: err instanceof Error ? err.message : 'Unknown error',
+                statusCode: 0,
+                timestamp: new Date().toISOString(),
+              });
+        setError(apiError);
+      } finally {
+        if (isMounted.current) setLoading(false);
       }
-      setMeta({
-        page: result.meta.page,
-        pageSize: result.meta.pageSize,
-        totalItems: result.meta.totalItems,
-        totalPages: result.meta.totalPages,
-        hasNextPage: result.meta.hasNextPage,
-        hasPreviousPage: result.meta.hasPreviousPage,
-      });
-    } catch (err) {
-      if (!isMounted.current) return;
-      const apiError = err instanceof ApiErrorClass ? err : new ApiErrorClass({
-        code: 'UNKNOWN_ERROR',
-        message: err instanceof Error ? err.message : 'Unknown error',
-        statusCode: 0,
-        timestamp: new Date().toISOString(),
-      });
-      setError(apiError);
-    } finally {
-      if (isMounted.current) setLoading(false);
-    }
-  }, [fetcher]);
+    },
+    [fetcher]
+  );
 
   const retry = useCallback(() => fetch(params), [fetch, params]);
   const refresh = useCallback(() => fetch({ ...params, page: 1 }), [fetch, params]);
@@ -162,12 +171,14 @@ function useApiList<T>(
   }, [fetch, params, meta]);
 
   const setParams = useCallback((newParams: Partial<ListFetcherParams>) => {
-    setParamsState(prev => ({ ...prev, ...newParams, page: 1 }));
+    setParamsState((prev) => ({ ...prev, ...newParams, page: 1 }));
   }, []);
 
   useEffect(() => {
     fetch(params);
-    return () => { isMounted.current = false; };
+    return () => {
+      isMounted.current = false;
+    };
   }, [fetch, params]);
 
   return { data, meta, loading, error, retry, refresh, loadMore, setParams };
@@ -189,28 +200,34 @@ function useMutation<TData, TVariables>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiErrorClass | null>(null);
 
-  const mutate = useCallback(async (variables: TVariables) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await mutator(variables);
-      setData(result);
-      onSuccess?.(result);
-      return result;
-    } catch (err) {
-      const apiError = err instanceof ApiErrorClass ? err : new ApiErrorClass({
-        code: 'UNKNOWN_ERROR',
-        message: err instanceof Error ? err.message : 'Unknown error',
-        statusCode: 0,
-        timestamp: new Date().toISOString(),
-      });
-      setError(apiError);
-      onError?.(apiError);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, [mutator, onSuccess, onError]);
+  const mutate = useCallback(
+    async (variables: TVariables) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await mutator(variables);
+        setData(result);
+        onSuccess?.(result);
+        return result;
+      } catch (err) {
+        const apiError =
+          err instanceof ApiErrorClass
+            ? err
+            : new ApiErrorClass({
+                code: 'UNKNOWN_ERROR',
+                message: err instanceof Error ? err.message : 'Unknown error',
+                statusCode: 0,
+                timestamp: new Date().toISOString(),
+              });
+        setError(apiError);
+        onError?.(apiError);
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [mutator, onSuccess, onError]
+  );
 
   const reset = useCallback(() => {
     setData(null);
@@ -226,7 +243,12 @@ function useMutation<TData, TVariables>(
 // ============================================
 
 // Appointment hooks
-export function useAppointments(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function useAppointments(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().appointments.getAll(p as any), []),
     params
@@ -241,34 +263,58 @@ export function useAppointment(id: string) {
 }
 
 export function useCreateAppointment() {
-  return useMutation(
-    useCallback((data: any) => useServices().appointments.create(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().appointments.create(data), []));
 }
 
 export function useUpdateAppointment() {
   return useMutation(
-    useCallback((vars: { id: string; data: any }) => useServices().appointments.update(vars.id, vars.data), [])
+    useCallback(
+      (vars: { id: string; data: any }) => useServices().appointments.update(vars.id, vars.data),
+      []
+    )
   );
 }
 
 export function useAppointmentActions() {
   const services = useServices();
   return {
-    cancel: useCallback((id: string, reason: string) => services.appointments.cancel(id, reason), [services]),
-    reschedule: useCallback((id: string, newDate: string, newStartTime: string) =>
-      services.appointments.reschedule(id, newDate, newStartTime), [services]),
-    markNoShow: useCallback((id: string, reason: string) => services.appointments.markNoShow(id, reason), [services]),
-    createEmergency: useCallback((data: any) => services.appointments.createEmergency(data), [services]),
-    getAvailableSlots: useCallback((dentistId: string, date: string, duration: number) =>
-      services.appointments.getAvailableSlots(dentistId, date, duration), [services]),
-    getAlternativeDates: useCallback((dentistId: string, fromDate: string, duration: number, count?: number) =>
-      services.appointments.getAlternativeDates(dentistId, fromDate, duration, count), [services]),
+    cancel: useCallback(
+      (id: string, reason: string) => services.appointments.cancel(id, reason),
+      [services]
+    ),
+    reschedule: useCallback(
+      (id: string, newDate: string, newStartTime: string) =>
+        services.appointments.reschedule(id, newDate, newStartTime),
+      [services]
+    ),
+    markNoShow: useCallback(
+      (id: string, reason: string) => services.appointments.markNoShow(id, reason),
+      [services]
+    ),
+    createEmergency: useCallback(
+      (data: any) => services.appointments.createEmergency(data),
+      [services]
+    ),
+    getAvailableSlots: useCallback(
+      (dentistId: string, date: string, duration: number) =>
+        services.appointments.getAvailableSlots(dentistId, date, duration),
+      [services]
+    ),
+    getAlternativeDates: useCallback(
+      (dentistId: string, fromDate: string, duration: number, count?: number) =>
+        services.appointments.getAlternativeDates(dentistId, fromDate, duration, count),
+      [services]
+    ),
   };
 }
 
 // Patient hooks
-export function usePatients(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function usePatients(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().patients.getAll(p as any), []),
     params
@@ -283,14 +329,15 @@ export function usePatient(id: string) {
 }
 
 export function useCreatePatient() {
-  return useMutation(
-    useCallback((data: any) => useServices().patients.create(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().patients.create(data), []));
 }
 
 export function useUpdatePatient() {
   return useMutation(
-    useCallback((vars: { id: string; data: any }) => useServices().patients.update(vars.id, vars.data), [])
+    useCallback(
+      (vars: { id: string; data: any }) => useServices().patients.update(vars.id, vars.data),
+      []
+    )
   );
 }
 
@@ -325,7 +372,12 @@ export function useDentalServices() {
 }
 
 // Waitlist hooks
-export function useWaitlist(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function useWaitlist(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().waitlist.getAll(p as any), []),
     params
@@ -333,19 +385,20 @@ export function useWaitlist(params?: { page?: number; pageSize?: number; sort?: 
 }
 
 export function useJoinWaitlist() {
-  return useMutation(
-    useCallback((data: any) => useServices().waitlist.join(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().waitlist.join(data), []));
 }
 
 export function useLeaveWaitlist() {
-  return useMutation(
-    useCallback((id: string) => useServices().waitlist.leave(id), [])
-  );
+  return useMutation(useCallback((id: string) => useServices().waitlist.leave(id), []));
 }
 
 // Consultation hooks
-export function useConsultations(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function useConsultations(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().consultations.getAll(p as any), []),
     params
@@ -353,13 +406,16 @@ export function useConsultations(params?: { page?: number; pageSize?: number; so
 }
 
 export function useCreateConsultation() {
-  return useMutation(
-    useCallback((data: any) => useServices().consultations.create(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().consultations.create(data), []));
 }
 
 // Payment hooks
-export function usePayments(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function usePayments(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().payments.getAll(p as any), []),
     params
@@ -367,20 +423,26 @@ export function usePayments(params?: { page?: number; pageSize?: number; sort?: 
 }
 
 export function useCreatePayment() {
-  return useMutation(
-    useCallback((data: any) => useServices().payments.create(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().payments.create(data), []));
 }
 
 export function useRevenueSummary(dateFrom: string, dateTo: string) {
   return useApi(
-    useCallback(() => useServices().payments.getRevenueSummary(dateFrom, dateTo), [dateFrom, dateTo]),
+    useCallback(
+      () => useServices().payments.getRevenueSummary(dateFrom, dateTo),
+      [dateFrom, dateTo]
+    ),
     { immediate: !!dateFrom && !!dateTo }
   );
 }
 
 // Notification hooks
-export function useNotifications(params?: { page?: number; pageSize?: number; sort?: { field?: string; direction?: 'asc' | 'desc' }; [key: string]: unknown }) {
+export function useNotifications(params?: {
+  page?: number;
+  pageSize?: number;
+  sort?: { field?: string; direction?: 'asc' | 'desc' };
+  [key: string]: unknown;
+}) {
   return useApiList(
     useCallback((p) => useServices().notifications.getAll(p as any), []),
     params
@@ -396,23 +458,27 @@ export function useSettings() {
 }
 
 export function useUpdateSettings() {
-  return useMutation(
-    useCallback((data: any) => useServices().settings.update(data), [])
-  );
+  return useMutation(useCallback((data: any) => useServices().settings.update(data), []));
 }
 
 // Report hooks
 export function useGenerateReport() {
   return useMutation(
-    useCallback((data: { type: string; format: string; filters?: Record<string, unknown> }) =>
-      useServices().reports.generateReport(data.type as any, data.format as any, data.filters), [])
+    useCallback(
+      (data: { type: string; format: string; filters?: Record<string, unknown> }) =>
+        useServices().reports.generateReport(data.type as any, data.format as any, data.filters),
+      []
+    )
   );
 }
 
 export function useDownloadReport() {
   return useMutation(
-    useCallback((data: { type: string; format: string; filters?: Record<string, unknown> }) =>
-      useServices().reports.downloadReport(data.type as any, data.format as any, data.filters), [])
+    useCallback(
+      (data: { type: string; format: string; filters?: Record<string, unknown> }) =>
+        useServices().reports.downloadReport(data.type as any, data.format as any, data.filters),
+      []
+    )
   );
 }
 

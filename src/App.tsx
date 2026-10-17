@@ -11,11 +11,16 @@ import { PatientDirectory } from './components/patient/PatientDirectory';
 import { UserRole } from './types';
 
 export default function App() {
-  const { activeUser, setActiveUser, users, currentPatient, updateAppointmentStatus } = useDentalStore();
+  const { activeUser, setActiveUser, users, currentPatient, updateAppointmentStatus } =
+    useDentalStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState<string>('frontdesk-dashboard');
-  const [activeConsultationAptId, setActiveConsultationAptId] = useState<string | undefined>(undefined);
-  const [selectedPatientIdForBooking, setSelectedPatientIdForBooking] = useState<string | undefined>(undefined);
+  const [activeConsultationAptId, setActiveConsultationAptId] = useState<string | undefined>(
+    undefined
+  );
+  const [selectedPatientIdForBooking, setSelectedPatientIdForBooking] = useState<
+    string | undefined
+  >(undefined);
 
   // Synchronize current default view when active role changes
   useEffect(() => {
@@ -90,16 +95,17 @@ export default function App() {
             currentView === 'patient-book' ||
             currentView === 'patient-appointments' ||
             currentView === 'patient-records' ||
-            currentView === 'patient-waitlist') && activeUser.role === 'patient' && (
-            <PatientDashboard
-              onStartBooking={() => {
-                setSelectedPatientIdForBooking(currentPatient?.id);
-                setCurrentView('patient-book');
-              }}
-              activeTab={currentView}
-              onSelectTab={(tab) => setCurrentView(tab)}
-            />
-          )}
+            currentView === 'patient-waitlist') &&
+            activeUser.role === 'patient' && (
+              <PatientDashboard
+                onStartBooking={() => {
+                  setSelectedPatientIdForBooking(currentPatient?.id);
+                  setCurrentView('patient-book');
+                }}
+                activeTab={currentView}
+                onSelectTab={(tab) => setCurrentView(tab)}
+              />
+            )}
 
           {/* Standalone Booking Wizard for Front Desk and Staff booking for patients */}
           {currentView === 'patient-book' && activeUser.role !== 'patient' && (
@@ -197,7 +203,7 @@ export default function App() {
           )}
 
           {/* Admin Views */}
-          {(currentView.startsWith('admin-')) && (
+          {currentView.startsWith('admin-') && (
             <AdminDashboard
               currentView={currentView}
               onStartBooking={(patientId) => {

@@ -34,7 +34,7 @@ import {
   CheckCircle,
   FileSpreadsheet,
   Activity,
-  UserCheck
+  UserCheck,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -48,7 +48,13 @@ import { CancellationModal } from '../exceptions/CancellationModal';
 import { RescheduleModal } from '../exceptions/RescheduleModal';
 import { BookingWizard } from './BookingWizard';
 import { getTodayDateString } from '../../data/seedData';
-import { getRelativeDay, getPatientAge, downloadICS, exportVisitsCSV, getTomorrowDate } from './patientUtils';
+import {
+  getRelativeDay,
+  getPatientAge,
+  downloadICS,
+  exportVisitsCSV,
+  getTomorrowDate,
+} from './patientUtils';
 import { JoinWaitlistModal } from './JoinWaitlistModal';
 
 interface MyDashboardProps {
@@ -63,7 +69,17 @@ interface MyDashboardProps {
   onJoinWaitlist: (entry: Omit<WaitlistEntry, 'id' | 'createdAt'>) => void;
 }
 
-export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSelectTab, selectedForCancel, setSelectedForCancel, selectedForReschedule, setSelectedForReschedule, isWaitlistModalOpen, setIsWaitlistModalOpen, onJoinWaitlist }) => {
+export const MyDashboard: React.FC<MyDashboardProps> = ({
+  onStartBooking,
+  onSelectTab,
+  selectedForCancel,
+  setSelectedForCancel,
+  selectedForReschedule,
+  setSelectedForReschedule,
+  isWaitlistModalOpen,
+  setIsWaitlistModalOpen,
+  onJoinWaitlist,
+}) => {
   const {
     currentPatient,
     appointments,
@@ -76,18 +92,24 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
     activeUser,
     settings,
     payments,
-    updateAppointmentStatus
+    updateAppointmentStatus,
   } = useDentalStore();
 
   const [selectedTooth, setSelectedTooth] = useState<number>(14);
-  const [dashboardVisitsFilter, setDashboardVisitsFilter] = useState<'all' | 'upcoming' | 'past'>('all');
+  const [dashboardVisitsFilter, setDashboardVisitsFilter] = useState<'all' | 'upcoming' | 'past'>(
+    'all'
+  );
   const [dashboardSearchQuery, setDashboardSearchQuery] = useState('');
   const [fastTrackSuccessMsg, setFastTrackSuccessMsg] = useState('');
   const [simulatedMatchMsg, setSimulatedMatchMsg] = useState('');
 
   const myAppointments = appointments
     .filter((a) => a.patientId === currentPatient.id)
-    .sort((a, b) => new Date(b.date + ' ' + b.startTime).getTime() - new Date(a.date + ' ' + a.startTime).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.date + ' ' + b.startTime).getTime() -
+        new Date(a.date + ' ' + a.startTime).getTime()
+    );
 
   const upcomingAppointments = myAppointments.filter((a) =>
     ['Requested', 'Confirmed', 'Checked-In', 'Waiting', 'In-Consultation'].includes(a.status)
@@ -101,8 +123,12 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
   const myWaitlist = waitlist.filter((w) => w.patientId === currentPatient.id);
 
   const nextAppointment = upcomingAppointments[0] || null;
-  const nextDentist = nextAppointment ? dentists.find((d) => d.id === nextAppointment.dentistId) : null;
-  const nextService = nextAppointment ? services.find((s) => s.id === nextAppointment.serviceId) : null;
+  const nextDentist = nextAppointment
+    ? dentists.find((d) => d.id === nextAppointment.dentistId)
+    : null;
+  const nextService = nextAppointment
+    ? services.find((s) => s.id === nextAppointment.serviceId)
+    : null;
 
   const handleSimulateWaitlistMatch = (entry: WaitlistEntry) => {
     const srv = services.find((s) => s.id === entry.serviceId);
@@ -114,10 +140,12 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
       type: 'waitlist_slot_available',
       title: '🎉 Early Cancellation Opening Found!',
       message: `Great news! An earlier slot opened for ${srv?.name || 'Dental Treatment'} with ${dnt?.fullName || 'Dentist'} on ${entry.preferredDate} at 2:00 PM. Claim your seat now!`,
-      channel: 'in_app'
+      channel: 'in_app',
     });
 
-    setSimulatedMatchMsg(`Match simulated! An alert has been dispatched to your notification center for ${srv?.name}.`);
+    setSimulatedMatchMsg(
+      `Match simulated! An alert has been dispatched to your notification center for ${srv?.name}.`
+    );
     setTimeout(() => setSimulatedMatchMsg(''), 4000);
   };
 
@@ -138,10 +166,12 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
       type: 'appointment_confirmed',
       title: 'Fast-Track Check-In Confirmed',
       message: `You are officially checked in for ${srv?.name || 'your treatment'} with ${dnt?.fullName || 'the dentist'}. Operatory chair and front reception have been notified!`,
-      channel: 'in_app'
+      channel: 'in_app',
     });
 
-    setFastTrackSuccessMsg('Check-In confirmed! Operatory room and reception have received your arrival alert.');
+    setFastTrackSuccessMsg(
+      'Check-In confirmed! Operatory room and reception have received your arrival alert.'
+    );
     setTimeout(() => setFastTrackSuccessMsg(''), 5000);
   };
 
@@ -152,7 +182,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
           <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <div>
             <span className="font-bold">Clinic Policy Notice:</span> You have{' '}
-            <strong>{currentPatient.noShowCount} recorded missed visits</strong>. Online bookings will be flagged for reception verification before confirmation.
+            <strong>{currentPatient.noShowCount} recorded missed visits</strong>. Online bookings
+            will be flagged for reception verification before confirmation.
           </div>
         </div>
       )}
@@ -199,15 +230,25 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                <span>DOB: <strong className="text-slate-700">{currentPatient.dateOfBirth}</strong> ({getPatientAge(currentPatient.dateOfBirth)})</span>
+                <span>
+                  DOB: <strong className="text-slate-700">{currentPatient.dateOfBirth}</strong> (
+                  {getPatientAge(currentPatient.dateOfBirth)})
+                </span>
                 <span>•</span>
-                <span>Phone: <strong className="text-slate-700">{currentPatient.phone}</strong></span>
+                <span>
+                  Phone: <strong className="text-slate-700">{currentPatient.phone}</strong>
+                </span>
                 <span>•</span>
-                <span>Sex: <strong className="text-slate-700">{currentPatient.sex}</strong></span>
+                <span>
+                  Sex: <strong className="text-slate-700">{currentPatient.sex}</strong>
+                </span>
                 {currentPatient.emergencyContact && (
                   <>
                     <span>•</span>
-                    <span className="text-slate-500">Emergency: {currentPatient.emergencyContact.name} ({currentPatient.emergencyContact.phone})</span>
+                    <span className="text-slate-500">
+                      Emergency: {currentPatient.emergencyContact.name} (
+                      {currentPatient.emergencyContact.phone})
+                    </span>
                   </>
                 )}
               </p>
@@ -240,7 +281,10 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
           <div className="flex items-center gap-3 shrink-0 self-start md:self-center">
             <div className="neo-inset px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Clinic Open Today ({settings.clinicOpenTime || '08:00'} - {settings.clinicCloseTime || '18:00'})</span>
+              <span>
+                Clinic Open Today ({settings.clinicOpenTime || '08:00'} -{' '}
+                {settings.clinicCloseTime || '18:00'})
+              </span>
             </div>
           </div>
         </div>
@@ -258,7 +302,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
               <Calendar className="w-4 h-4 text-blue-600 shrink-0 group-hover:scale-110 transition-transform" />
             </div>
             <span className="text-[10px] text-blue-600 font-semibold mt-1 truncate">
-              {nextAppointment ? getRelativeDay(nextAppointment.date, getTodayDateString(), getTomorrowDate()) : 'Book checkup'}
+              {nextAppointment
+                ? getRelativeDay(nextAppointment.date, getTodayDateString(), getTomorrowDate())
+                : 'Book checkup'}
             </span>
           </div>
 
@@ -268,7 +314,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
           >
             <span className="text-[10px] uppercase font-bold text-indigo-700">Upcoming</span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-indigo-700">{upcomingAppointments.length}</span>
+              <span className="text-2xl font-black text-indigo-700">
+                {upcomingAppointments.length}
+              </span>
               <Clock className="w-4 h-4 text-indigo-600 group-hover:scale-110 transition-transform" />
             </div>
             <span className="text-[10px] text-indigo-600 font-semibold mt-1">Confirmed visits</span>
@@ -280,7 +328,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
           >
             <span className="text-[10px] uppercase font-bold text-emerald-700">Completed</span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-emerald-700">{pastAppointments.length}</span>
+              <span className="text-2xl font-black text-emerald-700">
+                {pastAppointments.length}
+              </span>
               <CheckCircle2 className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
             </div>
             <span className="text-[10px] text-emerald-600 font-semibold mt-1">Past treatments</span>
@@ -295,7 +345,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
               <span className="text-2xl font-black text-purple-700">6-Mo</span>
               <Smile className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="text-[10px] text-purple-600 font-semibold mt-1">Prophylaxis cycle</span>
+            <span className="text-[10px] text-purple-600 font-semibold mt-1">
+              Prophylaxis cycle
+            </span>
           </div>
 
           <div
@@ -309,7 +361,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
               </span>
               <Pill className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="text-[10px] text-blue-600 font-semibold mt-1">Medications on file</span>
+            <span className="text-[10px] text-blue-600 font-semibold mt-1">
+              Medications on file
+            </span>
           </div>
 
           <div
@@ -385,13 +439,15 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-extrabold tracking-wider text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-full">
-                    Imminent Scheduled Visit • {getRelativeDay(nextAppointment.date, getTodayDateString(), getTomorrowDate())}
+                    Imminent Scheduled Visit •{' '}
+                    {getRelativeDay(nextAppointment.date, getTodayDateString(), getTomorrowDate())}
                   </span>
                   <h3 className="text-xl font-extrabold text-slate-800 mt-1">
                     {nextService?.name}
                   </h3>
                   <p className="text-xs text-slate-600">
-                    with Dr. {nextDentist?.fullName} ({nextDentist?.specialization}) • Ref #{nextAppointment.appointmentNumber}
+                    with Dr. {nextDentist?.fullName} ({nextDentist?.specialization}) • Ref #
+                    {nextAppointment.appointmentNumber}
                   </p>
                 </div>
               </div>
@@ -417,9 +473,15 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px] block uppercase font-bold">Appointment Window</span>
-                  <span className="font-extrabold text-slate-800 text-sm block">{nextAppointment.date}</span>
-                  <span className="text-[11px] text-blue-600 font-semibold">{nextAppointment.startTime} - {nextAppointment.endTime}</span>
+                  <span className="text-slate-400 text-[10px] block uppercase font-bold">
+                    Appointment Window
+                  </span>
+                  <span className="font-extrabold text-slate-800 text-sm block">
+                    {nextAppointment.date}
+                  </span>
+                  <span className="text-[11px] text-blue-600 font-semibold">
+                    {nextAppointment.startTime} - {nextAppointment.endTime}
+                  </span>
                 </div>
               </div>
 
@@ -428,9 +490,15 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                   <Stethoscope className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px] block uppercase font-bold">Provider & Operatory</span>
-                  <span className="font-extrabold text-slate-800 text-sm block">Dr. {nextDentist?.fullName}</span>
-                  <span className="text-[11px] text-slate-500">Operatory Chair 1 • {nextDentist?.specialization}</span>
+                  <span className="text-slate-400 text-[10px] block uppercase font-bold">
+                    Provider & Operatory
+                  </span>
+                  <span className="font-extrabold text-slate-800 text-sm block">
+                    Dr. {nextDentist?.fullName}
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    Operatory Chair 1 • {nextDentist?.specialization}
+                  </span>
                 </div>
               </div>
 
@@ -439,9 +507,15 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                   <CreditCard className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px] block uppercase font-bold">Treatment Fee & Time</span>
-                  <span className="font-extrabold text-slate-800 text-sm block">₱{nextService?.price} Est.</span>
-                  <span className="text-[11px] text-slate-500">{nextService?.durationMinutes} mins scheduled duration</span>
+                  <span className="text-slate-400 text-[10px] block uppercase font-bold">
+                    Treatment Fee & Time
+                  </span>
+                  <span className="font-extrabold text-slate-800 text-sm block">
+                    ₱{nextService?.price} Est.
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    {nextService?.durationMinutes} mins scheduled duration
+                  </span>
                 </div>
               </div>
             </div>
@@ -525,7 +599,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                 Ready for your 6-month checkup & professional cleaning?
               </h3>
               <p className="text-xs text-slate-500 max-w-xl">
-                Routine preventive visits catch early dental issues before they develop. Schedule your visit with our clinical team today.
+                Routine preventive visits catch early dental issues before they develop. Schedule
+                your visit with our clinical team today.
               </p>
             </div>
 
@@ -625,9 +700,19 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                       {myAppointments
                         .filter((apt) => {
                           if (dashboardVisitsFilter === 'upcoming') {
-                            if (!['Requested', 'Confirmed', 'Checked-In', 'Waiting', 'In-Consultation'].includes(apt.status)) return false;
+                            if (
+                              ![
+                                'Requested',
+                                'Confirmed',
+                                'Checked-In',
+                                'Waiting',
+                                'In-Consultation',
+                              ].includes(apt.status)
+                            )
+                              return false;
                           } else if (dashboardVisitsFilter === 'past') {
-                            if (!['Completed', 'Payment-Pending'].includes(apt.status)) return false;
+                            if (!['Completed', 'Payment-Pending'].includes(apt.status))
+                              return false;
                           }
 
                           if (dashboardSearchQuery.trim()) {
@@ -649,7 +734,12 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                         .map((apt) => {
                           const srv = services.find((s) => s.id === apt.serviceId);
                           const dnt = dentists.find((d) => d.id === apt.dentistId);
-                          const isPast = ['Completed', 'Cancelled', 'No-Show', 'Rescheduled'].includes(apt.status);
+                          const isPast = [
+                            'Completed',
+                            'Cancelled',
+                            'No-Show',
+                            'Rescheduled',
+                          ].includes(apt.status);
 
                           return (
                             <tr key={apt.id} className="hover:bg-slate-100/50 transition-all">
@@ -664,15 +754,21 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                               </td>
 
                               <td className="p-3.5">
-                                <div className="font-bold text-slate-900">{srv?.name || 'Dental Consultation'}</div>
+                                <div className="font-bold text-slate-900">
+                                  {srv?.name || 'Dental Consultation'}
+                                </div>
                                 <div className="text-[11px] text-slate-500">
                                   Duration: {srv?.durationMinutes} mins • Est. ₱{srv?.price}
                                 </div>
                               </td>
 
                               <td className="p-3.5">
-                                <div className="font-semibold text-slate-800">Dr. {dnt?.fullName}</div>
-                                <div className="text-[11px] text-slate-500">{dnt?.specialization}</div>
+                                <div className="font-semibold text-slate-800">
+                                  Dr. {dnt?.fullName}
+                                </div>
+                                <div className="text-[11px] text-slate-500">
+                                  {dnt?.specialization}
+                                </div>
                               </td>
 
                               <td className="p-3.5">
@@ -727,7 +823,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                   onClick={() => onSelectTab && onSelectTab('patient-appointments')}
                   className="text-xs font-bold text-blue-600 hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
-                  View All Appointments in Full Schedule ({myAppointments.length}) <ArrowRight className="w-3.5 h-3.5" />
+                  View All Appointments in Full Schedule ({myAppointments.length}){' '}
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </NeoCard>
@@ -735,13 +832,15 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
             <NeoCard className="space-y-3 p-5">
               <div className="flex items-center justify-between border-b border-slate-300/40 pb-2">
                 <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <Pill className="w-3.5 h-3.5 text-emerald-600" /> Active Prescriptions & Post-Care Directions
+                  <Pill className="w-3.5 h-3.5 text-emerald-600" /> Active Prescriptions & Post-Care
+                  Directions
                 </h4>
                 <button
                   onClick={() => onSelectTab && onSelectTab('patient-records')}
                   className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer"
                 >
-                  Full History ({myConsultations.reduce((a, c) => a + (c.prescriptions?.length || 0), 0)})
+                  Full History (
+                  {myConsultations.reduce((a, c) => a + (c.prescriptions?.length || 0), 0)})
                 </button>
               </div>
 
@@ -751,25 +850,31 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {myConsultations.flatMap((c) => c.prescriptions || []).slice(0, 4).map((rx, idx) => (
-                    <div key={idx} className="p-3 rounded-2xl neo-inset bg-[#EFF4FA] text-xs space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-blue-700 block">
-                          {rx.medication}
-                        </span>
-                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800">
-                          {rx.dosage}
-                        </span>
+                  {myConsultations
+                    .flatMap((c) => c.prescriptions || [])
+                    .slice(0, 4)
+                    .map((rx, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-2xl neo-inset bg-[#EFF4FA] text-xs space-y-1"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-extrabold text-blue-700 block">
+                            {rx.medication}
+                          </span>
+                          <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-md bg-blue-100 text-blue-800">
+                            {rx.dosage}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-600">
+                          <strong>Frequency:</strong> {rx.frequency}
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          <strong>Course:</strong> {rx.duration}
+                          {rx.instructions && ` • ${rx.instructions}`}
+                        </div>
                       </div>
-                      <div className="text-[11px] text-slate-600">
-                        <strong>Frequency:</strong> {rx.frequency}
-                      </div>
-                      <div className="text-[10px] text-slate-500">
-                        <strong>Course:</strong> {rx.duration}
-                        {rx.instructions && ` • ${rx.instructions}`}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               )}
             </NeoCard>
@@ -778,7 +883,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-300/40 pb-3">
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-                    <HeartPulse className="w-4 h-4 text-blue-600" /> Oral Health Snapshot & Clinical Odontogram
+                    <HeartPulse className="w-4 h-4 text-blue-600" /> Oral Health Snapshot & Clinical
+                    Odontogram
                   </h3>
                   <p className="text-xs text-slate-500">
                     Universal Tooth Numbering System (#1-32) clinical status & restorations summary.
@@ -837,7 +943,10 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                     Recent Clinical Notes
                   </span>
                   <p className="text-[11px] text-slate-600 italic line-clamp-2">
-                    &ldquo;{myConsultations[0]?.treatmentPlan || 'Routine dental checkup completed. Oral hygiene excellent, keep up daily flossing routine.'}&rdquo;
+                    &ldquo;
+                    {myConsultations[0]?.treatmentPlan ||
+                      'Routine dental checkup completed. Oral hygiene excellent, keep up daily flossing routine.'}
+                    &rdquo;
                   </p>
                 </div>
               </div>
@@ -888,7 +997,10 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                       <div key={w.id} className="p-3 rounded-2xl neo-inset space-y-2 text-xs">
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-slate-800">{srv?.name}</span>
-                          <NeoBadge variant={w.status === 'notified' ? 'warning' : 'info'} size="sm">
+                          <NeoBadge
+                            variant={w.status === 'notified' ? 'warning' : 'info'}
+                            size="sm"
+                          >
                             {w.status.toUpperCase()}
                           </NeoBadge>
                         </div>
@@ -930,7 +1042,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                     The 2x2 Brushing Rule
                   </span>
                   <p className="text-[10px] text-slate-500">
-                    Brush twice daily for 2 minutes using a soft-bristle brush and fluoride toothpaste at a 45-degree angle.
+                    Brush twice daily for 2 minutes using a soft-bristle brush and fluoride
+                    toothpaste at a 45-degree angle.
                   </p>
                 </div>
 
@@ -939,7 +1052,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                     Interdental Flossing
                   </span>
                   <p className="text-[10px] text-slate-500">
-                    Floss daily before bedtime to remove interproximal plaque that toothbrushes miss (approximately 35% of tooth area).
+                    Floss daily before bedtime to remove interproximal plaque that toothbrushes miss
+                    (approximately 35% of tooth area).
                   </p>
                 </div>
 
@@ -948,7 +1062,8 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
                     Fluoride & Enamel Protection
                   </span>
                   <p className="text-[10px] text-slate-500">
-                    Avoid rinsing with plain water immediately after brushing to let active fluoride remineralize enamel surfaces.
+                    Avoid rinsing with plain water immediately after brushing to let active fluoride
+                    remineralize enamel surfaces.
                   </p>
                 </div>
               </div>
@@ -969,7 +1084,9 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({ onStartBooking, onSele
 
                 <div className="flex items-center gap-2 text-slate-600">
                   <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Main Desk: <strong className="text-slate-800">{settings.clinicPhone}</strong></span>
+                  <span>
+                    Main Desk: <strong className="text-slate-800">{settings.clinicPhone}</strong>
+                  </span>
                 </div>
 
                 <div className="p-3 rounded-2xl neo-inset bg-rose-50/80 border border-rose-200 text-rose-900 space-y-1">

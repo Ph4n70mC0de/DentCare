@@ -16,7 +16,7 @@ import {
   CalendarClock,
   CalendarX2,
   Stethoscope,
-  Users
+  Users,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -54,15 +54,9 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
   onNavigateToDayFlow,
   onNavigateToBilling,
   onNavigateToExceptions,
-  onNavigateToReports
+  onNavigateToReports,
 }) => {
-  const {
-    appointments,
-    patients,
-    dentists,
-    services,
-    updateAppointmentStatus
-  } = useDentalStore();
+  const { appointments, patients, dentists, services, updateAppointmentStatus } = useDentalStore();
 
   const today = getTodayDateString();
 
@@ -82,34 +76,49 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
   const [noShowApt, setNoShowApt] = useState<Appointment | null>(null);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
 
-  const filteredAppointments = appointments.filter((apt) => {
-    if (dateFilter && apt.date !== dateFilter) return false;
-    if (statusFilter !== 'all' && apt.status !== statusFilter) return false;
-    if (dentistFilter !== 'all' && apt.dentistId !== dentistFilter) return false;
+  const filteredAppointments = appointments
+    .filter((apt) => {
+      if (dateFilter && apt.date !== dateFilter) return false;
+      if (statusFilter !== 'all' && apt.status !== statusFilter) return false;
+      if (dentistFilter !== 'all' && apt.dentistId !== dentistFilter) return false;
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const patient = patients.find((p) => p.id === apt.patientId);
-      return (
-        apt.appointmentNumber.toLowerCase().includes(q) ||
-        patient?.fullName.toLowerCase().includes(q) ||
-        patient?.phone.includes(q) ||
-        patient?.patientNumber.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const patient = patients.find((p) => p.id === apt.patientId);
+        return (
+          apt.appointmentNumber.toLowerCase().includes(q) ||
+          patient?.fullName.toLowerCase().includes(q) ||
+          patient?.phone.includes(q) ||
+          patient?.patientNumber.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    })
+    .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   const todayApts = appointments.filter((a) => a.date === today);
   const totalToday = todayApts.length;
-  const inWaiting = todayApts.filter((a) => a.status === 'Waiting' || a.status === 'Checked-In').length;
+  const inWaiting = todayApts.filter(
+    (a) => a.status === 'Waiting' || a.status === 'Checked-In'
+  ).length;
   const inChair = todayApts.filter((a) => a.status === 'In-Consultation').length;
   const pendingPayment = todayApts.filter((a) => a.status === 'Payment-Pending').length;
   const completedToday = todayApts.filter((a) => a.status === 'Completed').length;
-  const exceptionsToday = todayApts.filter((a) => ['Cancelled', 'No-Show', 'Emergency'].includes(a.status)).length;
+  const exceptionsToday = todayApts.filter((a) =>
+    ['Cancelled', 'No-Show', 'Emergency'].includes(a.status)
+  ).length;
 
   const exportScheduleCSV = () => {
-    const headers = ['Appointment #', 'Date', 'Time', 'Patient', 'Patient ID', 'Dentist', 'Service', 'Status'];
+    const headers = [
+      'Appointment #',
+      'Date',
+      'Time',
+      'Patient',
+      'Patient ID',
+      'Dentist',
+      'Service',
+      'Status',
+    ];
     const rows = filteredAppointments.map((apt) => {
       const p = patients.find((pat) => pat.id === apt.patientId);
       const d = dentists.find((dnt) => dnt.id === apt.dentistId);
@@ -122,7 +131,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
         p?.patientNumber || '',
         d?.fullName || '',
         s?.name || '',
-        apt.status
+        apt.status,
       ].join(',');
     });
 
@@ -273,10 +282,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
             onChange={(e) => setDateFilter(e.target.value)}
           />
 
-          <NeoSelect
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
+          <NeoSelect value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="all">All Statuses</option>
             <option value="Requested">Requested</option>
             <option value="Confirmed">Confirmed</option>
@@ -291,13 +297,12 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
             <option value="Emergency">Emergency</option>
           </NeoSelect>
 
-          <NeoSelect
-            value={dentistFilter}
-            onChange={(e) => setDentistFilter(e.target.value)}
-          >
+          <NeoSelect value={dentistFilter} onChange={(e) => setDentistFilter(e.target.value)}>
             <option value="all">All Dentists</option>
             {dentists.map((d) => (
-              <option key={d.id} value={d.id}>{d.fullName}</option>
+              <option key={d.id} value={d.id}>
+                {d.fullName}
+              </option>
             ))}
           </NeoSelect>
         </div>
@@ -410,7 +415,9 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
                           </button>
                         )}
 
-                        {!['Completed', 'Cancelled', 'No-Show', 'Rescheduled'].includes(apt.status) && (
+                        {!['Completed', 'Cancelled', 'No-Show', 'Rescheduled'].includes(
+                          apt.status
+                        ) && (
                           <>
                             <button
                               onClick={() => setRescheduleApt(apt)}
@@ -488,10 +495,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
         appointment={noShowApt}
       />
 
-      <EmergencyModal
-        isOpen={isEmergencyOpen}
-        onClose={() => setIsEmergencyOpen(false)}
-      />
+      <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
     </div>
   );
 };

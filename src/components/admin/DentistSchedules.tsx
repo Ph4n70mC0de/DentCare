@@ -22,7 +22,7 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
   blockedSchedules,
   dentists,
   onAddBlockedSchedule,
-  onRemoveBlockedSchedule
+  onRemoveBlockedSchedule,
 }) => {
   const [showBlockedForm, setShowBlockedForm] = useState(false);
   const [blockedDate, setBlockedDate] = useState('');
@@ -43,7 +43,7 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
       startTime: blockedAllDay ? undefined : blockedStart,
       endTime: blockedAllDay ? undefined : blockedEnd,
       reason: blockedReason.trim(),
-      isAllDay: blockedAllDay
+      isAllDay: blockedAllDay,
     });
 
     setShowBlockedForm(false);
@@ -68,16 +68,25 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
         <div className="border-b border-slate-300/40 pb-3 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-slate-800">Dentist Weekly Schedules</h3>
-            <p className="text-xs text-slate-500">Active operating hours per practitioner. Use this to verify coverage before accepting bookings.</p>
+            <p className="text-xs text-slate-500">
+              Active operating hours per practitioner. Use this to verify coverage before accepting
+              bookings.
+            </p>
           </div>
-          <NeoButton size="sm" variant="primary" onClick={() => setShowBlockedForm(!showBlockedForm)}>
+          <NeoButton
+            size="sm"
+            variant="primary"
+            onClick={() => setShowBlockedForm(!showBlockedForm)}
+          >
             <Plus className="w-3.5 h-3.5 mr-1" /> Block Date / Time
           </NeoButton>
         </div>
 
         {showBlockedForm && (
           <form onSubmit={handleAddBlocked} className="p-5 rounded-2xl neo-inset space-y-4">
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Block Schedule</h4>
+            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              Block Schedule
+            </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <NeoInput
                 label="Date (YYYY-MM-DD)"
@@ -101,7 +110,9 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
                 onChange={(e) => setBlockedDentistOnly(e.target.checked)}
                 className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
               />
-              <label htmlFor="blockedDentistOnly" className="text-xs text-slate-700">Apply to specific dentist only</label>
+              <label htmlFor="blockedDentistOnly" className="text-xs text-slate-700">
+                Apply to specific dentist only
+              </label>
             </div>
             {blockedDentistOnly && (
               <NeoSelect
@@ -111,7 +122,9 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
               >
                 <option value="">Select dentist...</option>
                 {dentists.map((d) => (
-                  <option key={d.id} value={d.id}>{d.fullName}</option>
+                  <option key={d.id} value={d.id}>
+                    {d.fullName}
+                  </option>
                 ))}
               </NeoSelect>
             )}
@@ -132,7 +145,12 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
               </div>
             )}
             <div className="flex justify-end gap-2">
-              <NeoButton type="button" size="sm" variant="default" onClick={() => setShowBlockedForm(false)}>
+              <NeoButton
+                type="button"
+                size="sm"
+                variant="default"
+                onClick={() => setShowBlockedForm(false)}
+              >
                 Cancel
               </NeoButton>
               <NeoButton type="submit" size="sm" variant="primary">
@@ -152,14 +170,23 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
                     <h5 className="font-bold text-slate-800 text-sm">{d.fullName}</h5>
                     <span className="text-[11px] text-slate-500">{d.specialization}</span>
                   </div>
-                  <NeoBadge variant="info" size="sm">{dentistSchedules.length} active days</NeoBadge>
+                  <NeoBadge variant="info" size="sm">
+                    {dentistSchedules.length} active days
+                  </NeoBadge>
                 </div>
                 <div className="space-y-2">
                   {dentistSchedules.map((s) => (
-                    <div key={s.id} className="flex items-center justify-between text-xs p-2 rounded-xl neo-inset">
+                    <div
+                      key={s.id}
+                      className="flex items-center justify-between text-xs p-2 rounded-xl neo-inset"
+                    >
                       <span className="font-semibold text-slate-700">{DAYS[s.dayOfWeek]}</span>
-                      <span className="text-slate-600">{s.startTime} - {s.endTime}</span>
-                      <span className="text-[10px] text-slate-400">Break: {s.breakStart}-{s.breakEnd}</span>
+                      <span className="text-slate-600">
+                        {s.startTime} - {s.endTime}
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        Break: {s.breakStart}-{s.breakEnd}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -185,16 +212,23 @@ export const DentistSchedules: React.FC<DentistSchedulesProps> = ({
             </div>
           ) : (
             blockedSchedules.map((b) => (
-              <div key={b.id} className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-center justify-between gap-4">
+              <div
+                key={b.id}
+                className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-center justify-between gap-4"
+              >
                 <div className="flex items-center gap-3">
                   <CalendarX className="w-5 h-5 text-rose-600" />
                   <div>
                     <span className="font-bold text-slate-800 text-sm">{b.date}</span>
                     {!b.isAllDay && (
-                      <span className="text-xs text-slate-600 ml-2">{b.startTime} - {b.endTime}</span>
+                      <span className="text-xs text-slate-600 ml-2">
+                        {b.startTime} - {b.endTime}
+                      </span>
                     )}
                     <p className="text-xs text-slate-600">{b.reason}</p>
-                    <span className="text-[10px] text-slate-400">{getDentistName(b.dentistId)}</span>
+                    <span className="text-[10px] text-slate-400">
+                      {getDentistName(b.dentistId)}
+                    </span>
                   </div>
                 </div>
                 <NeoButton size="sm" variant="default" onClick={() => handleRemoveBlocked(b.id)}>

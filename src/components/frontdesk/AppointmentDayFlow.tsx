@@ -21,7 +21,7 @@ import {
   CalendarClock,
   CalendarX2,
   PhoneCall,
-  User
+  User,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -51,15 +51,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
   onStartBooking,
   onNavigateToWaitingRoom,
   onStartConsultation,
-  onNavigateToBilling
+  onNavigateToBilling,
 }) => {
-  const {
-    appointments,
-    patients,
-    dentists,
-    services,
-    updateAppointmentStatus
-  } = useDentalStore();
+  const { appointments, patients, dentists, services, updateAppointmentStatus } = useDentalStore();
 
   const today = getTodayDateString();
   const [selectedDate, setSelectedDate] = useState<string>(today);
@@ -95,48 +89,58 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
   };
 
   // Filter appointments for the selected date
-  const dayAppointments = appointments.filter((apt) => {
-    if (apt.date !== selectedDate) return false;
-    if (dentistFilter !== 'all' && apt.dentistId !== dentistFilter) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const patient = patients.find((p) => p.id === apt.patientId);
-      return (
-        apt.appointmentNumber.toLowerCase().includes(q) ||
-        patient?.fullName.toLowerCase().includes(q) ||
-        patient?.phone.includes(q) ||
-        patient?.patientNumber.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  }).sort((a, b) => a.startTime.localeCompare(b.startTime));
+  const dayAppointments = appointments
+    .filter((apt) => {
+      if (apt.date !== selectedDate) return false;
+      if (dentistFilter !== 'all' && apt.dentistId !== dentistFilter) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const patient = patients.find((p) => p.id === apt.patientId);
+        return (
+          apt.appointmentNumber.toLowerCase().includes(q) ||
+          patient?.fullName.toLowerCase().includes(q) ||
+          patient?.phone.includes(q) ||
+          patient?.patientNumber.toLowerCase().includes(q)
+        );
+      }
+      return true;
+    })
+    .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   // Partition into Day Flow Pipeline Stages
   const stage1Scheduled = dayAppointments.filter((a) =>
     ['Confirmed', 'Requested'].includes(a.status)
   );
-  const stage2Waiting = dayAppointments.filter((a) =>
-    ['Checked-In', 'Waiting'].includes(a.status)
-  );
-  const stage3InChair = dayAppointments.filter((a) =>
-    a.status === 'In-Consultation'
-  );
-  const stage4PaymentPending = dayAppointments.filter((a) =>
-    a.status === 'Payment-Pending'
-  );
-  const stage5Completed = dayAppointments.filter((a) =>
-    a.status === 'Completed'
-  );
+  const stage2Waiting = dayAppointments.filter((a) => ['Checked-In', 'Waiting'].includes(a.status));
+  const stage3InChair = dayAppointments.filter((a) => a.status === 'In-Consultation');
+  const stage4PaymentPending = dayAppointments.filter((a) => a.status === 'Payment-Pending');
+  const stage5Completed = dayAppointments.filter((a) => a.status === 'Completed');
   const stageExceptions = dayAppointments.filter((a) =>
     ['Emergency', 'Cancelled', 'No-Show'].includes(a.status)
   );
 
   // Time slots for timeline view (08:00 to 18:00)
   const timeSlots = [
-    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
-    '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
-    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30'
+    '08:00',
+    '08:30',
+    '09:00',
+    '09:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '11:30',
+    '12:00',
+    '12:30',
+    '13:00',
+    '13:30',
+    '14:00',
+    '14:30',
+    '15:00',
+    '15:30',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
   ];
 
   const handleAdvanceStage = (apt: Appointment) => {
@@ -147,7 +151,10 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
     } else if (['Checked-In', 'Waiting'].includes(apt.status)) {
       // Call to operatory chair
       updateAppointmentStatus(apt.id, 'In-Consultation', {
-        consultationStartedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        consultationStartedAt: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       });
     } else if (apt.status === 'In-Consultation') {
       // Finish exam -> send to checkout
@@ -164,13 +171,16 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-800 tracking-tight">Appointment Day Flow</h1>
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+              Appointment Day Flow
+            </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
               Live Flow Engine
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1">
-            Real-time patient journey from morning check-in to operatory chair, checkout, and follow-up.
+            Real-time patient journey from morning check-in to operatory chair, checkout, and
+            follow-up.
           </p>
         </div>
 
@@ -187,7 +197,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <button
               onClick={handleToday}
               className={`px-3 py-1 text-xs font-bold rounded-xl cursor-pointer transition-colors ${
-                selectedDate === today ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'
+                selectedDate === today
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-200'
               }`}
             >
               Today
@@ -211,7 +223,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <button
               onClick={() => setViewMode('pipeline')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                viewMode === 'pipeline' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                viewMode === 'pipeline'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Columns className="w-3.5 h-3.5" />
@@ -220,7 +234,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <button
               onClick={() => setViewMode('timeline')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
-                viewMode === 'timeline' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+                viewMode === 'timeline'
+                  ? 'bg-white shadow-xs text-blue-700'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <CalendarDays className="w-3.5 h-3.5" />
@@ -308,7 +324,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
           >
             <option value="all">All Doctors</option>
             {dentists.map((d) => (
-              <option key={d.id} value={d.id}>{d.fullName} ({d.specialization})</option>
+              <option key={d.id} value={d.id}>
+                {d.fullName} ({d.specialization})
+              </option>
             ))}
           </select>
         </div>
@@ -356,7 +374,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-                <h3 className="font-bold text-xs text-slate-700 uppercase tracking-wider">Scheduled</h3>
+                <h3 className="font-bold text-xs text-slate-700 uppercase tracking-wider">
+                  Scheduled
+                </h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
                 {stage1Scheduled.length}
@@ -379,7 +399,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-indigo-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse" />
-                <h3 className="font-bold text-xs text-indigo-900 uppercase tracking-wider">In Waiting Room</h3>
+                <h3 className="font-bold text-xs text-indigo-900 uppercase tracking-wider">
+                  In Waiting Room
+                </h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-200 text-indigo-800">
                 {stage2Waiting.length}
@@ -402,7 +424,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-purple-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
-                <h3 className="font-bold text-xs text-purple-900 uppercase tracking-wider">In Operatory Chair</h3>
+                <h3 className="font-bold text-xs text-purple-900 uppercase tracking-wider">
+                  In Operatory Chair
+                </h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-200 text-purple-800">
                 {stage3InChair.length}
@@ -425,7 +449,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-amber-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <h3 className="font-bold text-xs text-amber-900 uppercase tracking-wider">Payment & Checkout</h3>
+                <h3 className="font-bold text-xs text-amber-900 uppercase tracking-wider">
+                  Payment & Checkout
+                </h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-200 text-amber-800">
                 {stage4PaymentPending.length}
@@ -434,9 +460,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
             <div className="space-y-2.5 flex-1 overflow-y-auto max-h-[700px] pr-1">
               {stage4PaymentPending.length === 0 ? (
-                <div className="text-center py-8 text-amber-400 text-xs">
-                  No pending checkouts
-                </div>
+                <div className="text-center py-8 text-amber-400 text-xs">No pending checkouts</div>
               ) : (
                 stage4PaymentPending.map((apt) => renderFlowCard(apt))
               )}
@@ -448,7 +472,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-emerald-200/60">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <h3 className="font-bold text-xs text-emerald-900 uppercase tracking-wider">Completed</h3>
+                <h3 className="font-bold text-xs text-emerald-900 uppercase tracking-wider">
+                  Completed
+                </h3>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-800">
                 {stage5Completed.length}
@@ -487,7 +513,10 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
             <div className="space-y-1.5 mt-2">
               {timeSlots.map((time) => {
                 return (
-                  <div key={time} className="grid grid-cols-[100px_repeat(3,_1fr)] gap-3 items-center min-h-[48px] py-1 border-b border-slate-100">
+                  <div
+                    key={time}
+                    className="grid grid-cols-[100px_repeat(3,_1fr)] gap-3 items-center min-h-[48px] py-1 border-b border-slate-100"
+                  >
                     <span className="text-xs font-mono font-bold text-slate-400 pl-1">{time}</span>
                     {dentists.map((dentist) => {
                       const apt = dayAppointments.find(
@@ -510,7 +539,10 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
 
                       if (!isStart) {
                         return (
-                          <div key={dentist.id} className="h-10 rounded-xl bg-blue-50/20 border border-blue-100 flex items-center px-2 text-[10px] text-slate-400">
+                          <div
+                            key={dentist.id}
+                            className="h-10 rounded-xl bg-blue-50/20 border border-blue-100 flex items-center px-2 text-[10px] text-slate-400"
+                          >
                             ↳ In progress
                           </div>
                         );
@@ -526,12 +558,16 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
                           className="p-2.5 rounded-xl neo-raised hover:border-blue-300 border border-transparent transition-all cursor-pointer bg-white"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-xs text-slate-800 truncate">{patient?.fullName}</span>
+                            <span className="font-bold text-xs text-slate-800 truncate">
+                              {patient?.fullName}
+                            </span>
                             <NeoStatusPill status={apt.status} />
                           </div>
                           <div className="flex items-center justify-between mt-1 text-[11px] text-slate-500">
                             <span className="truncate">{service?.name}</span>
-                            <span className="font-mono text-[10px] font-semibold">{apt.startTime}-{apt.endTime}</span>
+                            <span className="font-mono text-[10px] font-semibold">
+                              {apt.startTime}-{apt.endTime}
+                            </span>
                           </div>
                         </div>
                       );
@@ -550,9 +586,13 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-rose-600" />
-              <h3 className="font-bold text-sm text-rose-900">Today's Schedule Disruptions & Exceptions ({stageExceptions.length})</h3>
+              <h3 className="font-bold text-sm text-rose-900">
+                Today's Schedule Disruptions & Exceptions ({stageExceptions.length})
+              </h3>
             </div>
-            <span className="text-xs text-rose-600 font-semibold">Cancelled, No-Shows & Emergency Additions</span>
+            <span className="text-xs text-rose-600 font-semibold">
+              Cancelled, No-Shows & Emergency Additions
+            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -562,19 +602,28 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
               const srv = services.find((s) => s.id === apt.serviceId);
 
               return (
-                <div key={apt.id} className="neo-card p-3 rounded-2xl bg-white border border-rose-100 flex flex-col justify-between">
+                <div
+                  key={apt.id}
+                  className="neo-card p-3 rounded-2xl bg-white border border-rose-100 flex flex-col justify-between"
+                >
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-xs text-slate-800">{pat?.fullName}</span>
                       <NeoStatusPill status={apt.status} />
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-1 font-mono">{apt.startTime} with {dent?.fullName}</p>
+                    <p className="text-[11px] text-slate-500 mt-1 font-mono">
+                      {apt.startTime} with {dent?.fullName}
+                    </p>
                     <p className="text-[11px] text-slate-600 font-medium">{srv?.name}</p>
                     {apt.cancellationReason && (
-                      <p className="text-[10px] text-rose-600 mt-1 italic">Reason: "{apt.cancellationReason}"</p>
+                      <p className="text-[10px] text-rose-600 mt-1 italic">
+                        Reason: "{apt.cancellationReason}"
+                      </p>
                     )}
                     {apt.noShowReason && (
-                      <p className="text-[10px] text-rose-600 mt-1 italic">No-Show: "{apt.noShowReason}"</p>
+                      <p className="text-[10px] text-rose-600 mt-1 italic">
+                        No-Show: "{apt.noShowReason}"
+                      </p>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-slate-100">
@@ -602,8 +651,15 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
     const dentist = dentists.find((d) => d.id === apt.dentistId);
     const service = services.find((s) => s.id === apt.serviceId);
 
-    const hasAlerts = patient?.medicalAlerts && patient.medicalAlerts.length > 0 && !patient.medicalAlerts.includes('None declared');
-    const hasAllergies = patient?.allergies && patient.allergies.length > 0 && !patient.allergies.includes('None declared') && !patient.allergies.includes('None');
+    const hasAlerts =
+      patient?.medicalAlerts &&
+      patient.medicalAlerts.length > 0 &&
+      !patient.medicalAlerts.includes('None declared');
+    const hasAllergies =
+      patient?.allergies &&
+      patient.allergies.length > 0 &&
+      !patient.allergies.includes('None declared') &&
+      !patient.allergies.includes('None');
 
     return (
       <div
@@ -612,7 +668,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
       >
         <div className="flex items-start justify-between gap-1.5">
           <div>
-            <span className="text-[10px] font-mono font-bold text-slate-400 block">{apt.appointmentNumber}</span>
+            <span className="text-[10px] font-mono font-bold text-slate-400 block">
+              {apt.appointmentNumber}
+            </span>
             <p className="font-bold text-xs text-slate-900 leading-snug">{patient?.fullName}</p>
             <span className="text-[10px] text-slate-500 font-mono">{patient?.patientNumber}</span>
           </div>
@@ -630,7 +688,9 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
           </div>
           <div className="flex items-center justify-between text-slate-500 text-[10px]">
             <span>{dentist?.fullName}</span>
-            <span className="font-mono font-bold">{apt.startTime} - {apt.endTime}</span>
+            <span className="font-mono font-bold">
+              {apt.startTime} - {apt.endTime}
+            </span>
           </div>
         </div>
 
@@ -776,10 +836,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
           appointment={noShowApt}
         />
 
-        <EmergencyModal
-          isOpen={isEmergencyOpen}
-          onClose={() => setIsEmergencyOpen(false)}
-        />
+        <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
       </>
     );
   }

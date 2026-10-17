@@ -16,7 +16,7 @@ import {
   PhoneCall,
   Mail,
   FileSpreadsheet,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -34,9 +34,7 @@ interface ExceptionFlowsProps {
   onStartBooking?: (patientId?: string) => void;
 }
 
-export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
-  onStartBooking
-}) => {
+export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({ onStartBooking }) => {
   const {
     appointments,
     patients,
@@ -47,11 +45,13 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
     updatePatient,
     updateAppointmentStatus,
     sendNotification,
-    createAppointment
+    createAppointment,
   } = useDentalStore();
 
   const today = getTodayDateString();
-  const [activeTab, setActiveTab] = useState<'emergencies' | 'noshows' | 'cancellations' | 'waitlist'>('emergencies');
+  const [activeTab, setActiveTab] = useState<
+    'emergencies' | 'noshows' | 'cancellations' | 'waitlist'
+  >('emergencies');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Modals state
@@ -64,26 +64,32 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
   const [slotToBackfill, setSlotToBackfill] = useState<Appointment | null>(null);
 
   // Filtered queries
-  const emergencyAppointments = appointments.filter(
-    (a) => a.isEmergency || a.status === 'Emergency'
-  ).sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
+  const emergencyAppointments = appointments
+    .filter((a) => a.isEmergency || a.status === 'Emergency')
+    .sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
 
-  const noShowAppointments = appointments.filter(
-    (a) => a.status === 'No-Show'
-  ).sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
+  const noShowAppointments = appointments
+    .filter((a) => a.status === 'No-Show')
+    .sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
 
-  const cancelledAppointments = appointments.filter(
-    (a) => a.status === 'Cancelled'
-  ).sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
+  const cancelledAppointments = appointments
+    .filter((a) => a.status === 'Cancelled')
+    .sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
 
   // Candidates for no-show today (scheduled appointments whose start time passed without check-in)
-  const currentTimeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  const currentTimeStr = new Date().toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
   const potentialNoShows = appointments.filter(
     (a) => a.date === today && ['Confirmed', 'Requested'].includes(a.status)
   );
 
   // Patients with active no-show strikes
-  const patientsWithStrikes = patients.filter((p) => p.noShowCount > 0 || p.requiresStaffReviewForBooking);
+  const patientsWithStrikes = patients.filter(
+    (p) => p.noShowCount > 0 || p.requiresStaffReviewForBooking
+  );
 
   // Active waitlist entries
   const activeWaitlist = waitlist.filter((w) => w.status === 'active');
@@ -92,13 +98,13 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
     const newCount = Math.max(0, patient.noShowCount - 1);
     updatePatient(patient.id, {
       noShowCount: newCount,
-      requiresStaffReviewForBooking: newCount >= settings.maxNoShowsBeforeLock
+      requiresStaffReviewForBooking: newCount >= settings.maxNoShowsBeforeLock,
     });
   };
 
   const handleToggleLock = (patient: Patient) => {
     updatePatient(patient.id, {
-      requiresStaffReviewForBooking: !patient.requiresStaffReviewForBooking
+      requiresStaffReviewForBooking: !patient.requiresStaffReviewForBooking,
     });
   };
 
@@ -111,7 +117,7 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
       date: slot.date,
       startTime: slot.startTime,
       bookingSource: 'phone_call',
-      notes: `Backfilled from Waitlist into cancelled slot ${slot.appointmentNumber}`
+      notes: `Backfilled from Waitlist into cancelled slot ${slot.appointmentNumber}`,
     });
 
     // 2. Send notification to patient
@@ -121,7 +127,7 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
       type: 'waitlist_slot_available',
       title: 'Slot Confirmed from Waitlist!',
       message: `Great news! You have been scheduled for ${slot.date} at ${slot.startTime}.`,
-      channel: 'in_app'
+      channel: 'in_app',
     });
 
     // 3. Clear modal
@@ -134,13 +140,16 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-800 tracking-tight">Exception & Disruption Flows</h1>
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+              Exception & Disruption Flows
+            </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-200">
               Disruption Guard Active
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1">
-            Emergency triage dispatch, attendance strike enforcement, late cancellation recovery, and waitlist auto-fill.
+            Emergency triage dispatch, attendance strike enforcement, late cancellation recovery,
+            and waitlist auto-fill.
           </p>
         </div>
 
@@ -166,7 +175,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         >
           <span className="text-[10px] uppercase font-bold text-rose-600">Emergencies Handled</span>
           <div className="flex items-baseline justify-between mt-2">
-            <span className="text-2xl font-black text-rose-700">{emergencyAppointments.length}</span>
+            <span className="text-2xl font-black text-rose-700">
+              {emergencyAppointments.length}
+            </span>
             <Siren className="w-5 h-5 text-rose-500" />
           </div>
           <span className="text-[11px] text-slate-400 mt-1">Urgent triage & pain relief</span>
@@ -183,7 +194,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
             <span className="text-2xl font-black text-amber-700">{noShowAppointments.length}</span>
             <UserX className="w-5 h-5 text-amber-500" />
           </div>
-          <span className="text-[11px] text-slate-400 mt-1">{patientsWithStrikes.length} patients with strikes</span>
+          <span className="text-[11px] text-slate-400 mt-1">
+            {patientsWithStrikes.length} patients with strikes
+          </span>
         </div>
 
         <div
@@ -194,7 +207,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         >
           <span className="text-[10px] uppercase font-bold text-slate-600">Cancellations</span>
           <div className="flex items-baseline justify-between mt-2">
-            <span className="text-2xl font-black text-slate-800">{cancelledAppointments.length}</span>
+            <span className="text-2xl font-black text-slate-800">
+              {cancelledAppointments.length}
+            </span>
             <CalendarX2 className="w-5 h-5 text-slate-400" />
           </div>
           <span className="text-[11px] text-slate-400 mt-1">Available for chair backfill</span>
@@ -206,7 +221,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
             activeTab === 'waitlist' ? 'border-2 border-blue-400 bg-blue-50/20' : ''
           }`}
         >
-          <span className="text-[10px] uppercase font-bold text-blue-600">Active Waitlist Backfill</span>
+          <span className="text-[10px] uppercase font-bold text-blue-600">
+            Active Waitlist Backfill
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-blue-700">{activeWaitlist.length}</span>
             <Sparkles className="w-5 h-5 text-blue-500" />
@@ -220,7 +237,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <button
           onClick={() => setActiveTab('emergencies')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'emergencies' ? 'bg-white shadow-xs text-rose-700' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'emergencies'
+              ? 'bg-white shadow-xs text-rose-700'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Siren className="w-3.5 h-3.5" />
@@ -230,7 +249,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <button
           onClick={() => setActiveTab('noshows')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'noshows' ? 'bg-white shadow-xs text-amber-800' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'noshows'
+              ? 'bg-white shadow-xs text-amber-800'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <UserX className="w-3.5 h-3.5" />
@@ -245,7 +266,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <button
           onClick={() => setActiveTab('cancellations')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'cancellations' ? 'bg-white shadow-xs text-slate-800' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'cancellations'
+              ? 'bg-white shadow-xs text-slate-800'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <CalendarX2 className="w-3.5 h-3.5" />
@@ -255,7 +278,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <button
           onClick={() => setActiveTab('waitlist')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'waitlist' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'waitlist'
+              ? 'bg-white shadow-xs text-blue-700'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" />
@@ -268,10 +293,13 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <div className="space-y-4">
           <div className="neo-raised p-4 rounded-3xl bg-rose-50/40 border border-rose-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-base font-bold text-rose-900">Priority Dental Emergency Intake Protocol</h2>
+              <h2 className="text-base font-bold text-rose-900">
+                Priority Dental Emergency Intake Protocol
+              </h2>
               <p className="text-xs text-rose-700 mt-0.5">
-                Acute toothache, dental abscess, traumatic tooth displacement, facial swelling, or severe bleeding.
-                Emergencies bypass standard queue position and are assigned immediate operatory chairs.
+                Acute toothache, dental abscess, traumatic tooth displacement, facial swelling, or
+                severe bleeding. Emergencies bypass standard queue position and are assigned
+                immediate operatory chairs.
               </p>
             </div>
             <NeoButton
@@ -304,14 +332,20 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                         <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white flex items-center gap-1">
                           <Siren className="w-3 h-3" /> EMERGENCY
                         </span>
-                        <span className="font-mono text-xs font-bold text-slate-600">{apt.date}</span>
+                        <span className="font-mono text-xs font-bold text-slate-600">
+                          {apt.date}
+                        </span>
                       </div>
 
                       <h3 className="text-base font-black text-slate-900 mt-2">{pat?.fullName}</h3>
-                      <p className="text-xs text-slate-500 font-mono">{pat?.patientNumber} • {pat?.phone}</p>
+                      <p className="text-xs text-slate-500 font-mono">
+                        {pat?.patientNumber} • {pat?.phone}
+                      </p>
 
                       <div className="mt-2.5 p-2.5 rounded-xl bg-rose-50/60 border border-rose-100 text-xs space-y-1">
-                        <p className="text-rose-900 font-bold">Severity: {apt.emergencySeverity?.toUpperCase() || 'CRITICAL'}</p>
+                        <p className="text-rose-900 font-bold">
+                          Severity: {apt.emergencySeverity?.toUpperCase() || 'CRITICAL'}
+                        </p>
                         {apt.emergencyNotes && (
                           <p className="text-rose-700 italic">"{apt.emergencyNotes}"</p>
                         )}
@@ -347,10 +381,13 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <div className="space-y-4">
           <div className="neo-raised p-4 rounded-3xl bg-amber-50/40 border border-amber-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-base font-bold text-amber-900">No-Show Strike Tracker & Booking Lock Policy</h2>
+              <h2 className="text-base font-bold text-amber-900">
+                No-Show Strike Tracker & Booking Lock Policy
+              </h2>
               <p className="text-xs text-amber-700 mt-0.5">
-                Clinic policy: {settings.maxNoShowsBeforeLock} strikes trigger automatic online booking lock requiring staff review.
-                Grace period before marking no-show is {settings.pendingHoldMinutes || 15} minutes.
+                Clinic policy: {settings.maxNoShowsBeforeLock} strikes trigger automatic online
+                booking lock requiring staff review. Grace period before marking no-show is{' '}
+                {settings.pendingHoldMinutes || 15} minutes.
               </p>
             </div>
           </div>
@@ -368,10 +405,15 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                 {potentialNoShows.map((apt) => {
                   const pat = patients.find((p) => p.id === apt.patientId);
                   return (
-                    <div key={apt.id} className="p-2.5 rounded-xl bg-white border border-amber-100 flex items-center justify-between text-xs">
+                    <div
+                      key={apt.id}
+                      className="p-2.5 rounded-xl bg-white border border-amber-100 flex items-center justify-between text-xs"
+                    >
                       <div>
                         <p className="font-bold text-slate-800">{pat?.fullName}</p>
-                        <p className="text-[10px] text-slate-500 font-mono">Slot: {apt.startTime} ({apt.appointmentNumber})</p>
+                        <p className="text-[10px] text-slate-500 font-mono">
+                          Slot: {apt.startTime} ({apt.appointmentNumber})
+                        </p>
                       </div>
                       <button
                         onClick={() => setSelectedNoShowApt(apt)}
@@ -389,7 +431,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
           {/* Patients with active strikes list */}
           <NeoCard className="p-0 overflow-x-auto">
             <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="font-bold text-sm text-slate-800">Patients with Attendance Infractions & Strikes</h3>
+              <h3 className="font-bold text-sm text-slate-800">
+                Patients with Attendance Infractions & Strikes
+              </h3>
               <span className="text-xs text-slate-500">Total: {patientsWithStrikes.length}</span>
             </div>
             <table className="w-full text-left text-xs text-slate-600">
@@ -411,23 +455,29 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                   </tr>
                 ) : (
                   patientsWithStrikes.map((patient) => {
-                    const isLocked = patient.noShowCount >= settings.maxNoShowsBeforeLock || patient.requiresStaffReviewForBooking;
+                    const isLocked =
+                      patient.noShowCount >= settings.maxNoShowsBeforeLock ||
+                      patient.requiresStaffReviewForBooking;
 
                     return (
                       <tr key={patient.id} className="hover:bg-slate-50/50">
                         <td className="py-3 px-4">
                           <p className="font-bold text-slate-800">{patient.fullName}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">{patient.patientNumber}</p>
+                          <p className="text-[10px] text-slate-400 font-mono">
+                            {patient.patientNumber}
+                          </p>
                         </td>
-                        <td className="py-3 px-4 text-slate-600 font-mono">
-                          {patient.phone}
-                        </td>
+                        <td className="py-3 px-4 text-slate-600 font-mono">{patient.phone}</td>
                         <td className="py-3 px-4 text-center">
-                          <span className={`px-2.5 py-1 rounded-xl text-xs font-black ${
-                            patient.noShowCount >= 3 ? 'bg-rose-100 text-rose-800' :
-                            patient.noShowCount >= 2 ? 'bg-amber-100 text-amber-800' :
-                            'bg-slate-100 text-slate-700'
-                          }`}>
+                          <span
+                            className={`px-2.5 py-1 rounded-xl text-xs font-black ${
+                              patient.noShowCount >= 3
+                                ? 'bg-rose-100 text-rose-800'
+                                : patient.noShowCount >= 2
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-slate-100 text-slate-700'
+                            }`}
+                          >
                             {patient.noShowCount} / {settings.maxNoShowsBeforeLock}
                           </span>
                         </td>
@@ -452,7 +502,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                           <button
                             onClick={() => handleToggleLock(patient)}
                             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer ${
-                              isLocked ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
+                              isLocked
+                                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                                : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
                             }`}
                           >
                             {isLocked ? 'Unlock Patient' : 'Lock Booking'}
@@ -473,9 +525,12 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-slate-800">Cancelled Appointments & Chair Salvage</h2>
+              <h2 className="text-base font-bold text-slate-800">
+                Cancelled Appointments & Chair Salvage
+              </h2>
               <p className="text-xs text-slate-500">
-                Instantly match vacated chair slots with waitlisted patients to prevent lost clinic revenue.
+                Instantly match vacated chair slots with waitlisted patients to prevent lost clinic
+                revenue.
               </p>
             </div>
           </div>
@@ -498,14 +553,18 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono font-bold text-slate-400">{apt.date}</span>
+                        <span className="text-xs font-mono font-bold text-slate-400">
+                          {apt.date}
+                        </span>
                         <span className="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-700">
                           Slot: {apt.startTime} - {apt.endTime}
                         </span>
                       </div>
 
                       <h3 className="text-sm font-bold text-slate-900 mt-2">{pat?.fullName}</h3>
-                      <p className="text-xs text-slate-500 font-mono">{dent?.fullName} • {srv?.name}</p>
+                      <p className="text-xs text-slate-500 font-mono">
+                        {dent?.fullName} • {srv?.name}
+                      </p>
 
                       {apt.cancellationReason && (
                         <div className="mt-2 p-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-600 italic">
@@ -584,7 +643,11 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                         </td>
                         <td className="py-3 px-4 font-semibold text-slate-700">
                           {srv?.name}
-                          {dent && <span className="block text-[10px] text-slate-400">Prefers: {dent.fullName}</span>}
+                          {dent && (
+                            <span className="block text-[10px] text-slate-400">
+                              Prefers: {dent.fullName}
+                            </span>
+                          )}
                         </td>
                         <td className="py-3 px-4">
                           <p className="font-mono text-slate-700">{entry.preferredDate}</p>
@@ -593,11 +656,15 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                           </span>
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            entry.priority === 'urgent' ? 'bg-rose-100 text-rose-800' :
-                            entry.priority === 'high' ? 'bg-amber-100 text-amber-800' :
-                            'bg-blue-100 text-blue-800'
-                          }`}>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              entry.priority === 'urgent'
+                                ? 'bg-rose-100 text-rose-800'
+                                : entry.priority === 'high'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-blue-100 text-blue-800'
+                            }`}
+                          >
                             {entry.priority.toUpperCase()}
                           </span>
                         </td>
@@ -662,7 +729,9 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
                     >
                       <div>
                         <p className="font-bold text-slate-800">{pat?.fullName}</p>
-                        <p className="text-[11px] text-slate-500">{srv?.name} • Priority: {w.priority}</p>
+                        <p className="text-[11px] text-slate-500">
+                          {srv?.name} • Priority: {w.priority}
+                        </p>
                       </div>
                       <button
                         onClick={() => handleBackfillSlotWithWaitlist(slotToBackfill, w)}
@@ -677,10 +746,7 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
             </div>
 
             <div className="pt-3 border-t border-slate-200 flex justify-end">
-              <NeoButton
-                variant="default"
-                onClick={() => setSlotToBackfill(null)}
-              >
+              <NeoButton variant="default" onClick={() => setSlotToBackfill(null)}>
                 Cancel
               </NeoButton>
             </div>
@@ -689,10 +755,7 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({
       )}
 
       {/* Modals */}
-      <EmergencyModal
-        isOpen={isEmergencyOpen}
-        onClose={() => setIsEmergencyOpen(false)}
-      />
+      <EmergencyModal isOpen={isEmergencyOpen} onClose={() => setIsEmergencyOpen(false)} />
 
       <NoShowModal
         isOpen={Boolean(selectedNoShowApt)}

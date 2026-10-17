@@ -18,7 +18,7 @@ export const WaitlistEngine: React.FC<WaitlistEngineProps> = ({
   waitlist,
   patients,
   services,
-  dentists
+  dentists,
 }) => {
   const activeWaitlistCount = waitlist.filter((w) => w.status === 'active').length;
   const today = getTodayDateString();
@@ -27,9 +27,12 @@ export const WaitlistEngine: React.FC<WaitlistEngineProps> = ({
     <NeoCard className="space-y-4">
       <div className="border-b border-slate-300/40 pb-3 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-slate-800">Cancellation Priority Waitlist Engine</h3>
+          <h3 className="text-sm font-bold text-slate-800">
+            Cancellation Priority Waitlist Engine
+          </h3>
           <p className="text-xs text-slate-500">
-            When an appointment is cancelled, the matching engine automatically checks these records and sends notifications.
+            When an appointment is cancelled, the matching engine automatically checks these records
+            and sends notifications.
           </p>
         </div>
         <NeoBadge variant="info">Active Queue: {activeWaitlistCount}</NeoBadge>
@@ -47,7 +50,10 @@ export const WaitlistEngine: React.FC<WaitlistEngineProps> = ({
             const dnt = dentists.find((d) => d.id === w.preferredDentistId);
 
             return (
-              <div key={w.id} className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-center justify-between gap-4">
+              <div
+                key={w.id}
+                className="p-4 rounded-2xl neo-raised bg-[#E8EEF5] flex items-center justify-between gap-4"
+              >
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-slate-800 text-xs">{pat?.fullName}</span>
@@ -57,7 +63,8 @@ export const WaitlistEngine: React.FC<WaitlistEngineProps> = ({
                     </NeoBadge>
                   </div>
                   <p className="text-xs text-slate-600 mt-0.5">
-                    Target: {w.preferredDate} ({w.preferredTimeRange}) • {srv?.name} {dnt ? `• Dr. ${dnt.fullName}` : ''}
+                    Target: {w.preferredDate} ({w.preferredTimeRange}) • {srv?.name}{' '}
+                    {dnt ? `• Dr. ${dnt.fullName}` : ''}
                   </p>
                   {w.notes && <p className="text-[11px] text-slate-400 mt-1 italic">{w.notes}</p>}
                 </div>

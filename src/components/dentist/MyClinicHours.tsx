@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Clock,
-  Calendar,
-  Coffee,
-  MapPin,
-  Stethoscope,
-  ShieldCheck,
-  XCircle
-} from 'lucide-react';
+import { Clock, Calendar, Coffee, MapPin, Stethoscope, ShieldCheck, XCircle } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
@@ -22,16 +14,8 @@ interface MyClinicHoursProps {
   onNavigateToOperatory?: () => void;
 }
 
-export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
-  onNavigateToOperatory
-}) => {
-  const {
-    activeUser,
-    dentists,
-    schedules,
-    blockedSchedules,
-    settings
-  } = useDentalStore();
+export const MyClinicHours: React.FC<MyClinicHoursProps> = ({ onNavigateToOperatory }) => {
+  const { activeUser, dentists, schedules, blockedSchedules, settings } = useDentalStore();
 
   const today = getTodayDateString();
   const currentDentist = dentists.find((d) => d.userId === activeUser.id) || dentists[0];
@@ -50,7 +34,9 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
     return b.date === today;
   });
 
-  const getStatusForDay = (dayOfWeek: number): { active: boolean; label: string; color: string } => {
+  const getStatusForDay = (
+    dayOfWeek: number
+  ): { active: boolean; label: string; color: string } => {
     const schedule = mySchedules.find((s) => s.dayOfWeek === dayOfWeek && s.active);
     if (!schedule) {
       return { active: false, label: 'Off', color: 'bg-slate-200 text-slate-500' };
@@ -58,7 +44,7 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
     return {
       active: true,
       label: `${schedule.startTime} - ${schedule.endTime}`,
-      color: 'bg-emerald-100 text-emerald-700'
+      color: 'bg-emerald-100 text-emerald-700',
     };
   };
 
@@ -68,7 +54,11 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl neo-raised overflow-hidden shrink-0 bg-blue-100 flex items-center justify-center">
             {currentDentist.avatarUrl ? (
-              <img src={currentDentist.avatarUrl} alt={currentDentist.fullName} className="w-full h-full object-cover" />
+              <img
+                src={currentDentist.avatarUrl}
+                alt={currentDentist.fullName}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <Clock className="w-7 h-7 text-blue-600" />
             )}
@@ -105,7 +95,9 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
               <h4 className="text-sm font-bold text-amber-800">Clinic Closure / Block Today</h4>
               <p className="text-xs text-amber-700 mt-0.5">{todayBlocked.reason}</p>
               <p className="text-[10px] text-amber-600 font-semibold mt-1">
-                {todayBlocked.isAllDay ? 'Full day blocked' : `${todayBlocked.startTime} - ${todayBlocked.endTime}`}
+                {todayBlocked.isAllDay
+                  ? 'Full day blocked'
+                  : `${todayBlocked.startTime} - ${todayBlocked.endTime}`}
               </p>
             </div>
           </div>
@@ -130,11 +122,18 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
             ) : (
               <div className="divide-y divide-slate-300/30">
                 {mySchedules.map((sch) => (
-                  <div key={sch.id} className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-slate-100/50 transition-all">
+                  <div
+                    key={sch.id}
+                    className="p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-slate-100/50 transition-all"
+                  >
                     <div className="flex items-center gap-4">
                       <div className="w-12 text-center">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase block">{DAY_SHORT[sch.dayOfWeek]}</span>
-                        <span className="text-xs font-bold text-slate-700">{DAY_NAMES[sch.dayOfWeek]}</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase block">
+                          {DAY_SHORT[sch.dayOfWeek]}
+                        </span>
+                        <span className="text-xs font-bold text-slate-700">
+                          {DAY_NAMES[sch.dayOfWeek]}
+                        </span>
                       </div>
                       <div className="h-8 w-px bg-slate-300/60" />
                       <div>
@@ -152,7 +151,9 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
                         </div>
                       </div>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${sch.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${sch.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}
+                    >
                       {sch.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
@@ -179,19 +180,25 @@ export const MyClinicHours: React.FC<MyClinicHoursProps> = ({
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500">Working Today</span>
-                <span className={`font-bold ${getStatusForDay(new Date().getDay()).active ? 'text-emerald-700' : 'text-rose-700'}`}>
+                <span
+                  className={`font-bold ${getStatusForDay(new Date().getDay()).active ? 'text-emerald-700' : 'text-rose-700'}`}
+                >
                   {getStatusForDay(new Date().getDay()).active ? 'Yes' : 'No'}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500">Hours</span>
                 <span className="font-bold text-slate-800">
-                  {getStatusForDay(new Date().getDay()).active ? getStatusForDay(new Date().getDay()).label : 'N/A'}
+                  {getStatusForDay(new Date().getDay()).active
+                    ? getStatusForDay(new Date().getDay()).label
+                    : 'N/A'}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500">Blocked</span>
-                <span className={`font-bold ${todayBlocked ? 'text-amber-700' : 'text-emerald-700'}`}>
+                <span
+                  className={`font-bold ${todayBlocked ? 'text-amber-700' : 'text-emerald-700'}`}
+                >
                   {todayBlocked ? 'Yes' : 'No'}
                 </span>
               </div>

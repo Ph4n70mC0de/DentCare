@@ -1,6 +1,10 @@
 # DentCare — Dentist Appointment & Patient Management System
 
-Production-ready dentist appointment and patient management system with Neumorphic UI, complete appointment lifecycle, real-time availability, exception flows, and role-based portals.
+DentCare is a React/TypeScript dental clinic management UI with patient booking and appointment views, front-desk workflows, dentist consultation and clinical-history views, admin tools, exception flows, a local business-logic store, typed API-client scaffolding, and automated unit/workflow tests.
+
+**Current status:** Functional prototype. The active data path is local-first (browser `localStorage` via `src/services/store.ts`) and is not yet connected to a production backend. Backend design, Supabase schema/RLS, and the Python/FastAPI API may proceed in parallel against agreed domain contracts, but full frontend-to-backend integration should wait for the frontend readiness gate (Phase 0) to pass.
+
+See `IMPLEMENTATION_PLAN.md` (if present) or the project documentation for the phased rollout: frontend baseline → contracts → database/RLS → backend → vertical-slice integration → deployment gates.
 
 ## Features
 
@@ -17,17 +21,15 @@ Production-ready dentist appointment and patient management system with Neumorph
 - React 19 + TypeScript
 - Vite 6
 - Tailwind CSS 4
-- Express (API server)
 - Lucide React (icons)
-- Motion (animations)
 
 ## Run Locally
 
-**Prerequisites:** Node.js (v18+), npm or bun
+**Prerequisites:** Node.js (>=24.15.0), npm
 
 1. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 2. Copy `.env.example` to `.env.local` and configure:
    ```bash
@@ -39,17 +41,24 @@ Production-ready dentist appointment and patient management system with Neumorph
    ```
 4. Open [http://localhost:3000](http://localhost:3000)
 
+## Verification
+
+```bash
+npm ci          # clean, reproducible install
+npm run lint    # TypeScript type check
+npm run format  # Prettier check
+npm test        # unit/workflow tests (Vitest)
+npm run test:coverage
+npm run build   # production Vite build
+npm run preview # serve production bundle
+npm run test:e2e # Playwright end-to-end tests
+```
+
 ## Build
 
 ```bash
 npm run build
 npm run preview
-```
-
-## Lint
-
-```bash
-npm run lint
 ```
 
 ## Flowchart Compliance

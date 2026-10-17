@@ -31,7 +31,7 @@ import {
   Sparkles,
   UserCheck,
   Stethoscope,
-  X
+  X,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -55,7 +55,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
   onStartBooking,
   onNavigateToWaitingRoom,
   onNavigateToSchedule,
-  onStartConsultation
+  onStartConsultation,
 }) => {
   const {
     patients,
@@ -68,22 +68,28 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
     registerPatient,
     updatePatient,
     updateAppointmentStatus,
-    sendNotification
+    sendNotification,
   } = useDentalStore();
 
   const today = getTodayDateString();
 
   // Search, Filters & View Mode
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filterCategory, setFilterCategory] = useState<'all' | 'alerts' | 'flagged' | 'upcoming' | 'male' | 'female'>('all');
-  const [sortBy, setSortBy] = useState<'name-asc' | 'name-desc' | 'id-desc' | 'noshow-desc' | 'recent'>('name-asc');
+  const [filterCategory, setFilterCategory] = useState<
+    'all' | 'alerts' | 'flagged' | 'upcoming' | 'male' | 'female'
+  >('all');
+  const [sortBy, setSortBy] = useState<
+    'name-asc' | 'name-desc' | 'id-desc' | 'noshow-desc' | 'recent'
+  >('name-asc');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Modal States
   const [selectedPatientForDetail, setSelectedPatientForDetail] = useState<Patient | null>(null);
   const [selectedPatientForEdit, setSelectedPatientForEdit] = useState<Patient | null>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
-  const [detailActiveTab, setDetailActiveTab] = useState<'demographics' | 'alerts' | 'appointments' | 'clinical' | 'billing'>('demographics');
+  const [detailActiveTab, setDetailActiveTab] = useState<
+    'demographics' | 'alerts' | 'appointments' | 'clinical' | 'billing'
+  >('demographics');
 
   // Quick Notification Banner
   const [actionNotice, setActionNotice] = useState<string | null>(null);
@@ -105,18 +111,32 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
           const matchesPhone = p.phone.replace(/\D/g, '').includes(q.replace(/\D/g, ''));
           const matchesEmail = p.email.toLowerCase().includes(q);
           const matchesRef = p.identificationReference.toLowerCase().includes(q);
-          const matchesAlert = p.medicalAlerts.some((a) => a.toLowerCase().includes(q)) ||
-                               p.allergies.some((a) => a.toLowerCase().includes(q));
+          const matchesAlert =
+            p.medicalAlerts.some((a) => a.toLowerCase().includes(q)) ||
+            p.allergies.some((a) => a.toLowerCase().includes(q));
 
-          if (!matchesName && !matchesId && !matchesPhone && !matchesEmail && !matchesRef && !matchesAlert) {
+          if (
+            !matchesName &&
+            !matchesId &&
+            !matchesPhone &&
+            !matchesEmail &&
+            !matchesRef &&
+            !matchesAlert
+          ) {
             return false;
           }
         }
 
         // Category filters
         if (filterCategory === 'alerts') {
-          const hasAlerts = (p.medicalAlerts && p.medicalAlerts.length > 0 && !p.medicalAlerts.includes('None declared')) ||
-                            (p.allergies && p.allergies.length > 0 && !p.allergies.includes('None declared') && !p.allergies.includes('None'));
+          const hasAlerts =
+            (p.medicalAlerts &&
+              p.medicalAlerts.length > 0 &&
+              !p.medicalAlerts.includes('None declared')) ||
+            (p.allergies &&
+              p.allergies.length > 0 &&
+              !p.allergies.includes('None declared') &&
+              !p.allergies.includes('None'));
           if (!hasAlerts) return false;
         }
 
@@ -126,7 +146,10 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
 
         if (filterCategory === 'upcoming') {
           const hasUpcoming = appointments.some(
-            (a) => a.patientId === p.id && a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
+            (a) =>
+              a.patientId === p.id &&
+              a.date >= today &&
+              !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
           );
           if (!hasUpcoming) return false;
         }
@@ -141,22 +164,34 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
         if (sortBy === 'name-desc') return b.fullName.localeCompare(a.fullName);
         if (sortBy === 'id-desc') return b.patientNumber.localeCompare(a.patientNumber);
         if (sortBy === 'noshow-desc') return b.noShowCount - a.noShowCount;
-        if (sortBy === 'recent') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        if (sortBy === 'recent')
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         return 0;
       });
   }, [patients, searchQuery, filterCategory, sortBy, appointments, today]);
 
   // Statistics Metrics
   const totalCount = patients.length;
-  const alertCount = patients.filter((p) =>
-    (p.medicalAlerts && p.medicalAlerts.length > 0 && !p.medicalAlerts.includes('None declared')) ||
-    (p.allergies && p.allergies.length > 0 && !p.allergies.includes('None declared') && !p.allergies.includes('None'))
+  const alertCount = patients.filter(
+    (p) =>
+      (p.medicalAlerts &&
+        p.medicalAlerts.length > 0 &&
+        !p.medicalAlerts.includes('None declared')) ||
+      (p.allergies &&
+        p.allergies.length > 0 &&
+        !p.allergies.includes('None declared') &&
+        !p.allergies.includes('None'))
   ).length;
   const flaggedCount = patients.filter(
     (p) => p.noShowCount >= settings.maxNoShowsBeforeLock || p.requiresStaffReviewForBooking
   ).length;
   const activeWithUpcomingCount = patients.filter((p) =>
-    appointments.some((a) => a.patientId === p.id && a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status))
+    appointments.some(
+      (a) =>
+        a.patientId === p.id &&
+        a.date >= today &&
+        !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
+    )
   ).length;
 
   // Export to CSV
@@ -176,7 +211,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
       'Allergies',
       'No-Show Count',
       'Requires Staff Review',
-      'Created Date'
+      'Created Date',
     ];
 
     const rows = filteredPatients.map((p) => [
@@ -194,10 +229,12 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
       `"${p.allergies.join('; ')}"`,
       p.noShowCount,
       p.requiresStaffReviewForBooking ? 'YES' : 'NO',
-      `"${new Date(p.createdAt).toLocaleDateString()}"`
+      `"${new Date(p.createdAt).toLocaleDateString()}"`,
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -211,7 +248,10 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
   // Check-In Patient for today if appointment exists
   const handleQuickCheckIn = (patient: Patient) => {
     const todayApt = appointments.find(
-      (a) => a.patientId === patient.id && a.date === today && ['Confirmed', 'Pending', 'Requested'].includes(a.status)
+      (a) =>
+        a.patientId === patient.id &&
+        a.date === today &&
+        ['Confirmed', 'Pending', 'Requested'].includes(a.status)
     );
     if (todayApt) {
       updateAppointmentStatus(todayApt.id, 'Checked-In');
@@ -242,7 +282,10 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
             <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
             <span>{actionNotice}</span>
           </div>
-          <button onClick={() => setActionNotice(null)} className="text-slate-400 hover:text-slate-600">
+          <button
+            onClick={() => setActionNotice(null)}
+            className="text-slate-400 hover:text-slate-600"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -256,11 +299,16 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">Patient Directory</h2>
-              <NeoBadge variant="primary" size="sm">{totalCount} Patients</NeoBadge>
+              <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+                Patient Directory
+              </h2>
+              <NeoBadge variant="primary" size="sm">
+                {totalCount} Patients
+              </NeoBadge>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Comprehensive electronic dental health records, medical alerts, contact rosters, and clinical history.
+              Comprehensive electronic dental health records, medical alerts, contact rosters, and
+              clinical history.
             </p>
           </div>
         </div>
@@ -302,10 +350,14 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
         <div
           onClick={() => setFilterCategory('alerts')}
           className={`neo-raised p-4 rounded-2xl flex flex-col justify-between cursor-pointer transition-all ${
-            filterCategory === 'alerts' ? 'ring-2 ring-amber-500 bg-amber-50/20' : 'hover:bg-amber-50/30'
+            filterCategory === 'alerts'
+              ? 'ring-2 ring-amber-500 bg-amber-50/20'
+              : 'hover:bg-amber-50/30'
           }`}
         >
-          <span className="text-[10px] uppercase font-bold text-amber-700">Medical / Allergy Alerts</span>
+          <span className="text-[10px] uppercase font-bold text-amber-700">
+            Medical / Allergy Alerts
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-amber-700">{alertCount}</span>
             <AlertTriangle className="w-4 h-4 text-amber-600" />
@@ -315,10 +367,14 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
         <div
           onClick={() => setFilterCategory('flagged')}
           className={`neo-raised p-4 rounded-2xl flex flex-col justify-between cursor-pointer transition-all ${
-            filterCategory === 'flagged' ? 'ring-2 ring-rose-500 bg-rose-50/20' : 'hover:bg-rose-50/30'
+            filterCategory === 'flagged'
+              ? 'ring-2 ring-rose-500 bg-rose-50/20'
+              : 'hover:bg-rose-50/30'
           }`}
         >
-          <span className="text-[10px] uppercase font-bold text-rose-700">Flagged / No-Show Risk</span>
+          <span className="text-[10px] uppercase font-bold text-rose-700">
+            Flagged / No-Show Risk
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-rose-700">{flaggedCount}</span>
             <Lock className="w-4 h-4 text-rose-600" />
@@ -328,10 +384,14 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
         <div
           onClick={() => setFilterCategory('upcoming')}
           className={`neo-raised p-4 rounded-2xl flex flex-col justify-between cursor-pointer transition-all ${
-            filterCategory === 'upcoming' ? 'ring-2 ring-emerald-500 bg-emerald-50/20' : 'hover:bg-emerald-50/30'
+            filterCategory === 'upcoming'
+              ? 'ring-2 ring-emerald-500 bg-emerald-50/20'
+              : 'hover:bg-emerald-50/30'
           }`}
         >
-          <span className="text-[10px] uppercase font-bold text-emerald-700">Upcoming Appointments</span>
+          <span className="text-[10px] uppercase font-bold text-emerald-700">
+            Upcoming Appointments
+          </span>
           <div className="flex items-baseline justify-between mt-2">
             <span className="text-2xl font-black text-emerald-700">{activeWithUpcomingCount}</span>
             <CalendarPlus className="w-4 h-4 text-emerald-600" />
@@ -364,10 +424,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
               <option value="female">Female Patients</option>
             </NeoSelect>
 
-            <NeoSelect
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-            >
+            <NeoSelect value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
               <option value="name-asc">Sort: Name (A to Z)</option>
               <option value="name-desc">Sort: Name (Z to A)</option>
               <option value="id-desc">Sort: Patient ID (Newest)</option>
@@ -380,7 +437,9 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-                  viewMode === 'grid' ? 'neo-raised bg-white text-blue-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  viewMode === 'grid'
+                    ? 'neo-raised bg-white text-blue-700 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
                 title="Grid View"
               >
@@ -389,7 +448,9 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
               <button
                 onClick={() => setViewMode('table')}
                 className={`p-1.5 rounded-lg transition-all cursor-pointer ${
-                  viewMode === 'table' ? 'neo-raised bg-white text-blue-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  viewMode === 'table'
+                    ? 'neo-raised bg-white text-blue-700 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
                 title="Table View"
               >
@@ -402,7 +463,9 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
         {/* Active Filter Indicators */}
         {(searchQuery || filterCategory !== 'all') && (
           <div className="flex items-center gap-2 pt-1 text-xs text-slate-500">
-            <span>Showing <strong>{filteredPatients.length}</strong> of {totalCount} patients</span>
+            <span>
+              Showing <strong>{filteredPatients.length}</strong> of {totalCount} patients
+            </span>
             <button
               onClick={() => {
                 setSearchQuery('');
@@ -422,10 +485,18 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
           <Users className="w-10 h-10 text-slate-400 mx-auto" />
           <h4 className="text-base font-bold text-slate-800">No Patients Found</h4>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            We couldn't find any patient matching "{searchQuery}". Try modifying your search keywords or clear current filters.
+            We couldn't find any patient matching "{searchQuery}". Try modifying your search
+            keywords or clear current filters.
           </p>
           <div className="pt-2">
-            <NeoButton variant="default" size="sm" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
+            <NeoButton
+              variant="default"
+              size="sm"
+              onClick={() => {
+                setSearchQuery('');
+                setFilterCategory('all');
+              }}
+            >
               Clear Search Filters
             </NeoButton>
           </div>
@@ -436,15 +507,27 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
           {filteredPatients.map((patient) => {
             const patientApts = appointments.filter((a) => a.patientId === patient.id);
             const upcomingApt = patientApts
-              .filter((a) => a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status))
-              .sort((a, b) => `${a.date} ${a.startTime}`.localeCompare(`${b.date} ${b.startTime}`))[0];
-            const todayApt = patientApts.find((a) => a.date === today && ['Confirmed', 'Pending', 'Requested'].includes(a.status));
+              .filter(
+                (a) => a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
+              )
+              .sort((a, b) =>
+                `${a.date} ${a.startTime}`.localeCompare(`${b.date} ${b.startTime}`)
+              )[0];
+            const todayApt = patientApts.find(
+              (a) => a.date === today && ['Confirmed', 'Pending', 'Requested'].includes(a.status)
+            );
             const pastConsultations = consultations.filter((c) => c.patientId === patient.id);
             const age = getAge(patient.dateOfBirth);
 
-            const hasMedicalAlerts = patient.medicalAlerts.length > 0 && !patient.medicalAlerts.includes('None declared');
-            const hasAllergies = patient.allergies.length > 0 && !patient.allergies.includes('None declared') && !patient.allergies.includes('None');
-            const isRestricted = patient.noShowCount >= settings.maxNoShowsBeforeLock || patient.requiresStaffReviewForBooking;
+            const hasMedicalAlerts =
+              patient.medicalAlerts.length > 0 && !patient.medicalAlerts.includes('None declared');
+            const hasAllergies =
+              patient.allergies.length > 0 &&
+              !patient.allergies.includes('None declared') &&
+              !patient.allergies.includes('None');
+            const isRestricted =
+              patient.noShowCount >= settings.maxNoShowsBeforeLock ||
+              patient.requiresStaffReviewForBooking;
 
             return (
               <div
@@ -456,7 +539,11 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-2xl neo-raised flex items-center justify-center font-bold text-blue-700 bg-blue-50 text-sm shrink-0">
-                        {patient.fullName.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                        {patient.fullName
+                          .split(' ')
+                          .map((n) => n[0])
+                          .slice(0, 2)
+                          .join('')}
                       </div>
                       <div>
                         <h4 className="font-extrabold text-slate-800 text-sm leading-tight hover:text-blue-700 transition-colors">
@@ -475,7 +562,10 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
 
                     {/* No-Show / Restriction Pill */}
                     {isRestricted ? (
-                      <span className="flex items-center gap-1 text-[10px] font-extrabold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full" title="Exceeded clinic no-show threshold">
+                      <span
+                        className="flex items-center gap-1 text-[10px] font-extrabold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full"
+                        title="Exceeded clinic no-show threshold"
+                      >
                         <Lock className="w-3 h-3" />
                         <span>Restricted</span>
                       </span>
@@ -494,20 +584,28 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                   <div className="space-y-1 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
                       <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <a href={`tel:${patient.phone}`} className="hover:text-blue-700 font-medium truncate">
+                      <a
+                        href={`tel:${patient.phone}`}
+                        className="hover:text-blue-700 font-medium truncate"
+                      >
                         {patient.phone}
                       </a>
                     </div>
                     <div className="flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <a href={`mailto:${patient.email}`} className="hover:text-blue-700 truncate text-[11px]">
+                      <a
+                        href={`mailto:${patient.email}`}
+                        className="hover:text-blue-700 truncate text-[11px]"
+                      >
                         {patient.email}
                       </a>
                     </div>
                     {patient.identificationReference && (
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
                         <CreditCard className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="truncate">Policy / ID: <strong>{patient.identificationReference}</strong></span>
+                        <span className="truncate">
+                          Policy / ID: <strong>{patient.identificationReference}</strong>
+                        </span>
                       </div>
                     )}
                   </div>
@@ -515,24 +613,28 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                   {/* Clinical Alert Tags */}
                   {(hasMedicalAlerts || hasAllergies) && (
                     <div className="pt-1 flex flex-wrap gap-1">
-                      {patient.medicalAlerts.filter(a => a !== 'None declared').map((alert, idx) => (
-                        <span
-                          key={`alert-${idx}`}
-                          className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg flex items-center gap-1"
-                        >
-                          <HeartPulse className="w-2.5 h-2.5" />
-                          <span className="truncate max-w-[150px]">{alert}</span>
-                        </span>
-                      ))}
-                      {patient.allergies.filter(a => a !== 'None declared' && a !== 'None').map((allergy, idx) => (
-                        <span
-                          key={`allergy-${idx}`}
-                          className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg flex items-center gap-1"
-                        >
-                          <Pill className="w-2.5 h-2.5" />
-                          <span className="truncate max-w-[150px]">{allergy}</span>
-                        </span>
-                      ))}
+                      {patient.medicalAlerts
+                        .filter((a) => a !== 'None declared')
+                        .map((alert, idx) => (
+                          <span
+                            key={`alert-${idx}`}
+                            className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-lg flex items-center gap-1"
+                          >
+                            <HeartPulse className="w-2.5 h-2.5" />
+                            <span className="truncate max-w-[150px]">{alert}</span>
+                          </span>
+                        ))}
+                      {patient.allergies
+                        .filter((a) => a !== 'None declared' && a !== 'None')
+                        .map((allergy, idx) => (
+                          <span
+                            key={`allergy-${idx}`}
+                            className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg flex items-center gap-1"
+                          >
+                            <Pill className="w-2.5 h-2.5" />
+                            <span className="truncate max-w-[150px]">{allergy}</span>
+                          </span>
+                        ))}
                     </div>
                   )}
 
@@ -543,10 +645,12 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" /> Upcoming Visit:
                         </span>
-                        <span>{upcomingApt.date} at {upcomingApt.startTime}</span>
+                        <span>
+                          {upcomingApt.date} at {upcomingApt.startTime}
+                        </span>
                       </div>
                       <p className="text-slate-500 text-[10px] truncate">
-                        Procedure: {services.find(s => s.id === upcomingApt.serviceId)?.name}
+                        Procedure: {services.find((s) => s.id === upcomingApt.serviceId)?.name}
                       </p>
                     </div>
                   )}
@@ -623,15 +727,24 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                 {filteredPatients.map((patient) => {
                   const patientApts = appointments.filter((a) => a.patientId === patient.id);
                   const upcomingApt = patientApts
-                    .filter((a) => a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status))
-                    .sort((a, b) => `${a.date} ${a.startTime}`.localeCompare(`${b.date} ${b.startTime}`))[0];
+                    .filter(
+                      (a) =>
+                        a.date >= today && !['Completed', 'Cancelled', 'No-Show'].includes(a.status)
+                    )
+                    .sort((a, b) =>
+                      `${a.date} ${a.startTime}`.localeCompare(`${b.date} ${b.startTime}`)
+                    )[0];
                   const age = getAge(patient.dateOfBirth);
-                  const isRestricted = patient.noShowCount >= settings.maxNoShowsBeforeLock || patient.requiresStaffReviewForBooking;
+                  const isRestricted =
+                    patient.noShowCount >= settings.maxNoShowsBeforeLock ||
+                    patient.requiresStaffReviewForBooking;
 
                   return (
                     <tr key={patient.id} className="hover:bg-slate-100/50 transition-all">
                       <td className="p-3.5 pl-5">
-                        <div className="font-extrabold text-slate-900 text-sm">{patient.fullName}</div>
+                        <div className="font-extrabold text-slate-900 text-sm">
+                          {patient.fullName}
+                        </div>
                         <span className="text-[10px] font-bold text-blue-700 bg-blue-100/70 px-1.5 py-0.2 rounded-md">
                           {patient.patientNumber}
                         </span>
@@ -644,21 +757,33 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
 
                       <td className="p-3.5">
                         <span className="font-semibold">{patient.sex}</span>
-                        {age && <span className="text-slate-500 block text-[11px]">{age} years old</span>}
+                        {age && (
+                          <span className="text-slate-500 block text-[11px]">{age} years old</span>
+                        )}
                       </td>
 
                       <td className="p-3.5 max-w-[220px]">
                         <div className="flex flex-wrap gap-1">
-                          {patient.medicalAlerts.filter(a => a !== 'None declared').map((alert, i) => (
-                            <span key={i} className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
-                              {alert}
-                            </span>
-                          ))}
-                          {patient.allergies.filter(a => a !== 'None declared' && a !== 'None').map((allg, i) => (
-                            <span key={i} className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
-                              {allg}
-                            </span>
-                          ))}
+                          {patient.medicalAlerts
+                            .filter((a) => a !== 'None declared')
+                            .map((alert, i) => (
+                              <span
+                                key={i}
+                                className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200"
+                              >
+                                {alert}
+                              </span>
+                            ))}
+                          {patient.allergies
+                            .filter((a) => a !== 'None declared' && a !== 'None')
+                            .map((allg, i) => (
+                              <span
+                                key={i}
+                                className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200"
+                              >
+                                {allg}
+                              </span>
+                            ))}
                           {patient.medicalAlerts.length === 0 && patient.allergies.length === 0 && (
                             <span className="text-slate-400 text-[11px] italic">None declared</span>
                           )}
@@ -684,8 +809,13 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
                       <td className="p-3.5">
                         {upcomingApt ? (
                           <div className="text-[11px]">
-                            <span className="font-bold text-blue-700 block">{upcomingApt.date}</span>
-                            <span className="text-slate-500">{upcomingApt.startTime} ({services.find(s => s.id === upcomingApt.serviceId)?.name})</span>
+                            <span className="font-bold text-blue-700 block">
+                              {upcomingApt.date}
+                            </span>
+                            <span className="text-slate-500">
+                              {upcomingApt.startTime} (
+                              {services.find((s) => s.id === upcomingApt.serviceId)?.name})
+                            </span>
                           </div>
                         ) : (
                           <span className="text-slate-400 text-[11px] italic">None scheduled</span>
@@ -799,17 +929,10 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
   onClose,
   onStartBooking,
   onUpdatePatient,
-  onStartConsultation
+  onStartConsultation,
 }) => {
-  const {
-    appointments,
-    dentists,
-    services,
-    consultations,
-    payments,
-    settings,
-    updatePatient
-  } = useDentalStore();
+  const { appointments, dentists, services, consultations, payments, settings, updatePatient } =
+    useDentalStore();
 
   const patientApts = appointments.filter((a) => a.patientId === patient.id);
   const patientConsultations = consultations.filter((c) => c.patientId === patient.id);
@@ -821,9 +944,9 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
 
   const handleAddAlert = () => {
     if (!newAlertText.trim()) return;
-    const current = patient.medicalAlerts.filter(a => a !== 'None declared');
+    const current = patient.medicalAlerts.filter((a) => a !== 'None declared');
     const updated = updatePatient(patient.id, {
-      medicalAlerts: [...current, newAlertText.trim()]
+      medicalAlerts: [...current, newAlertText.trim()],
     });
     if (updated) onUpdatePatient(updated);
     setNewAlertText('');
@@ -831,16 +954,16 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
 
   const handleRemoveAlert = (alert: string) => {
     const updated = updatePatient(patient.id, {
-      medicalAlerts: patient.medicalAlerts.filter(a => a !== alert)
+      medicalAlerts: patient.medicalAlerts.filter((a) => a !== alert),
     });
     if (updated) onUpdatePatient(updated);
   };
 
   const handleAddAllergy = () => {
     if (!newAllergyText.trim()) return;
-    const current = patient.allergies.filter(a => a !== 'None declared' && a !== 'None');
+    const current = patient.allergies.filter((a) => a !== 'None declared' && a !== 'None');
     const updated = updatePatient(patient.id, {
-      allergies: [...current, newAllergyText.trim()]
+      allergies: [...current, newAllergyText.trim()],
     });
     if (updated) onUpdatePatient(updated);
     setNewAllergyText('');
@@ -848,7 +971,7 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
 
   const handleRemoveAllergy = (allergy: string) => {
     const updated = updatePatient(patient.id, {
-      allergies: patient.allergies.filter(a => a !== allergy)
+      allergies: patient.allergies.filter((a) => a !== allergy),
     });
     if (updated) onUpdatePatient(updated);
   };
@@ -856,14 +979,14 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
   const handleResetNoShowStrikes = () => {
     const updated = updatePatient(patient.id, {
       noShowCount: 0,
-      requiresStaffReviewForBooking: false
+      requiresStaffReviewForBooking: false,
     });
     if (updated) onUpdatePatient(updated);
   };
 
   const handleToggleRestriction = () => {
     const updated = updatePatient(patient.id, {
-      requiresStaffReviewForBooking: !patient.requiresStaffReviewForBooking
+      requiresStaffReviewForBooking: !patient.requiresStaffReviewForBooking,
     });
     if (updated) onUpdatePatient(updated);
   };
@@ -886,12 +1009,18 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
         <div className="p-4 rounded-2xl neo-raised bg-[#EFF4FA] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl neo-raised flex items-center justify-center text-blue-700 bg-white font-extrabold text-sm shrink-0">
-              {patient.fullName.split(' ').map(n => n[0]).slice(0, 2).join('')}
+              {patient.fullName
+                .split(' ')
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join('')}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-800 text-sm">{patient.fullName}</span>
-                <NeoBadge variant="primary" size="sm">{patient.patientNumber}</NeoBadge>
+                <NeoBadge variant="primary" size="sm">
+                  {patient.patientNumber}
+                </NeoBadge>
               </div>
               <p className="text-slate-500 text-[11px] mt-0.5">
                 Contact: {patient.phone} • {patient.email}
@@ -920,10 +1049,26 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
         <div className="flex flex-wrap gap-1.5 p-1 neo-inset-sm rounded-2xl">
           {[
             { id: 'demographics', label: 'Demographics & Emergency', icon: Users },
-            { id: 'alerts', label: `Medical Alerts & Rx (${patient.medicalAlerts.length + patient.allergies.length})`, icon: HeartPulse },
-            { id: 'appointments', label: `Appointments Flow (${patientApts.length})`, icon: Calendar },
-            { id: 'clinical', label: `Dental Consultations (${patientConsultations.length})`, icon: Stethoscope },
-            { id: 'billing', label: `Payments & Invoices (${patientPayments.length})`, icon: CreditCard }
+            {
+              id: 'alerts',
+              label: `Medical Alerts & Rx (${patient.medicalAlerts.length + patient.allergies.length})`,
+              icon: HeartPulse,
+            },
+            {
+              id: 'appointments',
+              label: `Appointments Flow (${patientApts.length})`,
+              icon: Calendar,
+            },
+            {
+              id: 'clinical',
+              label: `Dental Consultations (${patientConsultations.length})`,
+              icon: Stethoscope,
+            },
+            {
+              id: 'billing',
+              label: `Payments & Invoices (${patientPayments.length})`,
+              icon: CreditCard,
+            },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -970,11 +1115,15 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Residential Address:</span>
-                  <span className="font-semibold text-slate-800 text-right max-w-[200px]">{patient.address}</span>
+                  <span className="font-semibold text-slate-800 text-right max-w-[200px]">
+                    {patient.address}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Insurance / National ID:</span>
-                  <span className="font-semibold text-blue-700">{patient.identificationReference || 'Unspecified'}</span>
+                  <span className="font-semibold text-blue-700">
+                    {patient.identificationReference || 'Unspecified'}
+                  </span>
                 </div>
               </div>
 
@@ -984,15 +1133,21 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                 </span>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Contact Name:</span>
-                  <span className="font-semibold text-slate-800">{patient.emergencyContact?.name || 'None listed'}</span>
+                  <span className="font-semibold text-slate-800">
+                    {patient.emergencyContact?.name || 'None listed'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Relationship:</span>
-                  <span className="font-semibold text-slate-800">{patient.emergencyContact?.relationship || 'Family'}</span>
+                  <span className="font-semibold text-slate-800">
+                    {patient.emergencyContact?.relationship || 'Family'}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Emergency Phone:</span>
-                  <span className="font-semibold text-slate-800">{patient.emergencyContact?.phone || 'None'}</span>
+                  <span className="font-semibold text-slate-800">
+                    {patient.emergencyContact?.phone || 'None'}
+                  </span>
                 </div>
 
                 <div className="pt-3 border-t border-slate-300/40 space-y-2">
@@ -1001,26 +1156,45 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                   </span>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600">Recorded No-Shows:</span>
-                    <span className="font-extrabold text-slate-800">{patient.noShowCount} Strike(s)</span>
+                    <span className="font-extrabold text-slate-800">
+                      {patient.noShowCount} Strike(s)
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600">Restricted Booking Status:</span>
-                    <span className={`font-bold ${patient.requiresStaffReviewForBooking ? 'text-rose-700' : 'text-emerald-700'}`}>
-                      {patient.requiresStaffReviewForBooking ? 'Restricted (Staff Approval Required)' : 'Active / Allowed'}
+                    <span
+                      className={`font-bold ${patient.requiresStaffReviewForBooking ? 'text-rose-700' : 'text-emerald-700'}`}
+                    >
+                      {patient.requiresStaffReviewForBooking
+                        ? 'Restricted (Staff Approval Required)'
+                        : 'Active / Allowed'}
                     </span>
                   </div>
 
                   <div className="flex gap-2 pt-1">
-                    <NeoButton size="sm" variant="default" onClick={handleResetNoShowStrikes} icon={<RotateCcw className="w-3 h-3" />}>
+                    <NeoButton
+                      size="sm"
+                      variant="default"
+                      onClick={handleResetNoShowStrikes}
+                      icon={<RotateCcw className="w-3 h-3" />}
+                    >
                       Reset Strikes (0)
                     </NeoButton>
                     <NeoButton
                       size="sm"
                       variant={patient.requiresStaffReviewForBooking ? 'primary' : 'danger'}
                       onClick={handleToggleRestriction}
-                      icon={patient.requiresStaffReviewForBooking ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                      icon={
+                        patient.requiresStaffReviewForBooking ? (
+                          <Unlock className="w-3 h-3" />
+                        ) : (
+                          <Lock className="w-3 h-3" />
+                        )
+                      }
                     >
-                      {patient.requiresStaffReviewForBooking ? 'Lift Restriction' : 'Restrict Patient'}
+                      {patient.requiresStaffReviewForBooking
+                        ? 'Lift Restriction'
+                        : 'Restrict Patient'}
                     </NeoButton>
                   </div>
                 </div>
@@ -1037,7 +1211,8 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
               <div>
                 <span className="font-bold text-amber-900">Clinical Safety Notice:</span>
                 <p className="text-slate-600 mt-0.5">
-                  Pre-existing conditions, cardiac devices, anticoagulants, and drug allergies alert the dentist prior to local anesthesia and surgical procedures.
+                  Pre-existing conditions, cardiac devices, anticoagulants, and drug allergies alert
+                  the dentist prior to local anesthesia and surgical procedures.
                 </p>
               </div>
             </div>
@@ -1055,7 +1230,10 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                     <p className="text-slate-400 italic text-[11px]">No medical alerts recorded.</p>
                   ) : (
                     patient.medicalAlerts.map((alert, i) => (
-                      <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-white/70 text-slate-800">
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-2 rounded-xl bg-white/70 text-slate-800"
+                      >
                         <span className="font-semibold text-rose-700">{alert}</span>
                         <button
                           onClick={() => handleRemoveAlert(alert)}
@@ -1094,7 +1272,10 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                     <p className="text-slate-400 italic text-[11px]">No allergies declared.</p>
                   ) : (
                     patient.allergies.map((allergy, i) => (
-                      <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-white/70 text-slate-800">
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-2 rounded-xl bg-white/70 text-slate-800"
+                      >
                         <span className="font-semibold text-amber-800">{allergy}</span>
                         <button
                           onClick={() => handleRemoveAllergy(allergy)}
@@ -1134,16 +1315,23 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
             ) : (
               <div className="space-y-2">
                 {patientApts
-                  .sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`))
+                  .sort((a, b) =>
+                    `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`)
+                  )
                   .map((apt) => {
-                    const dentist = dentists.find(d => d.id === apt.dentistId);
-                    const service = services.find(s => s.id === apt.serviceId);
+                    const dentist = dentists.find((d) => d.id === apt.dentistId);
+                    const service = services.find((s) => s.id === apt.serviceId);
 
                     return (
-                      <div key={apt.id} className="p-3.5 rounded-2xl neo-raised bg-[#EFF4FA] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div
+                        key={apt.id}
+                        className="p-3.5 rounded-2xl neo-raised bg-[#EFF4FA] flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                      >
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-800">{apt.date} at {apt.startTime} - {apt.endTime}</span>
+                            <span className="font-bold text-slate-800">
+                              {apt.date} at {apt.startTime} - {apt.endTime}
+                            </span>
                             <NeoStatusPill status={apt.status} />
                             {apt.queueNumber && (
                               <span className="text-[10px] font-bold text-blue-700 bg-blue-100 px-1.5 py-0.2 rounded">
@@ -1152,7 +1340,8 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                             )}
                           </div>
                           <p className="text-[11px] text-slate-500 mt-0.5">
-                            Procedure: <strong>{service?.name}</strong> • Attending: Dr. {dentist?.fullName} • Ref #{apt.appointmentNumber}
+                            Procedure: <strong>{service?.name}</strong> • Attending: Dr.{' '}
+                            {dentist?.fullName} • Ref #{apt.appointmentNumber}
                           </p>
                           {apt.cancellationReason && (
                             <p className="text-[11px] text-rose-600 italic mt-0.5">
@@ -1162,7 +1351,14 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                         </div>
 
                         {apt.status === 'Waiting' && onStartConsultation && (
-                          <NeoButton size="sm" variant="primary" onClick={() => { onClose(); onStartConsultation(apt.id); }}>
+                          <NeoButton
+                            size="sm"
+                            variant="primary"
+                            onClick={() => {
+                              onClose();
+                              onStartConsultation(apt.id);
+                            }}
+                          >
                             Enter Operatory
                           </NeoButton>
                         )}
@@ -1186,20 +1382,35 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                 {patientConsultations.map((rec) => (
                   <div key={rec.id} className="p-4 rounded-2xl neo-inset space-y-2 bg-[#EFF4FA]">
                     <div className="flex items-center justify-between border-b border-slate-300/30 pb-1.5">
-                      <span className="font-bold text-blue-700">Record Ref: #{rec.appointmentId}</span>
-                      <span className="text-slate-400 text-[11px]">{new Date(rec.createdAt).toLocaleDateString()}</span>
+                      <span className="font-bold text-blue-700">
+                        Record Ref: #{rec.appointmentId}
+                      </span>
+                      <span className="text-slate-400 text-[11px]">
+                        {new Date(rec.createdAt).toLocaleDateString()}
+                      </span>
                     </div>
-                    <p className="text-slate-700"><strong>Diagnosis:</strong> {rec.diagnosis}</p>
-                    <p className="text-slate-700"><strong>Treatment Plan:</strong> {rec.treatmentPlan}</p>
+                    <p className="text-slate-700">
+                      <strong>Diagnosis:</strong> {rec.diagnosis}
+                    </p>
+                    <p className="text-slate-700">
+                      <strong>Treatment Plan:</strong> {rec.treatmentPlan}
+                    </p>
                     {rec.examinationFindings && (
-                      <p className="text-slate-600"><strong>Clinical Notes:</strong> {rec.examinationFindings}</p>
+                      <p className="text-slate-600">
+                        <strong>Clinical Notes:</strong> {rec.examinationFindings}
+                      </p>
                     )}
                     {rec.prescriptions && rec.prescriptions.length > 0 && (
                       <div className="pt-1">
-                        <span className="font-bold text-slate-800 block text-[11px]">Prescribed Medications:</span>
+                        <span className="font-bold text-slate-800 block text-[11px]">
+                          Prescribed Medications:
+                        </span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {rec.prescriptions.map((rx, idx) => (
-                            <span key={idx} className="p-1 px-2 rounded-lg neo-raised bg-white text-blue-800 text-[10px] font-bold">
+                            <span
+                              key={idx}
+                              className="p-1 px-2 rounded-lg neo-raised bg-white text-blue-800 text-[10px] font-bold"
+                            >
                               {rx.medication} ({rx.dosage}, {rx.frequency})
                             </span>
                           ))}
@@ -1208,7 +1419,8 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                     )}
                     {rec.followUpRecommendation?.required && (
                       <p className="text-blue-700 text-[11px] font-semibold pt-1">
-                        Follow-Up Recommendation: {rec.followUpRecommendation.timeframeWeeks} weeks ({rec.followUpRecommendation.notes})
+                        Follow-Up Recommendation: {rec.followUpRecommendation.timeframeWeeks} weeks
+                        ({rec.followUpRecommendation.notes})
                       </p>
                     )}
                   </div>
@@ -1228,22 +1440,31 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
             ) : (
               <div className="space-y-2">
                 {patientPayments.map((pmt) => (
-                  <div key={pmt.id} className="p-3.5 rounded-2xl neo-raised bg-[#EFF4FA] flex items-center justify-between text-xs">
+                  <div
+                    key={pmt.id}
+                    className="p-3.5 rounded-2xl neo-raised bg-[#EFF4FA] flex items-center justify-between text-xs"
+                  >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-slate-800">Receipt #{pmt.receiptNumber}</span>
+                        <span className="font-extrabold text-slate-800">
+                          Receipt #{pmt.receiptNumber}
+                        </span>
                         <span className="text-emerald-700 bg-emerald-100 font-bold px-2 py-0.5 rounded-md text-[10px]">
                           {pmt.paymentStatus}
                         </span>
                       </div>
                       <p className="text-slate-500 text-[11px] mt-0.5">
-                        Method: <strong>{pmt.paymentMethod}</strong> • Subtotal: ₱{pmt.subtotal.toFixed(2)} • Ins. Covered: ₱{pmt.insuranceCoverage.toFixed(2)}
+                        Method: <strong>{pmt.paymentMethod}</strong> • Subtotal: ₱
+                        {pmt.subtotal.toFixed(2)} • Ins. Covered: ₱
+                        {pmt.insuranceCoverage.toFixed(2)}
                       </p>
                     </div>
 
                     <div className="text-right">
                       <span className="text-[10px] text-slate-400 block">Amount Paid</span>
-                      <span className="text-base font-extrabold text-blue-700">₱{pmt.amountPaid.toFixed(2)}</span>
+                      <span className="text-base font-extrabold text-blue-700">
+                        ₱{pmt.amountPaid.toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -1271,11 +1492,7 @@ interface PatientEditModalProps {
   onSave: (patient: Patient) => void;
 }
 
-const PatientEditModal: React.FC<PatientEditModalProps> = ({
-  patient,
-  onClose,
-  onSave
-}) => {
+const PatientEditModal: React.FC<PatientEditModalProps> = ({ patient, onClose, onSave }) => {
   const { updatePatient } = useDentalStore();
 
   const [fullName, setFullName] = useState<string>(patient.fullName);
@@ -1284,14 +1501,24 @@ const PatientEditModal: React.FC<PatientEditModalProps> = ({
   const [address, setAddress] = useState<string>(patient.address);
   const [dateOfBirth, setDateOfBirth] = useState<string>(patient.dateOfBirth);
   const [sex, setSex] = useState<'Male' | 'Female' | 'Other'>(patient.sex);
-  const [identificationReference, setIdentificationReference] = useState<string>(patient.identificationReference);
+  const [identificationReference, setIdentificationReference] = useState<string>(
+    patient.identificationReference
+  );
   const [emergencyName, setEmergencyName] = useState<string>(patient.emergencyContact?.name || '');
-  const [emergencyRelationship, setEmergencyRelationship] = useState<string>(patient.emergencyContact?.relationship || 'Family');
-  const [emergencyPhone, setEmergencyPhone] = useState<string>(patient.emergencyContact?.phone || '');
-  const [medicalAlertsStr, setMedicalAlertsStr] = useState<string>(patient.medicalAlerts.join(', '));
+  const [emergencyRelationship, setEmergencyRelationship] = useState<string>(
+    patient.emergencyContact?.relationship || 'Family'
+  );
+  const [emergencyPhone, setEmergencyPhone] = useState<string>(
+    patient.emergencyContact?.phone || ''
+  );
+  const [medicalAlertsStr, setMedicalAlertsStr] = useState<string>(
+    patient.medicalAlerts.join(', ')
+  );
   const [allergiesStr, setAllergiesStr] = useState<string>(patient.allergies.join(', '));
   const [noShowCount, setNoShowCount] = useState<number>(patient.noShowCount);
-  const [requiresStaffReview, setRequiresStaffReview] = useState<boolean>(patient.requiresStaffReviewForBooking || false);
+  const [requiresStaffReview, setRequiresStaffReview] = useState<boolean>(
+    patient.requiresStaffReviewForBooking || false
+  );
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1316,12 +1543,12 @@ const PatientEditModal: React.FC<PatientEditModalProps> = ({
       emergencyContact: {
         name: emergencyName,
         relationship: emergencyRelationship,
-        phone: emergencyPhone
+        phone: emergencyPhone,
       },
       medicalAlerts: alerts,
       allergies: allgs,
       noShowCount: Number(noShowCount),
-      requiresStaffReviewForBooking: requiresStaffReview
+      requiresStaffReviewForBooking: requiresStaffReview,
     });
 
     if (updated) {
@@ -1435,7 +1662,9 @@ const PatientEditModal: React.FC<PatientEditModalProps> = ({
 
         <div className="p-3 rounded-2xl neo-inset flex items-center justify-between gap-3">
           <div>
-            <span className="font-bold text-slate-800 block text-xs">Attendance & No-Show Policy</span>
+            <span className="font-bold text-slate-800 block text-xs">
+              Attendance & No-Show Policy
+            </span>
             <span className="text-[11px] text-slate-500">Current Strikes: {noShowCount}</span>
           </div>
 
@@ -1483,7 +1712,7 @@ interface PatientRegistrationModalProps {
 const PatientRegistrationModal: React.FC<PatientRegistrationModalProps> = ({
   onClose,
   onSuccess,
-  onBookImmediate
+  onBookImmediate,
 }) => {
   const { registerPatient, patients } = useDentalStore();
 
@@ -1508,11 +1737,17 @@ const PatientRegistrationModal: React.FC<PatientRegistrationModalProps> = ({
     if (!fullName.trim() || !phone.trim() || !email.trim()) return;
 
     const alerts = medicalAlertsStr
-      ? medicalAlertsStr.split(',').map((s) => s.trim()).filter(Boolean)
+      ? medicalAlertsStr
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
       : [];
 
     const allgs = allergiesStr
-      ? allergiesStr.split(',').map((s) => s.trim()).filter(Boolean)
+      ? allergiesStr
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
       : [];
 
     const newPat = registerPatient({
@@ -1525,11 +1760,13 @@ const PatientRegistrationModal: React.FC<PatientRegistrationModalProps> = ({
       emergencyContact: {
         name: emergencyName.trim() || 'Emergency Contact',
         relationship: emergencyRelationship,
-        phone: emergencyPhone.trim() || phone.trim()
+        phone: emergencyPhone.trim() || phone.trim(),
       },
-      identificationReference: identificationReference.trim() || `ID-${Math.floor(100 + Math.random() * 900)}-${Math.floor(10 + Math.random() * 90)}`,
+      identificationReference:
+        identificationReference.trim() ||
+        `ID-${Math.floor(100 + Math.random() * 900)}-${Math.floor(10 + Math.random() * 90)}`,
       medicalAlerts: alerts,
-      allergies: allgs
+      allergies: allgs,
     });
 
     onSuccess(newPat);

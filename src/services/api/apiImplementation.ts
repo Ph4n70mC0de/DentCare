@@ -102,7 +102,9 @@ export class ApiAuthService implements IAuthService {
     this.currentUser = null;
   }
 
-  async registerPatient(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient> {
+  async registerPatient(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient> {
     const response = await apiClient.registerPatient(data as any);
     return response.patient;
   }
@@ -129,7 +131,11 @@ export class ApiAppointmentService implements IAppointmentService {
     return apiClient.updateAppointment(id, data);
   }
 
-  async updateStatus(id: string, status: AppointmentStatus, metadata?: Record<string, unknown>): Promise<Appointment | null> {
+  async updateStatus(
+    id: string,
+    status: AppointmentStatus,
+    metadata?: Record<string, unknown>
+  ): Promise<Appointment | null> {
     return apiClient.updateAppointment(id, { status, ...metadata });
   }
 
@@ -145,15 +151,26 @@ export class ApiAppointmentService implements IAppointmentService {
     return apiClient.markNoShow(id, reason);
   }
 
-  async createEmergency(data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }): Promise<Appointment> {
+  async createEmergency(
+    data: CreateAppointmentRequest & { emergencyNotes: string; severity: 'high' | 'critical' }
+  ): Promise<Appointment> {
     return apiClient.createEmergencyAppointment(data);
   }
 
-  async getAvailableSlots(dentistId: string, date: string, durationMinutes: number): Promise<AvailableSlot[]> {
+  async getAvailableSlots(
+    dentistId: string,
+    date: string,
+    durationMinutes: number
+  ): Promise<AvailableSlot[]> {
     return apiClient.getAvailableSlots(dentistId, date, durationMinutes);
   }
 
-  async getAlternativeDates(dentistId: string, fromDate: string, durationMinutes: number, count?: number): Promise<AlternativeDate[]> {
+  async getAlternativeDates(
+    dentistId: string,
+    fromDate: string,
+    durationMinutes: number,
+    count?: number
+  ): Promise<AlternativeDate[]> {
     return apiClient.getAlternativeDates(dentistId, fromDate, durationMinutes, count);
   }
 }
@@ -179,7 +196,9 @@ export class ApiPatientService implements IPatientService {
     }
   }
 
-  async create(data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>): Promise<Patient> {
+  async create(
+    data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
+  ): Promise<Patient> {
     const response = await apiClient.registerPatient(data as any);
     return response.patient;
   }
@@ -208,7 +227,7 @@ export class ApiDentistService implements IDentistService {
 
   async getByUserId(userId: string): Promise<Dentist | null> {
     const dentists = await this.getAll();
-    return dentists.find(d => d.userId === userId) ?? null;
+    return dentists.find((d) => d.userId === userId) ?? null;
   }
 
   async getSchedules(dentistId: string): Promise<DentistSchedule[]> {
@@ -219,7 +238,10 @@ export class ApiDentistService implements IDentistService {
     return apiClient.createDentistSchedule(data);
   }
 
-  async updateSchedule(id: string, data: Partial<CreateDentistScheduleRequest>): Promise<DentistSchedule> {
+  async updateSchedule(
+    id: string,
+    data: Partial<CreateDentistScheduleRequest>
+  ): Promise<DentistSchedule> {
     return apiClient.updateDentistSchedule(id, data);
   }
 

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { CreditCard, CheckCircle2, Receipt, ShieldCheck, Printer, CalendarPlus, Download } from 'lucide-react';
+import {
+  CreditCard,
+  CheckCircle2,
+  Receipt,
+  ShieldCheck,
+  Printer,
+  CalendarPlus,
+  Download,
+} from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -20,9 +28,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   onClose,
   appointment,
   onSuccess,
-  onScheduleFollowUp
+  onScheduleFollowUp,
 }) => {
-  const { patients, dentists, services, processPayment, consultations, settings } = useDentalStore();
+  const { patients, dentists, services, processPayment, consultations, settings } =
+    useDentalStore();
 
   if (!appointment) return null;
 
@@ -62,7 +71,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       balance: 0,
       paymentMethod,
       paymentStatus: 'Paid',
-      notes: `Settled at front desk reception for ${service?.name}`
+      notes: `Settled at front desk reception for ${service?.name}`,
     });
 
     setPaymentResult(record);
@@ -100,7 +109,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
             <h4 className="text-xl font-bold text-slate-800">Payment Successfully Processed</h4>
             <p className="text-xs text-slate-500">
-              Official Receipt <strong>#{paymentResult.receiptNumber}</strong> generated and recorded in audit log.
+              Official Receipt <strong>#{paymentResult.receiptNumber}</strong> generated and
+              recorded in audit log.
             </p>
           </div>
 
@@ -112,15 +122,21 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 <p className="text-[10px] text-slate-500">{settings.clinicAddress}</p>
               </div>
               <div className="text-right">
-                <span className="font-bold text-slate-700 block">{paymentResult.receiptNumber}</span>
-                <span className="text-[10px] text-slate-400">{new Date(paymentResult.createdAt).toLocaleString()}</span>
+                <span className="font-bold text-slate-700 block">
+                  {paymentResult.receiptNumber}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {new Date(paymentResult.createdAt).toLocaleString()}
+                </span>
               </div>
             </div>
 
             <div className="space-y-1.5 py-1">
               <div className="flex justify-between">
                 <span className="text-slate-600">Procedure: {service?.name}</span>
-                <span className="font-semibold text-slate-800">₱{paymentResult.subtotal.toFixed(2)}</span>
+                <span className="font-semibold text-slate-800">
+                  ₱{paymentResult.subtotal.toFixed(2)}
+                </span>
               </div>
               {paymentResult.discount > 0 && (
                 <div className="flex justify-between text-emerald-600">
@@ -141,8 +157,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-slate-500 text-[11px]">
-              <span>Payment Method: <strong>{paymentResult.paymentMethod}</strong></span>
-              <span>Status: <strong className="text-emerald-700 uppercase">Paid In Full</strong></span>
+              <span>
+                Payment Method: <strong>{paymentResult.paymentMethod}</strong>
+              </span>
+              <span>
+                Status: <strong className="text-emerald-700 uppercase">Paid In Full</strong>
+              </span>
             </div>
           </div>
 
@@ -155,7 +175,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   <span>Dentist Recommended Follow-Up Appointment</span>
                 </div>
                 <p className="text-[11px] text-slate-600 mt-0.5">
-                  Interval: <strong>{consultation.followUpRecommendation.timeframeWeeks} weeks</strong> ({consultation.followUpRecommendation.notes || 'Routine checkup'})
+                  Interval:{' '}
+                  <strong>{consultation.followUpRecommendation.timeframeWeeks} weeks</strong> (
+                  {consultation.followUpRecommendation.notes || 'Routine checkup'})
                 </p>
               </div>
               <NeoButton

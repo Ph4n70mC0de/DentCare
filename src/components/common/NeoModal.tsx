@@ -25,7 +25,7 @@ export const NeoModal: React.FC<NeoModalProps> = ({
   title,
   subtitle,
   children,
-  maxWidth = 'lg'
+  maxWidth = 'lg',
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -100,16 +100,12 @@ export const NeoModal: React.FC<NeoModalProps> = ({
     xl: 'max-w-xl',
     '2xl': 'max-w-2xl',
     '3xl': 'max-w-3xl',
-    '4xl': 'max-w-4xl'
+    '4xl': 'max-w-4xl',
   }[maxWidth];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-900/35 backdrop-blur-xs">
-      <div
-        className="fixed inset-0"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="fixed inset-0" onClick={onClose} aria-hidden="true" />
 
       <div
         ref={dialogRef}
@@ -135,9 +131,7 @@ export const NeoModal: React.FC<NeoModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="mt-5 overflow-y-auto pr-1 flex-1">
-          {children}
-        </div>
+        <div className="mt-5 overflow-y-auto pr-1 flex-1">{children}</div>
       </div>
     </div>
   );

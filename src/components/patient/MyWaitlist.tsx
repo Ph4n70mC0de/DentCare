@@ -20,7 +20,7 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
   onSelectTab,
   isWaitlistModalOpen,
   setIsWaitlistModalOpen,
-  onJoinWaitlist
+  onJoinWaitlist,
 }) => {
   const {
     currentPatient,
@@ -29,7 +29,7 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
     waitlist,
     cancelWaitlistEntry,
     sendNotification,
-    activeUser
+    activeUser,
   } = useDentalStore();
 
   const [simulatedMatchMsg, setSimulatedMatchMsg] = useState('');
@@ -46,10 +46,12 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
       type: 'waitlist_slot_available',
       title: '🎉 Early Cancellation Opening Found!',
       message: `Great news! An earlier slot opened for ${srv?.name || 'Dental Treatment'} with ${dnt?.fullName || 'Dentist'} on ${entry.preferredDate} at 2:00 PM. Claim your seat now!`,
-      channel: 'in_app'
+      channel: 'in_app',
     });
 
-    setSimulatedMatchMsg(`Match simulated! An alert has been dispatched to your notification center for ${srv?.name}.`);
+    setSimulatedMatchMsg(
+      `Match simulated! An alert has been dispatched to your notification center for ${srv?.name}.`
+    );
     setTimeout(() => setSimulatedMatchMsg(''), 4000);
   };
 
@@ -65,7 +67,8 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
             </h2>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Automated seat recovery: When earlier appointment slots open due to cancellations, queued patients are alerted first.
+            Automated seat recovery: When earlier appointment slots open due to cancellations,
+            queued patients are alerted first.
           </p>
         </div>
 
@@ -103,13 +106,10 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
             <Clock className="w-10 h-10 text-slate-400 mx-auto" />
             <h4 className="text-sm font-bold text-slate-700">No active waitlist requests</h4>
             <p className="text-xs text-slate-500 max-w-md mx-auto">
-              Want an earlier appointment or a slot on a fully booked day? Join our cancellation waitlist and our engine will notify you the moment a chair becomes available.
+              Want an earlier appointment or a slot on a fully booked day? Join our cancellation
+              waitlist and our engine will notify you the moment a chair becomes available.
             </p>
-            <NeoButton
-              variant="primary"
-              size="sm"
-              onClick={() => setIsWaitlistModalOpen(true)}
-            >
+            <NeoButton variant="primary" size="sm" onClick={() => setIsWaitlistModalOpen(true)}>
               Join Waitlist Now
             </NeoButton>
           </div>
@@ -126,16 +126,14 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
                 >
                   <div className="space-y-1.5 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-extrabold text-base text-slate-800">
-                        {srv?.name}
-                      </span>
+                      <span className="font-extrabold text-base text-slate-800">{srv?.name}</span>
                       <NeoBadge
                         variant={
                           w.status === 'notified'
                             ? 'warning'
                             : w.status === 'booked'
-                            ? 'success'
-                            : 'info'
+                              ? 'success'
+                              : 'info'
                         }
                         size="sm"
                       >
@@ -155,8 +153,8 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
                         {w.preferredTimeRange === 'morning'
                           ? 'Morning (08:00 - 12:00)'
                           : w.preferredTimeRange === 'afternoon'
-                          ? 'Afternoon (13:00 - 17:00)'
-                          : 'Any Available Time'}
+                            ? 'Afternoon (13:00 - 17:00)'
+                            : 'Any Available Time'}
                       </span>
                       <span>
                         <strong>Dentist:</strong> {dnt?.fullName || 'First Available Dentist'}
@@ -164,9 +162,7 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
                     </div>
 
                     {w.notes && (
-                      <p className="text-[11px] text-slate-500 italic">
-                        Notes: "{w.notes}"
-                      </p>
+                      <p className="text-[11px] text-slate-500 italic">Notes: "{w.notes}"</p>
                     )}
                   </div>
 
@@ -204,21 +200,24 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
           <div className="p-3 rounded-xl neo-inset bg-[#EFF4FA] space-y-1">
             <span className="font-extrabold text-blue-700 block">1. Cancellation Detected</span>
             <p className="text-[11px]">
-              When another patient cancels or reschedules, our system identifies the open operatory chair immediately.
+              When another patient cancels or reschedules, our system identifies the open operatory
+              chair immediately.
             </p>
           </div>
 
           <div className="p-3 rounded-xl neo-inset bg-[#EFF4FA] space-y-1">
             <span className="font-extrabold text-blue-700 block">2. Smart Priority Match</span>
             <p className="text-[11px]">
-              Waitlisted patients matching the procedure duration and time window are automatically prioritized.
+              Waitlisted patients matching the procedure duration and time window are automatically
+              prioritized.
             </p>
           </div>
 
           <div className="p-3 rounded-xl neo-inset bg-[#EFF4FA] space-y-1">
             <span className="font-extrabold text-blue-700 block">3. One-Click Reservation</span>
             <p className="text-[11px]">
-              An immediate notification is sent to your notification center so you can claim the earlier slot before it fills.
+              An immediate notification is sent to your notification center so you can claim the
+              earlier slot before it fills.
             </p>
           </div>
         </div>

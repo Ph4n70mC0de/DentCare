@@ -14,12 +14,12 @@
 // ============================================
 
 export interface PaginationParams {
-  page: number;           // 1-based page number
-  pageSize: number;       // items per page (max 100)
+  page: number; // 1-based page number
+  pageSize: number; // items per page (max 100)
 }
 
 export interface SortParams {
-  field: string;          // field name to sort by
+  field: string; // field name to sort by
   direction: 'asc' | 'desc';
 }
 
@@ -46,17 +46,17 @@ export interface PaginatedResponse<T> {
 // ============================================
 
 export interface ApiError {
-  code: string;                    // Machine-readable error code
-  message: string;                 // Human-readable message
-  statusCode: number;              // HTTP status code
+  code: string; // Machine-readable error code
+  message: string; // Human-readable message
+  statusCode: number; // HTTP status code
   details?: Record<string, unknown>; // Additional context
-  timestamp: string;               // ISO timestamp
-  requestId?: string;              // For tracing
+  timestamp: string; // ISO timestamp
+  requestId?: string; // For tracing
 }
 
 export interface ValidationErrorDetail {
   field: string;
-  code: string;                    // e.g., 'required', 'invalid_format', 'conflict'
+  code: string; // e.g., 'required', 'invalid_format', 'conflict'
   message: string;
 }
 
@@ -126,7 +126,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-  expiresIn: number;           // seconds
+  expiresIn: number; // seconds
   tokenType: 'Bearer';
   user: UserProfile;
 }
@@ -155,7 +155,7 @@ export type UserRole = 'patient' | 'front_desk' | 'dentist' | 'admin';
 
 export interface RegisterPatientRequest {
   fullName: string;
-  dateOfBirth: string;         // YYYY-MM-DD
+  dateOfBirth: string; // YYYY-MM-DD
   sex: 'Male' | 'Female' | 'Other';
   phone: string;
   email: string;
@@ -202,9 +202,9 @@ export interface Appointment {
   patientId: string;
   dentistId: string;
   serviceId: string;
-  date: string;              // YYYY-MM-DD
-  startTime: string;         // HH:mm
-  endTime: string;           // HH:mm
+  date: string; // YYYY-MM-DD
+  startTime: string; // HH:mm
+  endTime: string; // HH:mm
   status: AppointmentStatus;
   bookingSource: BookingSource;
   notes?: string;
@@ -219,14 +219,14 @@ export interface Appointment {
   emergencyNotes?: string;
   rescheduledFromId?: string;
   queueNumber?: number;
-  createdAt: string;         // ISO timestamp
-  updatedAt: string;         // ISO timestamp
-  confirmedAt?: string;      // ISO timestamp
-  arrivedAt?: string;        // ISO timestamp
+  createdAt: string; // ISO timestamp
+  updatedAt: string; // ISO timestamp
+  confirmedAt?: string; // ISO timestamp
+  arrivedAt?: string; // ISO timestamp
   consultationStartedAt?: string; // ISO timestamp
-  completedAt?: string;      // ISO timestamp
+  completedAt?: string; // ISO timestamp
   followUpReminderScheduledFor?: string; // ISO timestamp
-  followUpReminderSentAt?: string;       // ISO timestamp
+  followUpReminderSentAt?: string; // ISO timestamp
   // Populated via includes
   patient?: Patient;
   dentist?: Dentist;
@@ -237,8 +237,8 @@ export interface CreateAppointmentRequest {
   patientId: string;
   dentistId: string;
   serviceId: string;
-  date: string;              // YYYY-MM-DD
-  startTime: string;         // HH:mm
+  date: string; // YYYY-MM-DD
+  startTime: string; // HH:mm
   notes?: string;
   bookingSource?: BookingSource;
 }
@@ -252,8 +252,8 @@ export interface UpdateAppointmentRequest {
 }
 
 export interface RescheduleAppointmentRequest {
-  newDate: string;           // YYYY-MM-DD
-  newStartTime: string;      // HH:mm
+  newDate: string; // YYYY-MM-DD
+  newStartTime: string; // HH:mm
 }
 
 export interface AppointmentListParams extends ListParams {
@@ -261,22 +261,22 @@ export interface AppointmentListParams extends ListParams {
   dentistId?: string;
   patientId?: string;
   serviceId?: string;
-  dateFrom?: string;         // YYYY-MM-DD
-  dateTo?: string;           // YYYY-MM-DD
+  dateFrom?: string; // YYYY-MM-DD
+  dateTo?: string; // YYYY-MM-DD
   isEmergency?: boolean;
 }
 
 export interface AvailableSlot {
-  time: string;              // HH:mm
+  time: string; // HH:mm
   available: boolean;
   reason?: string;
   dentistId: string;
-  date: string;              // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
   durationMinutes: number;
 }
 
 export interface AlternativeDate {
-  date: string;              // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
   availableSlots: number;
 }
 
@@ -289,7 +289,7 @@ export interface Patient {
   userId?: string;
   patientNumber: string;
   fullName: string;
-  dateOfBirth: string;       // YYYY-MM-DD
+  dateOfBirth: string; // YYYY-MM-DD
   sex: 'Male' | 'Female' | 'Other';
   phone: string;
   email: string;
@@ -304,8 +304,8 @@ export interface Patient {
   allergies: string[];
   noShowCount: number;
   requiresStaffReviewForBooking: boolean;
-  createdAt: string;         // ISO timestamp
-  updatedAt: string;         // ISO timestamp
+  createdAt: string; // ISO timestamp
+  updatedAt: string; // ISO timestamp
 }
 
 export interface PatientListParams extends ListParams {
@@ -345,11 +345,11 @@ export interface Dentist {
 export interface DentistSchedule {
   id: string;
   dentistId: string;
-  dayOfWeek: number;         // 0 = Sunday, ..., 6 = Saturday
-  startTime: string;         // HH:mm
-  endTime: string;           // HH:mm
-  breakStart: string;        // HH:mm
-  breakEnd: string;          // HH:mm
+  dayOfWeek: number; // 0 = Sunday, ..., 6 = Saturday
+  startTime: string; // HH:mm
+  endTime: string; // HH:mm
+  breakStart: string; // HH:mm
+  breakEnd: string; // HH:mm
   active: boolean;
 }
 
@@ -364,10 +364,10 @@ export interface CreateDentistScheduleRequest {
 
 export interface BlockedSchedule {
   id: string;
-  dentistId?: string;        // undefined = whole clinic
-  date: string;              // YYYY-MM-DD
-  startTime?: string;        // HH:mm (if not all-day)
-  endTime?: string;          // HH:mm (if not all-day)
+  dentistId?: string; // undefined = whole clinic
+  date: string; // YYYY-MM-DD
+  startTime?: string; // HH:mm (if not all-day)
+  endTime?: string; // HH:mm (if not all-day)
   reason: string;
   isAllDay: boolean;
 }
@@ -438,13 +438,13 @@ export interface WaitlistEntry {
   patientId: string;
   preferredDentistId?: string;
   serviceId: string;
-  preferredDate: string;     // YYYY-MM-DD
+  preferredDate: string; // YYYY-MM-DD
   preferredTimeRange: WaitlistTimeRange;
   priority: WaitlistPriority;
   status: WaitlistStatus;
   notes?: string;
-  createdAt: string;         // ISO timestamp
-  notifiedAt?: string;       // ISO timestamp
+  createdAt: string; // ISO timestamp
+  notifiedAt?: string; // ISO timestamp
   matchedAppointmentId?: string;
   // Populated via includes
   patient?: Patient;
@@ -486,7 +486,7 @@ export interface PrescriptionItem {
 export interface FollowUpRecommendation {
   required: boolean;
   timeframeWeeks: number;
-  recommendedDate?: string;  // YYYY-MM-DD
+  recommendedDate?: string; // YYYY-MM-DD
   notes: string;
 }
 
@@ -502,8 +502,8 @@ export interface Consultation {
   prescriptions: PrescriptionItem[];
   aftercareInstructions: string;
   followUpRecommendation?: FollowUpRecommendation;
-  createdAt: string;         // ISO timestamp
-  updatedAt: string;         // ISO timestamp
+  createdAt: string; // ISO timestamp
+  updatedAt: string; // ISO timestamp
   // Populated via includes
   appointment?: Appointment;
   dentist?: Dentist;
@@ -553,7 +553,7 @@ export interface Payment {
   paymentStatus: PaymentStatus;
   receiptNumber: string;
   notes?: string;
-  createdAt: string;         // ISO timestamp
+  createdAt: string; // ISO timestamp
   // Populated via includes
   appointment?: Appointment;
   patient?: Patient;
@@ -622,7 +622,7 @@ export interface AppNotification {
   message: string;
   channel: NotificationChannel;
   read: boolean;
-  sentAt: string;            // ISO timestamp
+  sentAt: string; // ISO timestamp
   relatedAppointmentId?: string;
   metadata?: Record<string, unknown>;
 }
@@ -669,7 +669,7 @@ export interface AuditLog {
   beforeValue?: string;
   afterValue?: string;
   details?: string;
-  timestamp: string;         // ISO timestamp
+  timestamp: string; // ISO timestamp
 }
 
 export interface AuditListParams extends ListParams {
@@ -691,8 +691,8 @@ export interface SystemSettings {
   clinicPhone: string;
   clinicEmail: string;
   clinicAddress: string;
-  clinicOpenTime: string;    // HH:mm
-  clinicCloseTime: string;   // HH:mm
+  clinicOpenTime: string; // HH:mm
+  clinicCloseTime: string; // HH:mm
   defaultSlotDurationMinutes: number;
   bufferTimeMinutes: number;
   pendingHoldMinutes: number;
@@ -785,9 +785,9 @@ export interface GenerateReportRequest {
 
 export interface ApiConfig {
   baseUrl: string;
-  timeout: number;           // milliseconds
+  timeout: number; // milliseconds
   retryAttempts: number;
-  retryDelay: number;        // milliseconds
+  retryDelay: number; // milliseconds
 }
 
 // Default config - overridden by environment

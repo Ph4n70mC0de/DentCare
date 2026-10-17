@@ -17,12 +17,14 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
   isOpen,
   onClose,
   appointment,
-  onSuccess
+  onSuccess,
 }) => {
   const { cancelAppointment, patients, dentists, services } = useDentalStore();
   const [reasonCategory, setReasonCategory] = useState<string>('Personal emergency');
   const [customReason, setCustomReason] = useState<string>('');
-  const [result, setResult] = useState<{ success: boolean; notifiedWaitlistCount: number } | null>(null);
+  const [result, setResult] = useState<{ success: boolean; notifiedWaitlistCount: number } | null>(
+    null
+  );
 
   if (!appointment) return null;
 
@@ -67,7 +69,11 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
               <span>Appointment Cancelled & Slot Released</span>
             </div>
             <p className="text-xs text-slate-600">
-              The time slot <strong>{appointment.date} at {appointment.startTime}</strong> is now free for new bookings.
+              The time slot{' '}
+              <strong>
+                {appointment.date} at {appointment.startTime}
+              </strong>{' '}
+              is now free for new bookings.
             </p>
           </div>
 
@@ -75,10 +81,15 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
             <h5 className="font-bold text-slate-800 flex items-center gap-1.5">
               <Send className="w-3.5 h-3.5 text-blue-600" /> Automated Workflow Execution:
             </h5>
-            <p className="text-slate-600">• Dentist <strong>{dentist?.fullName}</strong> notified of schedule opening.</p>
-            <p className="text-slate-600">• Patient <strong>{patient?.fullName}</strong> sent cancellation confirmation.</p>
+            <p className="text-slate-600">
+              • Dentist <strong>{dentist?.fullName}</strong> notified of schedule opening.
+            </p>
+            <p className="text-slate-600">
+              • Patient <strong>{patient?.fullName}</strong> sent cancellation confirmation.
+            </p>
             <p className="text-slate-600 font-bold text-blue-700">
-              • Waitlist Matching: {result.notifiedWaitlistCount} eligible waitlisted patients automatically notified!
+              • Waitlist Matching: {result.notifiedWaitlistCount} eligible waitlisted patients
+              automatically notified!
             </p>
             <p className="text-slate-600">• Timestamp and actor recorded in immutable audit log.</p>
           </div>
@@ -102,7 +113,9 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Scheduled:</span>
-              <span className="font-bold text-blue-700">{appointment.date} at {appointment.startTime}</span>
+              <span className="font-bold text-blue-700">
+                {appointment.date} at {appointment.startTime}
+              </span>
             </div>
           </div>
 
@@ -112,11 +125,17 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
               value={reasonCategory}
               onChange={(e) => setReasonCategory(e.target.value)}
             >
-              <option value="Patient illness or indisposition">Patient illness or indisposition</option>
+              <option value="Patient illness or indisposition">
+                Patient illness or indisposition
+              </option>
               <option value="Personal schedule conflict">Personal schedule conflict</option>
               <option value="Transportation / Travel issue">Transportation / Travel issue</option>
-              <option value="Financial / Insurance constraint">Financial / Insurance constraint</option>
-              <option value="Resolved elsewhere / symptoms subsided">Resolved elsewhere / symptoms subsided</option>
+              <option value="Financial / Insurance constraint">
+                Financial / Insurance constraint
+              </option>
+              <option value="Resolved elsewhere / symptoms subsided">
+                Resolved elsewhere / symptoms subsided
+              </option>
               <option value="Clinic requested cancellation">Clinic requested cancellation</option>
               <option value="Other reason">Other reason</option>
             </NeoSelect>
