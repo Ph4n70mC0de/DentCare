@@ -2,15 +2,9 @@ import React from 'react';
 import {
   Stethoscope,
   Clock,
-  User,
   CheckCircle2,
-  Calendar,
-  AlertTriangle,
   FileText,
-  Activity,
   ArrowRight,
-  ShieldAlert,
-  Sparkles,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';

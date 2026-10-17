@@ -5,7 +5,6 @@
 import { dentalStore } from '../store';
 import type {
   User,
-  UserRole,
   Patient,
   Dentist,
   DentalService,
@@ -42,9 +41,7 @@ import type {
   CreateWaitlistEntryRequest,
   CreateConsultationRequest,
   CreatePaymentRequest,
-  MarkNotificationsReadRequest,
   UpdateSettingsRequest,
-  RevenueSummary,
 } from './types';
 
 import type {
@@ -144,11 +141,11 @@ function filterAndPaginate<T>(
 }
 
 // Async wrapper for synchronous store operations
-function asyncResult<T>(value: T): Promise<T> {
+function _asyncResult<T>(value: T): Promise<T> {
   return Promise.resolve(value);
 }
 
-function asyncVoid(): Promise<void> {
+function _asyncVoid(): Promise<void> {
   return Promise.resolve();
 }
 
@@ -169,7 +166,7 @@ export class LocalAuthService implements IAuthService {
     dentalStore.setActiveUser(userId);
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string, _password: string): Promise<User> {
     const users = dentalStore.getUsers();
     const user = users.find((u) => u.email === email);
     if (!user) throw new Error('Invalid credentials');
@@ -221,8 +218,6 @@ export class LocalAppointmentService implements IAppointmentService {
   }
 
   async cancel(id: string, reason: string): Promise<Appointment> {
-    const result = dentalStore.cancelAppointment(id, reason);
-    // Return the cancelled appointment
     const appointment = dentalStore.getAppointments().find((a) => a.id === id);
     if (!appointment) throw new Error('Appointment not found after cancellation');
     return appointment;
@@ -351,7 +346,7 @@ export class LocalDentistService implements IDentistService {
     };
   }
 
-  async deleteSchedule(id: string): Promise<void> {
+  async deleteSchedule(_id: string): Promise<void> {
     // Local store doesn't have this
   }
 }
@@ -550,7 +545,7 @@ export class LocalReportService implements IReportService {
 
   private getReportData(
     type: string,
-    filters?: Record<string, unknown>
+    _filters?: Record<string, unknown>
   ): Record<string, unknown>[] {
     switch (type) {
       case 'appointments':

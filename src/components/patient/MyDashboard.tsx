@@ -1,37 +1,15 @@
 import React, { useState } from 'react';
 import {
-  Calendar,
-  Clock,
   CalendarPlus,
-  FileText,
-  AlertCircle,
-  CheckCircle2,
-  CalendarX2,
-  CalendarClock,
+  CalendarCheck2,
+  Stethoscope,
   Sparkles,
   Pill,
-  Download,
-  Stethoscope,
-  ChevronRight,
-  ShieldAlert,
-  Search,
-  Filter,
-  Printer,
-  BellRing,
-  Check,
-  Info,
-  User,
-  HeartPulse,
-  CalendarCheck2,
-  Plus,
-  Phone,
-  MapPin,
   CreditCard,
+  ShieldAlert,
   ShieldCheck,
   Smile,
   AlertTriangle,
-  ArrowRight,
-  CheckCircle,
   FileSpreadsheet,
   Activity,
   UserCheck,
@@ -43,10 +21,9 @@ import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { NeoBadge } from '../common/NeoBadge';
-import { Appointment, Consultation, WaitlistEntry } from '../../types';
+import { Appointment, WaitlistEntry } from '../../types';
 import { CancellationModal } from '../exceptions/CancellationModal';
 import { RescheduleModal } from '../exceptions/RescheduleModal';
-import { BookingWizard } from './BookingWizard';
 import { getTodayDateString } from '../../data/seedData';
 import {
   getRelativeDay,
@@ -58,7 +35,6 @@ import {
 import { JoinWaitlistModal } from './JoinWaitlistModal';
 
 interface MyDashboardProps {
-  onStartBooking: () => void;
   onSelectTab: (tab: string) => void;
   selectedForCancel: Appointment | null;
   setSelectedForCancel: (apt: Appointment | null) => void;
@@ -70,7 +46,6 @@ interface MyDashboardProps {
 }
 
 export const MyDashboard: React.FC<MyDashboardProps> = ({
-  onStartBooking,
   onSelectTab,
   selectedForCancel,
   setSelectedForCancel,
@@ -95,7 +70,6 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({
     updateAppointmentStatus,
   } = useDentalStore();
 
-  const [selectedTooth, setSelectedTooth] = useState<number>(14);
   const [dashboardVisitsFilter, setDashboardVisitsFilter] = useState<'all' | 'upcoming' | 'past'>(
     'all'
   );

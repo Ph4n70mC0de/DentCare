@@ -10,8 +10,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
-import { NeoCard } from '../common/NeoCard';
-import { NeoButton } from '../common/NeoButton';
 import { AppNotification } from '../../types';
 
 export const NotificationCenter: React.FC = () => {

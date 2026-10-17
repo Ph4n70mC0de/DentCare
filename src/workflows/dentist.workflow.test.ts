@@ -232,7 +232,7 @@ describe('Dentist Workflows', () => {
       dentalStore.updateAppointmentStatus(appointment.id, 'Checked-In');
       dentalStore.updateAppointmentStatus(appointment.id, 'In-Consultation');
 
-      const consultation = dentalStore.saveConsultation({
+      const _consultation = dentalStore.saveConsultation({
         appointmentId: appointment.id,
         dentistId: 'dentist-1',
         patientId: 'pat-001',
@@ -370,7 +370,7 @@ describe('Dentist Workflows', () => {
     });
 
     it('validates appointment slot availability', () => {
-      const dentist = dentalStore.getDentists().find((d) => d.id === 'dentist-1');
+      dentalStore.getDentists().find((d) => d.id === 'dentist-1');
       const today = new Date().toISOString().split('T')[0];
 
       const isAvailable = dentalStore.isSlotAvailable('dentist-1', today, '09:00', 45);

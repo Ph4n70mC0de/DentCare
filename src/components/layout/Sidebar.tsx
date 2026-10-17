@@ -14,7 +14,6 @@ import {
   Settings,
   Sparkles,
   ClipboardList,
-  UserPlus,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { UserRole } from '../../types';

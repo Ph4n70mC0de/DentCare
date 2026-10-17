@@ -3,7 +3,6 @@
 
 import type {
   User,
-  UserRole,
   Patient,
   Dentist,
   DentalService,
@@ -32,7 +31,6 @@ import type {
   AlternativeDate,
   CreateAppointmentRequest,
   UpdateAppointmentRequest,
-  RescheduleAppointmentRequest,
   UpdatePatientRequest,
   CreateDentistScheduleRequest,
   CreateBlockedScheduleRequest,
@@ -41,7 +39,6 @@ import type {
   CreateWaitlistEntryRequest,
   CreateConsultationRequest,
   CreatePaymentRequest,
-  MarkNotificationsReadRequest,
   UpdateSettingsRequest,
   RevenueSummary,
 } from './types';

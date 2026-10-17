@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, Plus } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { WaitlistEntry } from '../../types';

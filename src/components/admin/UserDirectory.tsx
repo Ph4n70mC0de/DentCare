@@ -12,7 +12,7 @@ import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
-import { User, UserRole } from '../../types';
+import { UserRole } from '../../types';
 import { useDentalStore } from '../../services/useDentalStore';
 
 const ROLE_META: Record<
@@ -29,9 +29,7 @@ const ROLE_META: Record<
   patient: { label: 'Patient', variant: 'neutral', icon: <UserCheck className="w-3.5 h-3.5" /> },
 };
 
-interface UserDirectoryProps {}
-
-export const UserDirectory: React.FC<UserDirectoryProps> = ({}) => {
+export const UserDirectory: React.FC = () => {
   const { users } = useDentalStore();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');

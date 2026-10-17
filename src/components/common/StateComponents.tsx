@@ -7,12 +7,9 @@ import {
   Info,
   Search,
   Inbox,
-  FileText,
   User,
   Calendar,
   CreditCard,
-  ShieldCheck,
-  Clock,
   RefreshCw,
 } from 'lucide-react';
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { dentalStore } from '../services/store';
 import { getTodayDateString } from '../data/seedData';
 
@@ -165,7 +165,7 @@ describe('Shared Workflows - Edge Cases & Error Handling', () => {
           startTime: '09:00',
         });
         results.push(apt);
-      } catch (e) {
+      } catch (_e) {
         results.push(null);
       }
     }

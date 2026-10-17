@@ -24,15 +24,6 @@ interface DentistDashboardProps {
 export const DentistDashboard: React.FC<DentistDashboardProps> = ({
   activeTab,
   onSelectTab,
-  onStartBooking,
-  onStartBookingWithPatientId,
-  onNavigateToWaitingRoom,
-  onStartConsultation,
-  onNavigateToDirectory,
-  onNavigateToDayFlow,
-  onNavigateToBilling,
-  onNavigateToExceptions,
-  onNavigateToReports,
   activeConsultationAptId,
   onCompleteConsultation,
 }) => {

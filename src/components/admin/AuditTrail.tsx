@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { Download, Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
-import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { AuditLog } from '../../types';
 
 interface AuditTrailProps {
   auditLogs: AuditLog[];
-  onExportCSV: () => void;
 }
 
-export const AuditTrail: React.FC<AuditTrailProps> = ({ auditLogs, onExportCSV }) => {
+export const AuditTrail: React.FC<AuditTrailProps> = ({ auditLogs }) => {
   const [auditSearch, setAuditSearch] = useState<string>('');
   const [auditActionFilter, setAuditActionFilter] = useState<string>('all');
 

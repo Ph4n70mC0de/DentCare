@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarPlus, CheckCircle2, Clock, Calendar, Bell } from 'lucide-react';
+import { CalendarPlus, CheckCircle2, Bell } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -30,12 +30,12 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
     getAvailableSlotsForDate,
   } = useDentalStore();
 
-  if (!originalAppointment) return null;
+  const patient = patients.find((p) => p.id === originalAppointment?.patientId);
+  const dentist = dentists.find((d) => d.id === originalAppointment?.dentistId);
+  const service = services.find((s) => s.id === originalAppointment?.serviceId);
+  const consultation = consultations.find((c) => c.appointmentId === originalAppointment?.id);
 
-  const patient = patients.find((p) => p.id === originalAppointment.patientId);
-  const dentist = dentists.find((d) => d.id === originalAppointment.dentistId);
-  const service = services.find((s) => s.id === originalAppointment.serviceId);
-  const consultation = consultations.find((c) => c.appointmentId === originalAppointment.id);
+  if (!originalAppointment) return null;
 
   // Default follow-up date (e.g. timeframe in weeks or default 2 weeks)
   const defaultOffset = (consultation?.followUpRecommendation?.timeframeWeeks || 2) * 7;

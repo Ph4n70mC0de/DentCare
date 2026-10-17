@@ -36,7 +36,6 @@ export const ClinicAnalytics: React.FC<ClinicAnalyticsProps> = ({
       : '0';
 
   const totalRevenue = payments.reduce((acc, p) => acc + p.amountPaid, 0);
-  const activeWaitlistCount = waitlist.filter((w) => w.status === 'active').length;
   const notifiedWaitlistCount = waitlist.filter((w) => w.status === 'notified').length;
 
   return (

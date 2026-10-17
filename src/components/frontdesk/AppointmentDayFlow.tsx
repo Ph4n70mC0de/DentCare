@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
 import {
-  Clock,
+  ChevronLeft,
+  ChevronRight,
+  Columns,
+  CalendarDays,
   Calendar,
-  UserCheck,
+  Clock,
+  Stethoscope,
   CreditCard,
   CheckCircle2,
   AlertTriangle,
   Siren,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  Columns,
-  CalendarDays,
-  ArrowRight,
-  Sparkles,
-  Stethoscope,
-  RefreshCw,
   Search,
+  UserCheck,
   UserX,
-  CalendarClock,
-  CalendarX2,
-  PhoneCall,
-  User,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -30,7 +22,7 @@ import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { NeoBadge } from '../common/NeoBadge';
-import { Appointment, AppointmentStatus } from '../../types';
+import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { CheckInModal } from './CheckInModal';
 import { PaymentModal } from './PaymentModal';
@@ -42,16 +34,12 @@ import { EmergencyModal } from '../exceptions/EmergencyModal';
 
 interface AppointmentDayFlowProps {
   onStartBooking?: () => void;
-  onNavigateToWaitingRoom?: () => void;
   onStartConsultation?: (appointmentId: string) => void;
-  onNavigateToBilling?: () => void;
 }
 
 export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
   onStartBooking,
-  onNavigateToWaitingRoom,
   onStartConsultation,
-  onNavigateToBilling,
 }) => {
   const { appointments, patients, dentists, services, updateAppointmentStatus } = useDentalStore();
 
