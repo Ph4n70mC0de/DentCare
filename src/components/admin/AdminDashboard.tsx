@@ -23,9 +23,6 @@ interface AdminDashboardProps {
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   currentView,
-  onStartBooking,
-  onNavigateToWaitingRoom,
-  onStartConsultation,
 }) => {
   const {
     appointments,

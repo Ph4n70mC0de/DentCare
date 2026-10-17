@@ -1,6 +1,5 @@
 ﻿import {
   User,
-  UserRole,
   Patient,
   Dentist,
   DentalService,
@@ -276,7 +275,7 @@ class DentalDataStore {
     saveToStorage(STORAGE_KEYS.APPOINTMENTS, this.appointments);
 
     const patient = this.patients.find((p) => p.id === appointment.patientId);
-    const dentist = this.dentists.find((d) => d.id === appointment.dentistId);
+    const _dentist = this.dentists.find((d) => d.id === appointment.dentistId);
     const actor = this.getActiveUser();
     this.logAudit({
       actorId: actor.id,

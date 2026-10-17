@@ -4,7 +4,6 @@ import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
-import { DentistSchedule, BlockedSchedule } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

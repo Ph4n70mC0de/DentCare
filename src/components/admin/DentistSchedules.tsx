@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, CalendarX, Plus } from 'lucide-react';
+import { CalendarX, Plus } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';

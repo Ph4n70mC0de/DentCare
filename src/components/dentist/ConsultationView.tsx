@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import {
   Stethoscope,
-  FileText,
   AlertCircle,
   Plus,
   Trash2,
   CheckCircle2,
-  Clock,
-  Sparkles,
-  Calendar,
-  Pill,
   Save,
-  ArrowRight,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -19,7 +13,7 @@ import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
-import { Appointment, Consultation, PrescriptionItem } from '../../types';
+import { Consultation, PrescriptionItem } from '../../types';
 
 export type ToothStatus =
   'healthy' | 'caries' | 'filling' | 'crown' | 'missing' | 'implant' | 'root_canal';
@@ -274,7 +268,7 @@ export const ConsultationView: React.FC<ConsultationViewProps> = ({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'exam' | 'chart' | 'rx' | 'history')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? 'neo-raised bg-[#E8EEF5] text-blue-700 font-extrabold'

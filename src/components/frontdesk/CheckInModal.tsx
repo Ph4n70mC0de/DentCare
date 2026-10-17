@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { UserCheck, Search, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { UserCheck, Search, CheckCircle2, AlertCircle } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoBadge } from '../common/NeoBadge';
 import { useDentalStore } from '../../services/useDentalStore';
-import { Appointment, Patient } from '../../types';
+import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
 interface CheckInModalProps {

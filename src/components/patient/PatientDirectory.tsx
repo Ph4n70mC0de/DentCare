@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import {
   Users,
   Search,
-  Filter,
   Plus,
   Download,
   UserPlus,
@@ -41,7 +40,7 @@ import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { NeoModal } from '../common/NeoModal';
-import { Patient, Appointment, Consultation, Payment } from '../../types';
+import { Patient, Appointment, Payment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
 interface PatientDirectoryProps {

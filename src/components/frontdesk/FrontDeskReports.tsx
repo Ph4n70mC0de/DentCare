@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import {
-  BarChart3,
-  Calendar,
-  Clock,
   PhilippinePeso,
+  Clock,
   TrendingUp,
   FileSpreadsheet,
   Printer,
@@ -11,11 +9,6 @@ import {
   CheckCircle2,
   AlertTriangle,
   CreditCard,
-  Building,
-  ArrowUpRight,
-  Filter,
-  Download,
-  Stethoscope,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
@@ -23,7 +16,7 @@ import { NeoButton } from '../common/NeoButton';
 import { getTodayDateString } from '../../data/seedData';
 
 export const FrontDeskReports: React.FC = () => {
-  const { appointments, patients, dentists, services, payments, settings } = useDentalStore();
+  const { appointments, dentists, payments } = useDentalStore();
 
   const today = getTodayDateString();
   const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'all'>('today');

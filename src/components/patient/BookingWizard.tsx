@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Calendar,
   Clock,
   User,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
   ChevronRight,
   ChevronLeft,
   CalendarCheck,
   ShieldCheck,
-  Info,
-  Phone,
-  Mail,
-  HeartPulse,
-  Share2,
   UserCheck,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
@@ -196,7 +190,6 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     } catch (err: unknown) {
       setErrorMsg('Registration failed. Please check your details.');
     }
-  };
 
   // Confirm booking
   const handleConfirmBooking = () => {

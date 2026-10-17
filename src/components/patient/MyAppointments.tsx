@@ -21,7 +21,6 @@ import { downloadICS } from './patientUtils';
 
 interface MyAppointmentsProps {
   onStartBooking: () => void;
-  onSelectTab: (tab: string) => void;
   selectedForCancel: Appointment | null;
   setSelectedForCancel: (apt: Appointment | null) => void;
   selectedForReschedule: Appointment | null;
@@ -30,7 +29,6 @@ interface MyAppointmentsProps {
 
 export const MyAppointments: React.FC<MyAppointmentsProps> = ({
   onStartBooking,
-  onSelectTab,
   selectedForCancel,
   setSelectedForCancel,
   selectedForReschedule,

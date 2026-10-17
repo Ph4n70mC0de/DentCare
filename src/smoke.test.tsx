@@ -2,7 +2,7 @@
 // These tests ensure every view has an owner and can be mounted successfully
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 import { dentalStore } from './services/store';
 

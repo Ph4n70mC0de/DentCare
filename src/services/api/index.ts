@@ -4,7 +4,7 @@
 import type { Services, ServiceMode } from './interfaces';
 import { createLocalServices } from './localImplementation';
 import { createApiServices } from './apiImplementation';
-import { getServiceMode, isLocalMode, isApiMode } from './interfaces';
+import { getServiceMode } from './interfaces';
 
 // ============================================
 // SERVICE INSTANCE (Singleton)

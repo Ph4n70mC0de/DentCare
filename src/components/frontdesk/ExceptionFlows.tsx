@@ -5,24 +5,11 @@ import {
   UserX,
   CalendarX2,
   Clock,
-  CheckCircle2,
-  ArrowRight,
-  ShieldAlert,
-  Search,
-  UserCheck,
-  RefreshCw,
-  Bell,
   Sparkles,
-  PhoneCall,
-  Mail,
-  FileSpreadsheet,
-  AlertCircle,
 } from 'lucide-react';
 import { useDentalStore } from '../../services/useDentalStore';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
-import { NeoBadge } from '../common/NeoBadge';
-import { NeoStatusPill } from '../common/NeoStatusPill';
 import { Appointment, Patient, WaitlistEntry } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { EmergencyModal } from '../exceptions/EmergencyModal';
@@ -52,7 +39,6 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({ onStartBooking }
   const [activeTab, setActiveTab] = useState<
     'emergencies' | 'noshows' | 'cancellations' | 'waitlist'
   >('emergencies');
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Modals state
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
@@ -77,11 +63,6 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({ onStartBooking }
     .sort((a, b) => `${b.date} ${b.startTime}`.localeCompare(`${a.date} ${a.startTime}`));
 
   // Candidates for no-show today (scheduled appointments whose start time passed without check-in)
-  const currentTimeStr = new Date().toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
   const potentialNoShows = appointments.filter(
     (a) => a.date === today && ['Confirmed', 'Requested'].includes(a.status)
   );

@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { Download, FileSpreadsheet, FileText } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
-import { NeoSelect } from '../common/NeoSelect';
 import { Appointment, Patient, Dentist, Payment, AuditLog, WaitlistEntry } from '../../types';
 
 interface ReportsExportProps {
@@ -24,7 +23,6 @@ export const ReportsExport: React.FC<ReportsExportProps> = ({
   auditLogs,
   waitlist,
 }) => {
-  const [reportType, setReportType] = useState<ReportType>('appointments');
 
   const exportCSV = (headers: string[], rows: string[][], filename: string) => {
     const csvContent =

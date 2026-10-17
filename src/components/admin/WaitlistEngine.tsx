@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
-import { CalendarPlus, Trash2 } from 'lucide-react';
+import React from 'react';
 import { NeoCard } from '../common/NeoCard';
-import { NeoButton } from '../common/NeoButton';
-import { NeoInput } from '../common/NeoInput';
 import { NeoBadge } from '../common/NeoBadge';
 import { Dentist, WaitlistEntry, Patient, DentalService } from '../../types';
-import { getTodayDateString } from '../../data/seedData';
 
 interface WaitlistEngineProps {
   waitlist: WaitlistEntry[];
@@ -21,7 +17,6 @@ export const WaitlistEngine: React.FC<WaitlistEngineProps> = ({
   dentists,
 }) => {
   const activeWaitlistCount = waitlist.filter((w) => w.status === 'active').length;
-  const today = getTodayDateString();
 
   return (
     <NeoCard className="space-y-4">
