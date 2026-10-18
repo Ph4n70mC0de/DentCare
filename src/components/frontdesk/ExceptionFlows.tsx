@@ -7,7 +7,7 @@ import {
   Clock,
   Sparkles,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { Appointment, Patient, WaitlistEntry } from '../../types';
@@ -33,7 +33,7 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({ onStartBooking }
     updateAppointmentStatus,
     sendNotification,
     createAppointment,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const today = getTodayDateString();
   const [activeTab, setActiveTab] = useState<

@@ -4,7 +4,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { Appointment } from '../../types';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { getTodayDateString } from '../../data/seedData';
 
 interface RescheduleModalProps {
@@ -21,7 +21,7 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
   onSuccess,
 }) => {
   const { rescheduleAppointment, getAvailableSlotsForDate, services, dentists, patients } =
-    useDentalStore();
+    useDentalServices();
   const [newDate, setNewDate] = useState<string>('');
   const [newTime, setNewTime] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');

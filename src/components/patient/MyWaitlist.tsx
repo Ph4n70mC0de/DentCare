@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, Plus, Sparkles, BellRing, Info, ChevronRight } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
@@ -30,7 +30,7 @@ export const MyWaitlist: React.FC<MyWaitlistProps> = ({
     cancelWaitlistEntry,
     sendNotification,
     activeUser,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const [simulatedMatchMsg, setSimulatedMatchMsg] = useState('');
 

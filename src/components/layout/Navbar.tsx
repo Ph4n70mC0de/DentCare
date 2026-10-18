@@ -1,6 +1,6 @@
 import React from 'react';
 import { Activity, RotateCcw, Menu, X } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NotificationCenter } from '../notifications/NotificationCenter';
 import { UserRole } from '../../types';
 
@@ -19,7 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectView,
   onRoleSwitch,
 }) => {
-  const { activeUser, users, setActiveUser, resetToSeed } = useDentalStore();
+  const { activeUser, users, setActiveUser, resetToSeed } = useDentalServices();
 
   const isDev = import.meta.env.DEV;
 

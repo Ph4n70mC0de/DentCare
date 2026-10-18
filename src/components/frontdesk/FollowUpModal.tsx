@@ -3,7 +3,7 @@ import { CalendarPlus, CheckCircle2, Bell } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { Appointment } from '../../types';
 import { getOffsetDateString } from '../../data/seedData';
 
@@ -28,7 +28,7 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
     createAppointment,
     scheduleFollowUpReminder,
     getAvailableSlotsForDate,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const patient = patients.find((p) => p.id === originalAppointment?.patientId);
   const dentist = dentists.find((d) => d.id === originalAppointment?.dentistId);

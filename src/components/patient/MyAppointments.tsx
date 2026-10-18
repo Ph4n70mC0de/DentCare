@@ -10,7 +10,7 @@ import {
   Download,
   Search,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoStatusPill } from '../common/NeoStatusPill';
@@ -34,7 +34,7 @@ export const MyAppointments: React.FC<MyAppointmentsProps> = ({
   selectedForReschedule,
   setSelectedForReschedule,
 }) => {
-  const { currentPatient, appointments, dentists, services, settings } = useDentalStore();
+  const { currentPatient, appointments, dentists, services, settings } = useDentalServices();
 
   const [appointmentFilter, setAppointmentFilter] = useState<
     'all' | 'upcoming' | 'past' | 'cancelled'

@@ -13,7 +13,7 @@ import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
 import { UserRole } from '../../types';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 
 const ROLE_META: Record<
   UserRole,
@@ -30,7 +30,7 @@ const ROLE_META: Record<
 };
 
 export const UserDirectory: React.FC = () => {
-  const { users } = useDentalStore();
+  const { users } = useDentalServices();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');

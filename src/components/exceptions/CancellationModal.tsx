@@ -4,7 +4,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoSelect } from '../common/NeoSelect';
 import { Appointment } from '../../types';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 
 interface CancellationModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export const CancellationModal: React.FC<CancellationModalProps> = ({
   appointment,
   onSuccess,
 }) => {
-  const { cancelAppointment, patients, dentists, services } = useDentalStore();
+  const { cancelAppointment, patients, dentists, services } = useDentalServices();
   const [reasonCategory, setReasonCategory] = useState<string>('Personal emergency');
   const [customReason, setCustomReason] = useState<string>('');
   const [result, setResult] = useState<{ success: boolean; notifiedWaitlistCount: number } | null>(

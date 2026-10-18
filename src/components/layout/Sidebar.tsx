@@ -15,7 +15,7 @@ import {
   Sparkles,
   ClipboardList,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { UserRole } from '../../types';
 
 interface SidebarProps {
@@ -26,7 +26,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, onSelectView, isOpen, onClose }) => {
-  const { activeUser, appointments, waitlist, currentPatient } = useDentalStore();
+  const { activeUser, appointments, waitlist, currentPatient } = useDentalServices();
 
   const getNavItems = (role: UserRole) => {
     switch (role) {

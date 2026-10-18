@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDentalStore } from './services/useDentalStore';
+import { useDentalServices } from './services/useDentalServices';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
 import { PatientDashboard } from './components/patient/PatientDashboard';
@@ -12,7 +12,7 @@ import { UserRole } from './types';
 
 export default function App() {
   const { activeUser, setActiveUser, users, currentPatient, updateAppointmentStatus } =
-    useDentalStore();
+    useDentalServices();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState<string>('frontdesk-dashboard');
   const [activeConsultationAptId, setActiveConsultationAptId] = useState<string | undefined>(

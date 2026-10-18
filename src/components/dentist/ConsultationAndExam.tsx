@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   Save,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -35,7 +35,7 @@ export const ConsultationAndExam: React.FC<ConsultationAndExamProps> = ({
   onBack,
 }) => {
   const { appointments, patients, dentists, services, saveConsultation, consultations } =
-    useDentalStore();
+    useDentalServices();
 
   const currentApt = appointmentId
     ? appointments.find((a) => a.id === appointmentId)

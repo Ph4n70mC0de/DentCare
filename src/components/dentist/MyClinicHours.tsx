@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, Calendar, Coffee, MapPin, Stethoscope, ShieldCheck, XCircle } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
@@ -14,7 +14,7 @@ interface MyClinicHoursProps {
 }
 
 export const MyClinicHours: React.FC<MyClinicHoursProps> = ({ onNavigateToOperatory }) => {
-  const { activeUser, dentists, schedules, blockedSchedules, settings } = useDentalStore();
+  const { activeUser, dentists, schedules, blockedSchedules, settings } = useDentalServices();
 
   const today = getTodayDateString();
   const currentDentist = dentists.find((d) => d.userId === activeUser.id) || dentists[0];

@@ -12,7 +12,7 @@ import {
   ArrowRight,
   Volume2,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
@@ -29,7 +29,7 @@ interface WaitingRoomProps {
 
 export const WaitingRoom: React.FC<WaitingRoomProps> = ({ onStartConsultation, onOpenCheckIn }) => {
   const { appointments, patients, dentists, services, updateAppointmentStatus, sendNotification } =
-    useDentalStore();
+    useDentalServices();
   const [privacyMode, setPrivacyMode] = useState<boolean>(false);
   const [selectedForNoShow, setSelectedForNoShow] = useState<Appointment | null>(null);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FileText, HeartPulse, Pill, Stethoscope, Printer } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
@@ -9,7 +9,7 @@ import { toothNames, defaultTeethConditions } from './patientUtils';
 interface DentalHistoryAndRxProps {}
 
 export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = () => {
-  const { consultations, dentists, currentPatient } = useDentalStore();
+  const { consultations, dentists, currentPatient } = useDentalServices();
 
   const [selectedTooth, setSelectedTooth] = useState<number>(14);
   const [printFeedback, setPrintFeedback] = useState(false);

@@ -4,7 +4,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoSelect } from '../common/NeoSelect';
 import { Appointment } from '../../types';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 
 interface NoShowModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export const NoShowModal: React.FC<NoShowModalProps> = ({
   appointment,
   onSuccess,
 }) => {
-  const { markNoShow, patients, settings } = useDentalStore();
+  const { markNoShow, patients, settings } = useDentalServices();
   const [reason, setReason] = useState<string>(
     'Patient did not arrive within grace period (15 mins)'
   );

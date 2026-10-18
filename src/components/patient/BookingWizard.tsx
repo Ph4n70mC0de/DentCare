@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   UserCheck,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -50,7 +50,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     currentPatient,
     activeUser,
     confirmPatientBookingEligibility,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const preselectedPat = initialPatientId
     ? patients.find((p) => p.id === initialPatientId) || currentPatient
