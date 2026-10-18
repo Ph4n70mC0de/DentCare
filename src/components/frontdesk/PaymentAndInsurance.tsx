@@ -20,7 +20,7 @@ import {
   Sparkles,
   Download,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
@@ -45,7 +45,7 @@ export const PaymentAndInsurance: React.FC<PaymentAndInsuranceProps> = ({
     processPayment,
     consultations,
     settings,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const today = getTodayDateString();
   const [activeTab, setActiveTab] = useState<'pending' | 'settled' | 'insurance' | 'cashier'>(

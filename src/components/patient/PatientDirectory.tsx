@@ -32,7 +32,7 @@ import {
   Stethoscope,
   X,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -68,7 +68,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
     updatePatient,
     updateAppointmentStatus,
     sendNotification,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const today = getTodayDateString();
 
@@ -931,7 +931,7 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
   onStartConsultation,
 }) => {
   const { appointments, dentists, services, consultations, payments, settings, updatePatient } =
-    useDentalStore();
+    useDentalServices();
 
   const patientApts = appointments.filter((a) => a.patientId === patient.id);
   const patientConsultations = consultations.filter((c) => c.patientId === patient.id);
@@ -1492,7 +1492,7 @@ interface PatientEditModalProps {
 }
 
 const PatientEditModal: React.FC<PatientEditModalProps> = ({ patient, onClose, onSave }) => {
-  const { updatePatient } = useDentalStore();
+  const { updatePatient } = useDentalServices();
 
   const [fullName, setFullName] = useState<string>(patient.fullName);
   const [phone, setPhone] = useState<string>(patient.phone);
@@ -1713,7 +1713,7 @@ const PatientRegistrationModal: React.FC<PatientRegistrationModalProps> = ({
   onSuccess,
   onBookImmediate,
 }) => {
-  const { registerPatient, patients } = useDentalStore();
+  const { registerPatient, patients } = useDentalServices();
 
   const [fullName, setFullName] = useState<string>('');
   const [sex, setSex] = useState<'Male' | 'Female' | 'Other'>('Male');

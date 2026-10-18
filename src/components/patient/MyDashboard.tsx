@@ -14,7 +14,7 @@ import {
   Activity,
   UserCheck,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -68,7 +68,7 @@ export const MyDashboard: React.FC<MyDashboardProps> = ({
     settings,
     payments,
     updateAppointmentStatus,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const [dashboardVisitsFilter, setDashboardVisitsFilter] = useState<'all' | 'upcoming' | 'past'>(
     'all'

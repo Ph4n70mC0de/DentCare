@@ -4,7 +4,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoBadge } from '../common/NeoBadge';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
@@ -22,7 +22,7 @@ export const CheckInModal: React.FC<CheckInModalProps> = ({
   preselectedAppointmentId,
 }) => {
   const { appointments, patients, dentists, services, updateAppointmentStatus, updatePatient } =
-    useDentalStore();
+    useDentalServices();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedApt, setSelectedApt] = useState<Appointment | null>(
     preselectedAppointmentId

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { Appointment, WaitlistEntry } from '../../types';
@@ -21,7 +21,7 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
   activeTab = 'patient-dashboard',
   onSelectTab,
 }) => {
-  const { currentPatient, joinWaitlist, cancelWaitlistEntry } = useDentalStore();
+  const { currentPatient, joinWaitlist, cancelWaitlistEntry } = useDentalServices();
 
   const [selectedForCancel, setSelectedForCancel] = useState<Appointment | null>(null);
   const [selectedForReschedule, setSelectedForReschedule] = useState<Appointment | null>(null);

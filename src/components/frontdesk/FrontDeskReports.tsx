@@ -10,13 +10,13 @@ import {
   AlertTriangle,
   CreditCard,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { getTodayDateString } from '../../data/seedData';
 
 export const FrontDeskReports: React.FC = () => {
-  const { appointments, dentists, payments } = useDentalStore();
+  const { appointments, dentists, payments } = useDentalServices();
 
   const today = getTodayDateString();
   const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'all'>('today');

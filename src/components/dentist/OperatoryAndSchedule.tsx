@@ -6,7 +6,7 @@ import {
   FileText,
   ArrowRight,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoStatusPill } from '../common/NeoStatusPill';
@@ -22,7 +22,7 @@ export const OperatoryAndSchedule: React.FC<OperatoryAndScheduleProps> = ({
   onStartConsultation,
 }) => {
   const { activeUser, dentists, appointments, patients, services, updateAppointmentStatus } =
-    useDentalStore();
+    useDentalServices();
 
   const today = getTodayDateString();
 

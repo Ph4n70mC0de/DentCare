@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { ClinicAnalytics } from './ClinicAnalytics';
 import { UserDirectory } from './UserDirectory';
 import { DentalServices } from './DentalServices';
@@ -40,7 +40,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     updateSettings,
     schedules,
     blockedSchedules,
-  } = useDentalStore();
+  } = useDentalServices();
 
   const [activeTab, setActiveTab] = React.useState<string>(() => {
     if (!currentView) return 'analytics';

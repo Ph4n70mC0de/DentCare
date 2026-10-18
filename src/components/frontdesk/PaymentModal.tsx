@@ -12,7 +12,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { Appointment, Payment, PaymentMethod } from '../../types';
 
 interface PaymentModalProps {
@@ -31,7 +31,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   onScheduleFollowUp,
 }) => {
   const { patients, dentists, services, processPayment, consultations, settings } =
-    useDentalStore();
+    useDentalServices();
 
   if (!appointment) return null;
 

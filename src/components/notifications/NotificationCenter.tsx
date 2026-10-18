@@ -9,14 +9,14 @@ import {
   CreditCard,
   Sparkles,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { AppNotification } from '../../types';
 
 export const NotificationCenter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const { notifications, activeUser, markNotificationAsRead, markAllNotificationsAsRead } =
-    useDentalStore();
+    useDentalServices();
 
   // Filter notifications for active user or general
   const userNotifications = notifications.filter((n) => !n.userId || n.userId === activeUser.id);

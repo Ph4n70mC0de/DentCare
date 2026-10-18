@@ -10,7 +10,7 @@ import {
   Stethoscope,
   X,
 } from 'lucide-react';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
@@ -30,7 +30,7 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
   onNavigateToOperatory,
 }) => {
   const { patients, dentists, appointments, consultations, activeUser, services, users } =
-    useDentalStore();
+    useDentalServices();
 
   const today = getTodayDateString();
   const currentDentist = dentists.find((d) => d.userId === activeUser.id) || dentists[0];

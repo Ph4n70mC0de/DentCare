@@ -4,7 +4,7 @@ import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoInput } from '../common/NeoInput';
-import { useDentalStore } from '../../services/useDentalStore';
+import { useDentalServices } from '../../services/useDentalServices';
 import { Appointment } from '../../types';
 
 interface EmergencyModalProps {
@@ -14,7 +14,7 @@ interface EmergencyModalProps {
 }
 
 export const EmergencyModal: React.FC<EmergencyModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const { patients, dentists, services, settings, createEmergencyAppointment } = useDentalStore();
+  const { patients, dentists, services, settings, createEmergencyAppointment } = useDentalServices();
 
   const [patientId, setPatientId] = useState<string>(patients[0]?.id || '');
   const [dentistId, setDentistId] = useState<string>(dentists[0]?.id || '');
