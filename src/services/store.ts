@@ -1004,8 +1004,9 @@ class DentalDataStore {
     serviceId: string;
     emergencyNotes: string;
     severity: 'high' | 'critical';
+    date?: string; // Optional date for testing; defaults to today
   }): { appointment: Appointment; affectedWaitingPatientsCount: number } {
-    const today = getTodayDateString();
+    const today = data.date || getTodayDateString();
     const service = this.services.find((s) => s.id === data.serviceId);
     const duration = service ? service.durationMinutes : 30;
 

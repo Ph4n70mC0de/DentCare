@@ -49,6 +49,7 @@ import type {
 
 export interface IAuthService {
   getCurrentUser(): User | null;
+  getProfile(): Promise<User | null>;
   getUsers(): User[];
   setActiveUser(userId: string): void;
   login(email: string, password: string): Promise<User>;

@@ -451,23 +451,24 @@ describe('Shared Workflows - Data Integrity', () => {
   });
 
   it('handles cascading updates (emergency shifts waiting)', () => {
-    const today = getTodayDateString();
-    // Create waiting appointments for dentist-2 (different schedule from seed)
+    // Use a future date with no seed appointments to avoid conflicts
+    const testDate = '2026-12-01'; // Tuesday, dentist-1 works Mon-Fri
+    // Create waiting appointments for dentist-1 (Mon-Fri schedule from seed)
     const apt1 = dentalStore.createAppointment({
       patientId: 'pat-001',
-      dentistId: 'dentist-2',
+      dentistId: 'dentist-1',
       serviceId: 'serv-1',
-      date: today,
+      date: testDate,
       startTime: '09:00',
     });
     dentalStore.updateAppointmentStatus(apt1.id, 'Checked-In');
 
     const apt2 = dentalStore.createAppointment({
       patientId: 'pat-002',
-      dentistId: 'dentist-2',
+      dentistId: 'dentist-1',
       serviceId: 'serv-1',
-      date: today,
-      startTime: '12:00', // Before lunch break (13:00-14:00)
+      date: testDate,
+      startTime: '11:00', // Before lunch break (12:30-13:30), 45-min service ends at 11:45
     });
     dentalStore.updateAppointmentStatus(apt2.id, 'Checked-In');
 
@@ -476,10 +477,11 @@ describe('Shared Workflows - Data Integrity', () => {
 
     dentalStore.createEmergencyAppointment({
       patientId: 'pat-004',
-      dentistId: 'dentist-2',
+      dentistId: 'dentist-1',
       serviceId: 'serv-6',
       emergencyNotes: 'Emergency',
       severity: 'high',
+      date: testDate,
     });
 
     const shifted1 = dentalStore.getAppointments().find((a) => a.id === apt1.id);

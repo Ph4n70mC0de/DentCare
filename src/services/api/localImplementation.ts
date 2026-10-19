@@ -42,6 +42,7 @@ import type {
   CreateConsultationRequest,
   CreatePaymentRequest,
   UpdateSettingsRequest,
+  RevenueSummary,
 } from './types';
 
 import type {
@@ -156,6 +157,10 @@ function _asyncVoid(): Promise<void> {
 export class LocalAuthService implements IAuthService {
   getCurrentUser(): User {
     return dentalStore.getActiveUser();
+  }
+
+  async getProfile(): Promise<User | null> {
+    return dentalStore.getActiveUser() ?? null;
   }
 
   getUsers(): User[] {

@@ -7,6 +7,7 @@ import { AuditLog } from '../../types';
 
 interface AuditTrailProps {
   auditLogs: AuditLog[];
+  onExportCSV?: () => void;
 }
 
 export const AuditTrail: React.FC<AuditTrailProps> = ({ auditLogs }) => {

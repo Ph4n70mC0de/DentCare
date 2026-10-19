@@ -26,6 +26,8 @@ export const DentistDashboard: React.FC<DentistDashboardProps> = ({
   onSelectTab,
   activeConsultationAptId,
   onCompleteConsultation,
+  onStartBookingWithPatientId,
+  onStartConsultation,
 }) => {
   const currentView =
     activeTab === 'dentist-consultation'

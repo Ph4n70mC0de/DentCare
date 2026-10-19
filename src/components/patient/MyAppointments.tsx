@@ -21,6 +21,7 @@ import { downloadICS } from './patientUtils';
 
 interface MyAppointmentsProps {
   onStartBooking: () => void;
+  onSelectTab?: (tab: string) => void;
   selectedForCancel: Appointment | null;
   setSelectedForCancel: (apt: Appointment | null) => void;
   selectedForReschedule: Appointment | null;

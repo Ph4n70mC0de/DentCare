@@ -76,6 +76,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
   const [noShowApt, setNoShowApt] = useState<Appointment | null>(null);
   const [isEmergencyOpen, setIsEmergencyOpen] = useState<boolean>(false);
 
+  const servicesArray = services ?? [];
   const filteredAppointments = appointments
     .filter((apt) => {
       if (dateFilter && apt.date !== dateFilter) return false;
@@ -338,7 +339,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
                 {filteredAppointments.map((apt) => {
                   const patient = patients.find((p) => p.id === apt.patientId);
                   const dentist = dentists.find((d) => d.id === apt.dentistId);
-                  const service = services.find((s) => s.id === apt.serviceId);
+                  const service = servicesArray.find((s) => s.id === apt.serviceId);
 
                   return (
                     <tr key={apt.id} className="hover:bg-slate-100/50 transition-all">

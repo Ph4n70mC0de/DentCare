@@ -13,6 +13,21 @@ import {
   FileSpreadsheet,
   Activity,
   UserCheck,
+  Check,
+  HeartPulse,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  Info,
+  Download,
+  Search,
+  CheckCircle,
+  Phone,
+  MapPin,
+  ArrowRight,
+  ChevronRight,
+  CalendarClock,
+  CalendarX2,
 } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
@@ -35,6 +50,7 @@ import {
 import { JoinWaitlistModal } from './JoinWaitlistModal';
 
 interface MyDashboardProps {
+  onStartBooking?: () => void;
   onSelectTab: (tab: string) => void;
   selectedForCancel: Appointment | null;
   setSelectedForCancel: (apt: Appointment | null) => void;
@@ -46,6 +62,7 @@ interface MyDashboardProps {
 }
 
 export const MyDashboard: React.FC<MyDashboardProps> = ({
+  onStartBooking,
   onSelectTab,
   selectedForCancel,
   setSelectedForCancel,

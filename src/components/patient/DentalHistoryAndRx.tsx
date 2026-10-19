@@ -6,7 +6,9 @@ import { NeoButton } from '../common/NeoButton';
 import { NeoBadge } from '../common/NeoBadge';
 import { toothNames, defaultTeethConditions } from './patientUtils';
 
-interface DentalHistoryAndRxProps {}
+interface DentalHistoryAndRxProps {
+  onStartBooking?: () => void;
+}
 
 export const DentalHistoryAndRx: React.FC<DentalHistoryAndRxProps> = () => {
   const { consultations, dentists, currentPatient } = useDentalServices();

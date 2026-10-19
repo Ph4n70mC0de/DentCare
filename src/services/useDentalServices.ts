@@ -17,7 +17,7 @@ import type {
   AuditLog,
   SystemSettings,
   BookingSource,
-} from '../../types';
+} from '@/types';
 import type {
   CreateAppointmentRequest,
   CreateConsultationRequest,
@@ -43,10 +43,10 @@ import {
   initialNotifications,
   initialAuditLogs,
   getTodayDateString,
-} from '../../data/seedData';
+} from '../data/seedData';
 
 interface BoundaryState {
-  activeUserId: string;
+  activeUserId: string | null;
   users: User[];
   patients: Patient[];
   dentists: Dentist[];
@@ -93,8 +93,23 @@ function parseDayOfWeek(dateISO: string): number {
   return new Date(dateISO + 'T00:00:00').getDay();
 }
 
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+
+let authStatus: AuthStatus = 'loading';
+let currentUser: User | null = null;
+
+function setAuthStatus(status: AuthStatus): void {
+  authStatus = status;
+  notify();
+}
+
+function setBoundaryCurrentUser(user: User | null): void {
+  currentUser = user;
+  notify();
+}
+
 let state: BoundaryState = {
-  activeUserId: 'user-admin',
+  activeUserId: null,
   users: [...initialUsers],
   patients: [...initialPatients],
   dentists: [...initialDentists],
@@ -135,7 +150,7 @@ function audit(
   const user = state.users.find((u) => u.id === state.activeUserId);
   state.auditLogs.push({
     id: createUniqueId('audit'),
-    actorId: state.activeUserId,
+    actorId: state.activeUserId ?? 'system',
     actorName: user?.fullName || 'System',
     actorRole: (user?.role || 'front_desk') as UserRole,
     action,
@@ -208,15 +223,30 @@ export function getAvailableSlotsForDate(
   dentistId: string,
   date: string,
   durationMinutes: number
-): { time: string; available: boolean }[] {
-  const slots: { time: string; available: boolean }[] = [];
+): { time: string; available: boolean; reason?: string }[] {
+  const slots: { time: string; available: boolean; reason?: string }[] = [];
   const step = Math.max(state.settings.defaultSlotDurationMinutes, 15);
   let t = state.settings.clinicOpenTime;
   const close = state.settings.clinicCloseTime;
   while (t < close) {
     const endTime = calculateEndTime(t, durationMinutes);
     if (endTime <= close) {
-      slots.push({ time: t, available: isSlotAvailable(dentistId, date, t, durationMinutes) });
+      const available = isSlotAvailable(dentistId, date, t, durationMinutes);
+      let reason: string | undefined;
+      if (!available) {
+        const dayOfWeek = parseDayOfWeek(date);
+        const schedule = findDentistSchedule(dentistId, dayOfWeek);
+        if (!schedule) {
+          reason = 'Dentist Not Working';
+        } else if (isBlocked(dentistId, date, t, endTime)) {
+          reason = 'Blocked Schedule';
+        } else if (t < schedule.breakEnd && endTime > schedule.breakStart) {
+          reason = 'Dentist Lunch Break';
+        } else {
+          reason = 'Already Booked';
+        }
+      }
+      slots.push({ time: t, available, reason });
     }
     t = addMinutes(t, step);
   }
@@ -250,13 +280,13 @@ function callService(promise: Promise<unknown>): void {
 }
 
 async function loadAll(): Promise<void> {
-  const services = getServices();
+  const svc = getServices();
   try {
     const [
       users,
       patientsRes,
       dentists,
-      servicesRes,
+      serviceList,
       appointmentsRes,
       waitlistRes,
       consultationsRes,
@@ -264,43 +294,39 @@ async function loadAll(): Promise<void> {
       notificationsRes,
       auditLogsRes,
       settings,
+      blockedSchedules,
     ] = await Promise.all([
-      services.auth.getUsers(),
-      services.patients.getAll(),
-      services.dentists.getAll(),
-      services.services.getAll(),
-      services.appointments.getAll(),
-      services.waitlist.getAll(),
-      services.consultations.getAll(),
-      services.payments.getAll(),
-      services.notifications.getAll(),
-      services.audit.getAll(),
-      services.settings.get(),
+      svc.auth.getUsers(),
+      svc.patients.getAll(),
+      svc.dentists.getAll(),
+      svc.services.getAll(),
+      svc.appointments.getAll(),
+      svc.waitlist.getAll(),
+      svc.consultations.getAll(),
+      svc.payments.getAll(),
+      svc.notifications.getAll(),
+      svc.audit.getAll(),
+      svc.settings.get(),
+      svc.blockedSchedules.getAll(),
     ]);
 
-    const patients: Patient[] = patientsRes.data;
-    const serviceList: DentalService[] = servicesRes.data;
-    const appointments: Appointment[] = appointmentsRes.data;
-    const waitlist: WaitlistEntry[] = waitlistRes.data;
-    const consultations: Consultation[] = consultationsRes.data;
-    const payments: Payment[] = paymentsRes.data;
-    const notifications: AppNotification[] = notificationsRes.data;
-    const auditLogs: AuditLog[] = auditLogsRes.data;
+    // Handle both PaginatedResponse and direct array returns
+    const patients: Patient[] = 'data' in patientsRes ? patientsRes.data : patientsRes;
+    const appointments: Appointment[] = 'data' in appointmentsRes ? appointmentsRes.data : appointmentsRes;
+    const waitlist: WaitlistEntry[] = 'data' in waitlistRes ? waitlistRes.data : waitlistRes;
+    const consultations: Consultation[] = 'data' in consultationsRes ? consultationsRes.data : consultationsRes;
+    const payments: Payment[] = 'data' in paymentsRes ? paymentsRes.data : paymentsRes;
+    const notifications: AppNotification[] = 'data' in notificationsRes ? notificationsRes.data : notificationsRes;
+    const auditLogs: AuditLog[] = 'data' in auditLogsRes ? auditLogsRes.data : auditLogsRes;
 
     const schedules: DentistSchedule[] = [];
     for (const d of dentists) {
       try {
-        const s = await services.dentists.getSchedules(d.id);
+        const s = await svc.dentists.getSchedules(d.id);
         schedules.push(...s);
       } catch {
         /* ignore per-dentist schedule errors */
       }
-    }
-    let blockedSchedules: BlockedSchedule[] = [];
-    try {
-      blockedSchedules = (await services.blockedSchedules.getAll()).data;
-    } catch {
-      blockedSchedules = [];
     }
 
     state = {
@@ -326,12 +352,34 @@ async function loadAll(): Promise<void> {
   }
 }
 
+async function bootstrapSession(): Promise<void> {
+  setAuthStatus('loading');
+  try {
+    const svc = getServices();
+    let user = svc.auth.getCurrentUser();
+    if (!user) {
+      // Restore session from backend-managed HttpOnly cookie
+      user = await svc.auth.getProfile();
+    }
+    if (user) {
+      state.activeUserId = user.id;
+      setBoundaryCurrentUser(user);
+      await loadAll();
+      setAuthStatus('authenticated');
+    } else {
+      setAuthStatus('unauthenticated');
+    }
+  } catch {
+    setAuthStatus('unauthenticated');
+  }
+}
+
 export function useDentalServices() {
   const [, setTick] = useState(0);
 
   useEffect(() => {
     const unsub = subscribe(() => setTick((t) => t + 1));
-    loadAll();
+    bootstrapSession();
     return unsub;
   }, []);
 
@@ -356,6 +404,10 @@ export function useDentalServices() {
   const getAuditLogs = useCallback(() => state.auditLogs, []);
   const getSettings = useCallback(() => state.settings, []);
 
+  const getAuthStatus = useCallback((): AuthStatus => authStatus, []);
+  const getCurrentUser = useCallback((): User | null => currentUser, []);
+  const isAuthenticated = useCallback((): boolean => authStatus === 'authenticated', []);
+
   const getPatientById = useCallback((id: string) => state.patients.find((p) => p.id === id), []);
   const findPatient = useCallback(
     (term: string) => {
@@ -379,20 +431,47 @@ export function useDentalServices() {
     []
   );
 
+  const login = useCallback(
+    async (email: string, password: string): Promise<User> => {
+      setAuthStatus('loading');
+      const svc = getServices();
+      const user = await svc.auth.login(email, password);
+      state.activeUserId = user.id;
+      setBoundaryCurrentUser(user);
+      await loadAll();
+      setAuthStatus('authenticated');
+      audit('LOGIN', 'settings', 'session');
+      return user;
+    },
+    []
+  );
+
+  const logout = useCallback(async (): Promise<void> => {
+    const svc = getServices();
+    try {
+      await svc.auth.logout();
+    } finally {
+      state.activeUserId = null;
+      setBoundaryCurrentUser(null);
+      setAuthStatus('unauthenticated');
+      audit('LOGOUT', 'settings', 'session');
+    }
+  }, []);
+
   const registerPatient = useCallback(
-    (data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt'>) => {
+    (data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>) => {
       const patient: Patient = {
         ...data,
         id: createUniqueId('pat'),
         patientNumber: `PAT-${String(state.patients.length + 1).padStart(4, '0')}`,
         createdAt: nowISO(),
         updatedAt: nowISO(),
-        noShowCount: data.noShowCount ?? 0,
+        noShowCount: 0,
         requiresStaffReviewForBooking: false,
       };
       state.patients.push(patient);
       notify();
-      callService(services.patients.create(data));
+      callService(getServices().patients.create(data));
       audit('PATIENT_REGISTERED', 'patient', patient.id);
       return patient;
     },
@@ -407,7 +486,7 @@ export function useDentalServices() {
       const updated = { ...before, ...updates, updatedAt: nowISO() };
       state.patients[idx] = updated;
       notify();
-      callService(services.patients.update(id, updates as UpdatePatientRequest));
+      callService(getServices().patients.update(id, updates as UpdatePatientRequest));
       audit('PATIENT_UPDATED', 'patient', id, JSON.stringify(before), JSON.stringify(updated));
       return updated;
     },
@@ -420,7 +499,7 @@ export function useDentalServices() {
       if (!patient) return null;
       patient.requiresStaffReviewForBooking = false;
       notify();
-      callService(services.patients.confirmBookingEligibility(patientId));
+      callService(getServices().patients.confirmBookingEligibility(patientId));
       audit('BOOKING_ELIGIBILITY_CONFIRMED', 'patient', patientId);
       return patient;
     },
@@ -476,7 +555,7 @@ export function useDentalServices() {
         notes: data.notes,
         bookingSource: data.bookingSource,
       };
-      callService(services.appointments.create(createReq));
+      callService(getServices().appointments.create(createReq));
       audit('APPOINTMENT_REQUESTED', 'appointment', appointment.id, undefined, appointmentNumber);
       return appointment;
     },
@@ -508,7 +587,7 @@ export function useDentalServices() {
       if (meta.notes) updated.notes = (updated.notes ? updated.notes + ' | ' : '') + meta.notes;
       state.appointments[idx] = updated;
       notify();
-      callService(services.appointments.updateStatus(id, status, meta as Record<string, unknown>));
+      callService(getServices().appointments.updateStatus(id, status, meta as Record<string, unknown>));
       audit('STATUS_CHANGED', 'appointment', id, before.status, status);
       return updated;
     },
@@ -525,7 +604,7 @@ export function useDentalServices() {
       apt.cancellationReason = reason;
       apt.updatedAt = nowISO();
       notify();
-      callService(services.appointments.cancel(id, reason));
+      callService(getServices().appointments.cancel(id, reason));
       audit('APPOINTMENT_CANCELLED', 'appointment', id, beforeStatus, 'Cancelled');
       return { success: true, notifiedWaitlistCount: 0 };
     },
@@ -564,7 +643,7 @@ export function useDentalServices() {
       apt.updatedAt = nowISO();
       state.appointments.push(newApt);
       notify();
-      callService(services.appointments.reschedule(id, newDate, newStartTime));
+      callService(getServices().appointments.reschedule(id, newDate, newStartTime));
       audit('APPOINTMENT_RESCHEDULED', 'appointment', id, 'Rescheduled', newApt.appointmentNumber);
       return { success: true, newAppointment: newApt };
     },
@@ -591,7 +670,7 @@ export function useDentalServices() {
         }
       }
       notify();
-      callService(services.appointments.markNoShow(id, reason));
+      callService(getServices().appointments.markNoShow(id, reason));
       audit('NO_SHOW_RECORDED', 'appointment', id, beforeStatus, 'No-Show');
       return {
         success: true,
@@ -648,7 +727,7 @@ export function useDentalServices() {
         emergencyNotes: data.emergencyNotes,
         severity: data.severity,
       };
-      callService(services.appointments.createEmergency(createReq));
+      callService(getServices().appointments.createEmergency(createReq));
       audit('APPOINTMENT_REQUESTED', 'appointment', appointment.id, undefined, appointmentNumber);
       return { appointment, affectedWaitingPatientsCount: 0 };
     },
@@ -669,7 +748,7 @@ export function useDentalServices() {
         priority: data.priority,
         notes: data.notes,
       };
-      callService(services.waitlist.join(createReq));
+      callService(getServices().waitlist.join(createReq));
       audit('WAITLIST_JOINED', 'waitlist', entry.id);
       return entry;
     },
@@ -681,7 +760,7 @@ export function useDentalServices() {
     if (entry) {
       entry.status = 'cancelled';
       notify();
-      callService(services.waitlist.leave(id));
+      callService(getServices().waitlist.leave(id));
       audit('WAITLIST_CANCELLED', 'waitlist', id);
     }
   }, []);
@@ -769,7 +848,7 @@ export function useDentalServices() {
         aftercareInstructions: data.aftercareInstructions,
         followUpRecommendation: data.followUpRecommendation,
       };
-      callService(services.consultations.create(createReq));
+      callService(getServices().consultations.create(createReq));
       audit('CONSULTATION_SAVED', 'consultation', consultation.id);
       return consultation;
     },
@@ -805,7 +884,7 @@ export function useDentalServices() {
         paymentStatus: data.paymentStatus,
         notes: data.notes,
       };
-      callService(services.payments.create(createReq));
+      callService(getServices().payments.create(createReq));
       audit('PAYMENT_PROCESSED', 'payment', payment.id);
       return payment;
     },
@@ -817,7 +896,7 @@ export function useDentalServices() {
     if (notif) {
       notif.read = true;
       notify();
-      callService(services.notifications.markAsRead(id));
+      callService(getServices().notifications.markAsRead(id));
     }
   }, []);
 
@@ -826,13 +905,13 @@ export function useDentalServices() {
       if (!userId || notif.userId === userId || !notif.userId) notif.read = true;
     }
     notify();
-    callService(services.notifications.markAllAsRead(userId));
+    callService(getServices().notifications.markAllAsRead(userId));
   }, []);
 
   const updateSettings = useCallback((updates: Partial<SystemSettings>) => {
     state.settings = { ...state.settings, ...updates };
     notify();
-    callService(services.settings.update(state.settings as UpdateSettingsRequest));
+    callService(getServices().settings.update(state.settings as UpdateSettingsRequest));
     audit('SETTINGS_UPDATED', 'settings', 'clinic');
   }, []);
 
@@ -849,7 +928,7 @@ export function useDentalServices() {
       active: s.active,
       iconName: s.iconName,
     };
-    callService(services.services.create(createReq));
+    callService(getServices().services.create(createReq));
     audit('SERVICE_ADDED', 'service', s.id);
     return s;
   }, []);
@@ -859,7 +938,7 @@ export function useDentalServices() {
     if (s) {
       Object.assign(s, updates);
       notify();
-      callService(services.services.update(id, updates as UpdateServiceRequest));
+      callService(getServices().services.update(id, updates as UpdateServiceRequest));
       audit('SERVICE_UPDATED', 'service', id);
     }
   }, []);
@@ -876,7 +955,7 @@ export function useDentalServices() {
       reason: b.reason,
       isAllDay: b.isAllDay,
     };
-    callService(services.blockedSchedules.create(createReq));
+    callService(getServices().blockedSchedules.create(createReq));
     audit('BLOCK_ADDED', 'schedule', b.id);
     return b;
   }, []);
@@ -886,7 +965,7 @@ export function useDentalServices() {
     if (idx === -1) return;
     state.blockedSchedules.splice(idx, 1);
     notify();
-    callService(services.blockedSchedules.delete(id));
+    callService(getServices().blockedSchedules.delete(id));
     audit('BLOCK_REMOVED', 'schedule', id);
   }, []);
 
@@ -916,6 +995,8 @@ export function useDentalServices() {
   return {
     // state
     activeUser,
+    currentUser,
+    authStatus,
     currentPatient,
     currentDentist,
     users: state.users,
@@ -945,16 +1026,20 @@ export function useDentalServices() {
     getNotifications,
     getAuditLogs,
     getSettings,
+    getAuthStatus,
+    getCurrentUser,
+    isAuthenticated,
     getPatientById,
     findPatient,
     getAvailableSlotsForDate,
     getAlternativeDates,
     // actions
     setActiveUser,
+    login,
+    logout,
     registerPatient,
     confirmPatientBookingEligibility,
     updatePatient,
-    findPatient,
     createAppointment,
     updateAppointmentStatus,
     cancelAppointment,

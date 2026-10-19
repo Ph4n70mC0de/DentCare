@@ -10,6 +10,8 @@ import {
   CalendarCheck,
   ShieldCheck,
   UserCheck,
+  Sparkles,
+  Info,
 } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
@@ -190,6 +192,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     } catch (err: unknown) {
       setErrorMsg('Registration failed. Please check your details.');
     }
+  };
 
   // Confirm booking
   const handleConfirmBooking = () => {
@@ -242,6 +245,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
       preferredDate: selectedDate,
       preferredTimeRange: waitlistTimeRange,
       priority: 'normal',
+      status: 'active',
       notes: `Joined waitlist via booking wizard for ${selectedDate}`,
     });
 

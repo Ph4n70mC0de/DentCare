@@ -10,6 +10,7 @@ import {
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
+import { NeoStatusPill } from '../common/NeoStatusPill';
 import { Appointment, Patient, WaitlistEntry } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { EmergencyModal } from '../exceptions/EmergencyModal';
