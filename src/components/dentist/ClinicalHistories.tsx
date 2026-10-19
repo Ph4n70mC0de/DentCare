@@ -23,6 +23,7 @@ import { getTodayDateString } from '../../data/seedData';
 interface ClinicalHistoriesProps {
   onStartBooking?: (patientId?: string) => void;
   onNavigateToOperatory?: () => void;
+  onStartConsultation?: (appointmentId: string) => void;
 }
 
 export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({

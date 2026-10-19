@@ -288,25 +288,24 @@ describe('Front Desk Workflows', () => {
     });
 
     it('shifts waiting appointments when emergency added', () => {
-      const today = getTodayDateString();
-      // Create waiting appointments for TODAY using dentist-2 (different schedule)
-      // dentist-2 schedule: Tue-Sat 09:00-17:00, break 13:00-14:00
-      // Seed has dentist-2 at 10:30-12:00 and 15:00-16:00 today
+      // Use a future date with no seed appointments to avoid conflicts
+      const testDate = '2026-12-01'; // Tuesday, dentist-1 works Mon-Fri
+      // Create waiting appointments for testDate using dentist-1 (Mon-Fri schedule)
       const apt1 = dentalStore.createAppointment({
         patientId: 'pat-001',
-        dentistId: 'dentist-2',
+        dentistId: 'dentist-1',
         serviceId: 'serv-1',
-        date: today,
+        date: testDate,
         startTime: '09:00',
       });
       dentalStore.updateAppointmentStatus(apt1.id, 'Checked-In');
 
       const apt2 = dentalStore.createAppointment({
         patientId: 'pat-002',
-        dentistId: 'dentist-2',
+        dentistId: 'dentist-1',
         serviceId: 'serv-1',
-        date: today,
-        startTime: '12:00', // Before lunch break (13:00-14:00)
+        date: testDate,
+        startTime: '11:00', // Before lunch break (12:30-13:30), 45-min service ends at 11:45
       });
       dentalStore.updateAppointmentStatus(apt2.id, 'Checked-In');
 
@@ -315,10 +314,11 @@ describe('Front Desk Workflows', () => {
 
       dentalStore.createEmergencyAppointment({
         patientId: 'pat-004',
-        dentistId: 'dentist-2',
+        dentistId: 'dentist-1',
         serviceId: 'serv-6',
         emergencyNotes: 'Emergency',
         severity: 'high',
+        date: testDate,
       });
 
       const shifted1 = dentalStore.getAppointments().find((a) => a.id === apt1.id);

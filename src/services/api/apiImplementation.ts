@@ -74,6 +74,24 @@ export class ApiAuthService implements IAuthService {
     return this.currentUser;
   }
 
+  async getProfile(): Promise<User | null> {
+    try {
+      const userProfile = await apiClient.getProfile();
+      const user: User = {
+        ...userProfile,
+        phone: '',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      this.currentUser = user;
+      return user;
+    } catch {
+      this.currentUser = null;
+      return null;
+    }
+  }
+
   getUsers(): User[] {
     return [];
   }

@@ -8,11 +8,21 @@ import { FrontDeskDashboard } from './components/frontdesk/FrontDeskDashboard';
 import { DentistDashboard } from './components/dentist/DentistDashboard';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { PatientDirectory } from './components/patient/PatientDirectory';
+import { LoginScreen } from './components/auth/LoginScreen';
 import { UserRole } from './types';
 
 export default function App() {
-  const { activeUser, setActiveUser, users, currentPatient, updateAppointmentStatus } =
-    useDentalServices();
+  const {
+    activeUser,
+    authStatus,
+    isAuthenticated,
+    login,
+    logout,
+    setActiveUser,
+    users,
+    currentPatient,
+    updateAppointmentStatus,
+  } = useDentalServices();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState<string>('frontdesk-dashboard');
   const [activeConsultationAptId, setActiveConsultationAptId] = useState<string | undefined>(
@@ -22,8 +32,16 @@ export default function App() {
     string | undefined
   >(undefined);
 
+  // Bootstrap session: loading → authenticated / unauthenticated
+  useEffect(() => {
+    if (!isAuthenticated() && authStatus === 'unauthenticated') {
+      setCurrentView('frontdesk-dashboard');
+    }
+  }, [authStatus, isAuthenticated]);
+
   // Synchronize current default view when active role changes
   useEffect(() => {
+    if (!activeUser) return;
     switch (activeUser.role) {
       case 'patient':
         setCurrentView('patient-dashboard');
@@ -38,7 +56,7 @@ export default function App() {
         setCurrentView('admin-dashboard');
         break;
     }
-  }, [activeUser.role]);
+  }, [activeUser]);
 
   const handleRoleSwitch = (role: UserRole, targetView?: string) => {
     // DEV ONLY: Role switching is only available in development
@@ -67,6 +85,79 @@ export default function App() {
     setCurrentView('dentist-consultation');
   };
 
+  // Role-based default view guard: never land on a view the current role cannot access
+  const defaultViewForRole = (role: UserRole): string => {
+    switch (role) {
+      case 'patient':
+        return 'patient-dashboard';
+      case 'front_desk':
+        return 'frontdesk-dashboard';
+      case 'dentist':
+        return 'dentist-dashboard';
+      case 'admin':
+        return 'admin-dashboard';
+    }
+  };
+
+  // Guard: redirect to role-default view if current view is outside the active role's scope
+  useEffect(() => {
+    if (!activeUser) return;
+    const roleViews: Record<UserRole, string[]> = {
+      patient: [
+        'patient-dashboard',
+        'patient-book',
+        'patient-appointments',
+        'patient-records',
+        'patient-waitlist',
+      ],
+      front_desk: [
+        'frontdesk-dashboard',
+        'frontdesk-waiting-room',
+        'frontdesk-appointments',
+        'frontdesk-billing',
+        'frontdesk-exceptions',
+        'frontdesk-reports',
+        'frontdesk-search',
+        'patient-book',
+      ],
+      dentist: [
+        'dentist-dashboard',
+        'dentist-schedule',
+        'dentist-consultation',
+        'dentist-records',
+        'patient-book',
+      ],
+      admin: ['admin-dashboard', 'admin-users', 'admin-services', 'admin-schedules', 'admin-waitlist', 'admin-audit', 'admin-reports', 'admin-settings', 'patient-book'],
+    };
+    const allowed = roleViews[activeUser.role];
+    if (allowed && !allowed.includes(currentView)) {
+      setCurrentView(defaultViewForRole(activeUser.role));
+    }
+  }, [activeUser, currentView]);
+
+  if (authStatus === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#E8EEF5] font-sans antialiased">
+        <div className="flex flex-col items-center gap-3 text-slate-600">
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-medium">Signing in…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated()) {
+    return (
+      <LoginScreen
+        onLogin={login}
+        onLoading={() => {
+          /* loader handled by App authStatus */
+        }}
+        authError={null}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#E8EEF5] text-slate-800 flex flex-col font-sans antialiased selection:bg-blue-500/20 selection:text-blue-900">
       {/* Top Navigation */}
@@ -76,6 +167,7 @@ export default function App() {
         currentView={currentView}
         onSelectView={(view) => setCurrentView(view)}
         onRoleSwitch={handleRoleSwitch}
+        onLogout={logout}
       />
 
       {/* Main Layout Body */}
@@ -85,7 +177,7 @@ export default function App() {
           currentView={currentView}
           onSelectView={(v) => setCurrentView(v)}
           isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
+          onClose={() => setIsSidebarOpen(false)} 
         />
 
         {/* Content Area */}

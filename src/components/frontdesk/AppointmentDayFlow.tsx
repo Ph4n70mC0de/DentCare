@@ -35,6 +35,8 @@ import { EmergencyModal } from '../exceptions/EmergencyModal';
 interface AppointmentDayFlowProps {
   onStartBooking?: () => void;
   onStartConsultation?: (appointmentId: string) => void;
+  onNavigateToWaitingRoom?: () => void;
+  onNavigateToBilling?: () => void;
 }
 
 export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
@@ -138,12 +140,7 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
       setIsCheckInOpen(true);
     } else if (['Checked-In', 'Waiting'].includes(apt.status)) {
       // Call to operatory chair
-      updateAppointmentStatus(apt.id, 'In-Consultation', {
-        consultationStartedAt: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-      });
+      updateAppointmentStatus(apt.id, 'In-Consultation');
     } else if (apt.status === 'In-Consultation') {
       // Finish exam -> send to checkout
       updateAppointmentStatus(apt.id, 'Payment-Pending');

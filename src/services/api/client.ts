@@ -9,8 +9,6 @@ import type {
   ApiErrorResponse,
   LoginRequest,
   LoginResponse,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
   UserProfile,
   RegisterPatientRequest,
   RegisterPatientResponse,
@@ -57,42 +55,6 @@ import type {
 // ============================================
 // TOKEN MANAGEMENT
 // ============================================
-
-const TOKEN_STORAGE_KEY = 'dentcare_access_token';
-const REFRESH_TOKEN_STORAGE_KEY = 'dentcare_refresh_token';
-const TOKEN_EXPIRY_KEY = 'dentcare_token_expiry';
-
-export function getAccessToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(TOKEN_STORAGE_KEY);
-}
-
-export function getRefreshToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
-}
-
-export function setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
-  const expiry = Date.now() + expiresIn * 1000;
-  localStorage.setItem(TOKEN_EXPIRY_KEY, String(expiry));
-}
-
-export function clearTokens(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(TOKEN_STORAGE_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
-  localStorage.removeItem(TOKEN_EXPIRY_KEY);
-}
-
-export function isTokenExpired(): boolean {
-  if (typeof window === 'undefined') return true;
-  const expiry = localStorage.getItem(TOKEN_EXPIRY_KEY);
-  if (!expiry) return true;
-  return Date.now() >= parseInt(expiry, 10);
-}
 
 // ============================================
 // ERROR HANDLING
@@ -282,40 +244,11 @@ export class ApiClient {
       Accept: 'application/json',
     };
 
-    // Default request interceptor - adds auth header
+    // Default request interceptor - no bearer header: the session is carried by
+    // Secure HttpOnly cookies (credentials: 'include'). The backend owns the
+    // session cookie and CSRF/origin validation.
     this.interceptors.addRequestInterceptor(async (config) => {
-      const token = getAccessToken();
-      const headers = new Headers(config.headers);
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return { ...config, headers };
-    });
-
-    // Default response interceptor - handles token refresh on 401
-    this.interceptors.addResponseInterceptor(async (response) => {
-      if (response.status === 401 && !response.url.includes('/auth/refresh')) {
-        const refreshed = await this.refreshAccessToken();
-        if (refreshed) {
-          // Retry original request with new token
-          const token = getAccessToken();
-          const retryConfig: RequestInit = {
-            ...response,
-            headers: {
-              ...Object.fromEntries(response.headers.entries()),
-              Authorization: `Bearer ${token}`,
-            },
-          };
-          return fetch(response.url, retryConfig);
-        } else {
-          // Refresh failed - redirect to login
-          clearTokens();
-          if (typeof window !== 'undefined') {
-            window.location.href = '/login?expired=1';
-          }
-        }
-      }
-      return response;
+      return config;
     });
 
     // Error interceptor for logging
@@ -343,29 +276,6 @@ export class ApiClient {
     return this.interceptors.addErrorInterceptor(interceptor);
   }
 
-  // Token refresh
-  private async refreshAccessToken(): Promise<boolean> {
-    const refreshToken = getRefreshToken();
-    if (!refreshToken) return false;
-
-    try {
-      const response = await fetch(`${this.config.baseUrl}/auth/refresh`, {
-        method: 'POST',
-        headers: this.baseHeaders,
-        body: JSON.stringify({ refreshToken } as RefreshTokenRequest),
-      });
-
-      if (response.ok) {
-        const data = (await response.json()) as RefreshTokenResponse;
-        setTokens(data.accessToken, refreshToken, data.expiresIn);
-        return true;
-      }
-    } catch {
-      // Ignore - will be handled by returning false
-    }
-    return false;
-  }
-
   // Core request method
   private async request<T>(
     endpoint: string,
@@ -375,6 +285,7 @@ export class ApiClient {
     const url = `${this.config.baseUrl}${endpoint}`;
     const requestConfig = await this.interceptors.runRequestInterceptors({
       ...options,
+      credentials: 'include',
       headers: {
         ...this.baseHeaders,
         ...options.headers,
@@ -442,8 +353,9 @@ export class ApiClient {
 
   // Auth methods
   async login(credentials: LoginRequest): Promise<LoginResponse> {
+    // The backend sets the session via Secure HttpOnly cookies; the client only
+    // needs to forward credentials so cookies are sent/received (credentials: 'include').
     const response = await this.post<LoginResponse>('/auth/login', credentials);
-    setTokens(response.accessToken, response.refreshToken, response.expiresIn);
     return response;
   }
 
@@ -451,7 +363,7 @@ export class ApiClient {
     try {
       await this.post<void>('/auth/logout', {});
     } finally {
-      clearTokens();
+      // Session cookie is cleared by the backend Set-Cookie on logout.
     }
   }
 
@@ -701,9 +613,9 @@ export class ApiClient {
   async generateReport(data: GenerateReportRequest): Promise<Blob> {
     const response = await fetch(`${this.config.baseUrl}/reports/generate`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         ...this.baseHeaders,
-        Authorization: `Bearer ${getAccessToken()}`,
       },
       body: JSON.stringify(data),
     });

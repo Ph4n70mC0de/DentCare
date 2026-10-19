@@ -10,14 +10,15 @@ interface NavbarProps {
   currentView: string;
   onSelectView: (view: string) => void;
   onRoleSwitch?: (role: UserRole) => void;
+  onLogout?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onToggleSidebar,
   isSidebarOpen,
-  currentView,
   onSelectView,
   onRoleSwitch,
+  onLogout,
 }) => {
   const { activeUser, users, setActiveUser, resetToSeed } = useDentalServices();
 
@@ -166,6 +167,31 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </div>
           </div>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="neo-btn p-2 rounded-xl text-slate-500 hover:text-red-600 transition-all cursor-pointer hidden sm:flex items-center justify-center"
+              aria-label="Sign out"
+              title="Sign out"
+            >
+              <span className="sr-only">Sign out</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
     </header>
