@@ -251,7 +251,6 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
               <div className="divide-y divide-slate-300/30">
                 {selectedPatientConsultations.map((cons) => {
                   const apt = getAppointmentForConsultation(cons.appointmentId);
-                  const _dentist = dentists.find((d) => d.id === cons.dentistId);
 
                   return (
                     <div key={cons.id} className="p-4 sm:p-5 hover:bg-slate-100/50 transition-all">
@@ -351,12 +350,12 @@ export const ClinicalHistories: React.FC<ClinicalHistoriesProps> = ({
                 icon={<Search className="w-4 h-4 text-slate-400" />}
               />
 
-                <NeoSelect
-                  value={filterCategory}
-                  onChange={(e) =>
-                    setFilterCategory(e.target.value as 'all' | 'recent' | 'chronic' | 'flagged')
-                  }
-                >
+              <NeoSelect
+                value={filterCategory}
+                onChange={(e) =>
+                  setFilterCategory(e.target.value as 'all' | 'recent' | 'chronic' | 'flagged')
+                }
+              >
                 <option value="all">All Patients</option>
                 <option value="recent">Recent Visits</option>
                 <option value="chronic">Chronic Cases</option>

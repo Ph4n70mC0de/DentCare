@@ -8,7 +8,6 @@ import { BookAppointment } from './BookAppointment';
 import { MyAppointments } from './MyAppointments';
 import { DentalHistoryAndRx } from './DentalHistoryAndRx';
 import { MyWaitlist } from './MyWaitlist';
-import { BookingWizard } from './BookingWizard';
 
 interface PatientDashboardProps {
   onStartBooking: () => void;
@@ -21,7 +20,7 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
   activeTab = 'patient-dashboard',
   onSelectTab,
 }) => {
-  const { currentPatient, joinWaitlist, cancelWaitlistEntry } = useDentalServices();
+  const { currentPatient, joinWaitlist } = useDentalServices();
 
   const [selectedForCancel, setSelectedForCancel] = useState<Appointment | null>(null);
   const [selectedForReschedule, setSelectedForReschedule] = useState<Appointment | null>(null);

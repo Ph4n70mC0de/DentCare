@@ -8,9 +8,8 @@ import {
   ChevronRight,
   ChevronLeft,
   CalendarCheck,
-  ShieldCheck,
-  UserCheck,
   Sparkles,
+  UserCheck,
   Info,
 } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
@@ -19,7 +18,7 @@ import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
-import { DentalService, Dentist, Patient, Appointment, BookingSource } from '../../types';
+import { Patient, Appointment, BookingSource } from '../../types';
 import { getTodayDateString, getOffsetDateString } from '../../data/seedData';
 
 interface BookingWizardProps {

@@ -385,7 +385,6 @@ export const getOffsetDateString = (offsetDays: number): string => {
 
 const todayStr = getTodayDateString();
 const tomorrowStr = getOffsetDateString(1);
-const dayAfterStr = getOffsetDateString(2);
 const yesterdayStr = getOffsetDateString(-1);
 
 export const initialAppointments: Appointment[] = [

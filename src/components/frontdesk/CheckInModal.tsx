@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserCheck, Search, CheckCircle2, AlertCircle } from 'lucide-react';
+import { UserCheck, Search, CheckCircle2 } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';

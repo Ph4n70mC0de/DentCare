@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Stethoscope,
-  Clock,
-  CheckCircle2,
-  FileText,
-  ArrowRight,
-} from 'lucide-react';
+import { Stethoscope, Clock, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';

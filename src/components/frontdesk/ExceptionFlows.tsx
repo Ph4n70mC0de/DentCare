@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  AlertTriangle,
-  Siren,
-  UserX,
-  CalendarX2,
-  Clock,
-  Sparkles,
-} from 'lucide-react';
+import { Siren, UserX, CalendarX2, Clock, Sparkles } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';

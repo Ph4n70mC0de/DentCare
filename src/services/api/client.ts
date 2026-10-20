@@ -5,7 +5,6 @@ import { defaultApiConfig } from './types';
 
 import type {
   ApiConfig,
-  ApiError as ApiErrorType,
   ApiErrorResponse,
   LoginRequest,
   LoginResponse,

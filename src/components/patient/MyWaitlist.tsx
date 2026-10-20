@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, Plus, Sparkles, BellRing, Info, ChevronRight } from 'lucide-react';
+import { Clock, Plus, Sparkles, BellRing, Info } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
@@ -16,8 +16,6 @@ interface MyWaitlistProps {
 }
 
 export const MyWaitlist: React.FC<MyWaitlistProps> = ({
-  onStartBooking,
-  onSelectTab,
   isWaitlistModalOpen,
   setIsWaitlistModalOpen,
   onJoinWaitlist,

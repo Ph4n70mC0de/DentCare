@@ -108,22 +108,45 @@ function setBoundaryCurrentUser(user: User | null): void {
   notify();
 }
 
-let state: BoundaryState = {
-  activeUserId: null,
-  users: [...initialUsers],
-  patients: [...initialPatients],
-  dentists: [...initialDentists],
-  services: [...initialServices],
-  schedules: [...initialSchedules],
-  blockedSchedules: [...initialBlockedSchedules],
-  appointments: [...initialAppointments],
-  waitlist: [...initialWaitlist],
-  consultations: [...initialConsultations],
-  payments: [...initialPayments],
-  notifications: [...initialNotifications],
-  auditLogs: [...initialAuditLogs],
-  settings: { ...initialSettings },
-};
+function seedBoundaryState(): BoundaryState {
+  return {
+    activeUserId: null,
+    users: [],
+    patients: [],
+    dentists: [],
+    services: [],
+    schedules: [],
+    blockedSchedules: [],
+    appointments: [],
+    waitlist: [],
+    consultations: [],
+    payments: [],
+    notifications: [],
+    auditLogs: [],
+    settings: { ...initialSettings },
+  };
+}
+
+let loadError: Error | null = null;
+
+let state: BoundaryState = import.meta.env.PROD
+  ? seedBoundaryState()
+  : {
+      activeUserId: null,
+      users: [...initialUsers],
+      patients: [...initialPatients],
+      dentists: [...initialDentists],
+      services: [...initialServices],
+      schedules: [...initialSchedules],
+      blockedSchedules: [...initialBlockedSchedules],
+      appointments: [...initialAppointments],
+      waitlist: [...initialWaitlist],
+      consultations: [...initialConsultations],
+      payments: [...initialPayments],
+      notifications: [...initialNotifications],
+      auditLogs: [...initialAuditLogs],
+      settings: { ...initialSettings },
+    };
 
 const listeners = new Set<() => void>();
 function notify(): void {
@@ -161,7 +184,6 @@ function audit(
     timestamp: nowISO(),
   });
 }
-
 
 function findDentistSchedule(dentistId: string, dayOfWeek: number): DentistSchedule | undefined {
   return state.schedules.find(
@@ -312,11 +334,14 @@ async function loadAll(): Promise<void> {
 
     // Handle both PaginatedResponse and direct array returns
     const patients: Patient[] = 'data' in patientsRes ? patientsRes.data : patientsRes;
-    const appointments: Appointment[] = 'data' in appointmentsRes ? appointmentsRes.data : appointmentsRes;
+    const appointments: Appointment[] =
+      'data' in appointmentsRes ? appointmentsRes.data : appointmentsRes;
     const waitlist: WaitlistEntry[] = 'data' in waitlistRes ? waitlistRes.data : waitlistRes;
-    const consultations: Consultation[] = 'data' in consultationsRes ? consultationsRes.data : consultationsRes;
+    const consultations: Consultation[] =
+      'data' in consultationsRes ? consultationsRes.data : consultationsRes;
     const payments: Payment[] = 'data' in paymentsRes ? paymentsRes.data : paymentsRes;
-    const notifications: AppNotification[] = 'data' in notificationsRes ? notificationsRes.data : notificationsRes;
+    const notifications: AppNotification[] =
+      'data' in notificationsRes ? notificationsRes.data : notificationsRes;
     const auditLogs: AuditLog[] = 'data' in auditLogsRes ? auditLogsRes.data : auditLogsRes;
 
     const schedules: DentistSchedule[] = [];
@@ -346,8 +371,10 @@ async function loadAll(): Promise<void> {
       settings,
     };
     notify();
-  } catch {
-    // If the API is unavailable (e.g. no backend in dev preview), keep existing state.
+  } catch (error) {
+    if (import.meta.env.PROD) {
+      loadError = error instanceof Error ? error : new Error(String(error));
+    }
     notify();
   }
 }
@@ -405,46 +432,38 @@ export function useDentalServices() {
   const getSettings = useCallback(() => state.settings, []);
 
   const getAuthStatus = useCallback((): AuthStatus => authStatus, []);
+  const getLoadError = useCallback((): Error | null => loadError, []);
   const getCurrentUser = useCallback((): User | null => currentUser, []);
   const isAuthenticated = useCallback((): boolean => authStatus === 'authenticated', []);
 
   const getPatientById = useCallback((id: string) => state.patients.find((p) => p.id === id), []);
-  const findPatient = useCallback(
-    (term: string) => {
-      const q = term.toLowerCase().trim();
-      return (
-        state.patients.find((p) =>
-          p.fullName.toLowerCase().includes(q) || p.patientNumber.toLowerCase().includes(q)
-        ) ?? undefined
-      );
-    },
-    []
-  );
+  const findPatient = useCallback((term: string) => {
+    const q = term.toLowerCase().trim();
+    return (
+      state.patients.find(
+        (p) => p.fullName.toLowerCase().includes(q) || p.patientNumber.toLowerCase().includes(q)
+      ) ?? undefined
+    );
+  }, []);
 
   // --- actions (optimistic boundary writes + API delegation) ---
-  const setActiveUser = useCallback(
-    (userId: string) => {
-      if (import.meta.env.PROD) return;
-      state.activeUserId = userId;
-      notify();
-    },
-    []
-  );
+  const setActiveUser = useCallback((userId: string) => {
+    if (import.meta.env.PROD) return;
+    state.activeUserId = userId;
+    notify();
+  }, []);
 
-  const login = useCallback(
-    async (email: string, password: string): Promise<User> => {
-      setAuthStatus('loading');
-      const svc = getServices();
-      const user = await svc.auth.login(email, password);
-      state.activeUserId = user.id;
-      setBoundaryCurrentUser(user);
-      await loadAll();
-      setAuthStatus('authenticated');
-      audit('LOGIN', 'settings', 'session');
-      return user;
-    },
-    []
-  );
+  const login = useCallback(async (email: string, password: string): Promise<User> => {
+    setAuthStatus('loading');
+    const svc = getServices();
+    const user = await svc.auth.login(email, password);
+    state.activeUserId = user.id;
+    setBoundaryCurrentUser(user);
+    await loadAll();
+    setAuthStatus('authenticated');
+    audit('LOGIN', 'settings', 'session');
+    return user;
+  }, []);
 
   const logout = useCallback(async (): Promise<void> => {
     const svc = getServices();
@@ -478,33 +497,27 @@ export function useDentalServices() {
     []
   );
 
-  const updatePatient = useCallback(
-    (id: string, updates: Partial<Patient>) => {
-      const idx = state.patients.findIndex((p) => p.id === id);
-      if (idx === -1) return null;
-      const before = state.patients[idx];
-      const updated = { ...before, ...updates, updatedAt: nowISO() };
-      state.patients[idx] = updated;
-      notify();
-      callService(getServices().patients.update(id, updates as UpdatePatientRequest));
-      audit('PATIENT_UPDATED', 'patient', id, JSON.stringify(before), JSON.stringify(updated));
-      return updated;
-    },
-    []
-  );
+  const updatePatient = useCallback((id: string, updates: Partial<Patient>) => {
+    const idx = state.patients.findIndex((p) => p.id === id);
+    if (idx === -1) return null;
+    const before = state.patients[idx];
+    const updated = { ...before, ...updates, updatedAt: nowISO() };
+    state.patients[idx] = updated;
+    notify();
+    callService(getServices().patients.update(id, updates as UpdatePatientRequest));
+    audit('PATIENT_UPDATED', 'patient', id, JSON.stringify(before), JSON.stringify(updated));
+    return updated;
+  }, []);
 
-  const confirmPatientBookingEligibility = useCallback(
-    (patientId: string) => {
-      const patient = state.patients.find((p) => p.id === patientId);
-      if (!patient) return null;
-      patient.requiresStaffReviewForBooking = false;
-      notify();
-      callService(getServices().patients.confirmBookingEligibility(patientId));
-      audit('BOOKING_ELIGIBILITY_CONFIRMED', 'patient', patientId);
-      return patient;
-    },
-    []
-  );
+  const confirmPatientBookingEligibility = useCallback((patientId: string) => {
+    const patient = state.patients.find((p) => p.id === patientId);
+    if (!patient) return null;
+    patient.requiresStaffReviewForBooking = false;
+    notify();
+    callService(getServices().patients.confirmBookingEligibility(patientId));
+    audit('BOOKING_ELIGIBILITY_CONFIRMED', 'patient', patientId);
+    return patient;
+  }, []);
 
   const createAppointment = useCallback(
     (data: {
@@ -566,7 +579,13 @@ export function useDentalServices() {
     (
       id: string,
       status: AppointmentStatus,
-      meta: { actorId?: string; actorName?: string; actorRole?: UserRole; notes?: string; queueNumber?: number } = {}
+      meta: {
+        actorId?: string;
+        actorName?: string;
+        actorRole?: UserRole;
+        notes?: string;
+        queueNumber?: number;
+      } = {}
     ): Appointment | null => {
       const idx = state.appointments.findIndex((a) => a.id === id);
       if (idx === -1) return null;
@@ -587,98 +606,91 @@ export function useDentalServices() {
       if (meta.notes) updated.notes = (updated.notes ? updated.notes + ' | ' : '') + meta.notes;
       state.appointments[idx] = updated;
       notify();
-      callService(getServices().appointments.updateStatus(id, status, meta as Record<string, unknown>));
+      callService(
+        getServices().appointments.updateStatus(id, status, meta as Record<string, unknown>)
+      );
       audit('STATUS_CHANGED', 'appointment', id, before.status, status);
       return updated;
     },
     []
   );
 
-  const cancelAppointment = useCallback(
-    (id: string, reason: string) => {
-      const apt = state.appointments.find((a) => a.id === id);
-      if (!apt) return { success: false, notifiedWaitlistCount: 0 };
-      const beforeStatus = apt.status;
-      apt.status = 'Cancelled';
-      apt.cancelledAt = nowISO();
-      apt.cancellationReason = reason;
-      apt.updatedAt = nowISO();
-      notify();
-      callService(getServices().appointments.cancel(id, reason));
-      audit('APPOINTMENT_CANCELLED', 'appointment', id, beforeStatus, 'Cancelled');
-      return { success: true, notifiedWaitlistCount: 0 };
-    },
-    []
-  );
+  const cancelAppointment = useCallback((id: string, reason: string) => {
+    const apt = state.appointments.find((a) => a.id === id);
+    if (!apt) return { success: false, notifiedWaitlistCount: 0 };
+    const beforeStatus = apt.status;
+    apt.status = 'Cancelled';
+    apt.cancelledAt = nowISO();
+    apt.cancellationReason = reason;
+    apt.updatedAt = nowISO();
+    notify();
+    callService(getServices().appointments.cancel(id, reason));
+    audit('APPOINTMENT_CANCELLED', 'appointment', id, beforeStatus, 'Cancelled');
+    return { success: true, notifiedWaitlistCount: 0 };
+  }, []);
 
-  const rescheduleAppointment = useCallback(
-    (id: string, newDate: string, newStartTime: string) => {
-      const apt = state.appointments.find((a) => a.id === id);
-      if (!apt) return { success: false, error: 'Appointment not found' };
-      const service = state.services.find((s) => s.id === apt.serviceId);
-      const duration = service?.durationMinutes ?? state.settings.defaultSlotDurationMinutes;
-      const endTime = calculateEndTime(newStartTime, duration);
-      if (!isSlotAvailable(apt.dentistId, newDate, newStartTime, duration, id)) {
-        return { success: false, error: 'Slot unavailable' };
-      }
-      const newApt: Appointment = {
-        id: createUniqueId('apt'),
-        appointmentNumber: `APT-${newDate.replace(/-/g, '')}-${String(
-          state.appointments.filter((a) => a.date === newDate).length + 1
-        ).padStart(3, '0')}`,
-        patientId: apt.patientId,
-        dentistId: apt.dentistId,
-        serviceId: apt.serviceId,
-        date: newDate,
-        startTime: newStartTime,
-        endTime,
-        status: 'Confirmed',
-        bookingSource: apt.bookingSource,
-        notes: apt.notes,
-        rescheduledFromId: apt.id,
-        createdAt: nowISO(),
-        updatedAt: nowISO(),
-      };
-      apt.status = 'Rescheduled';
-      apt.updatedAt = nowISO();
-      state.appointments.push(newApt);
-      notify();
-      callService(getServices().appointments.reschedule(id, newDate, newStartTime));
-      audit('APPOINTMENT_RESCHEDULED', 'appointment', id, 'Rescheduled', newApt.appointmentNumber);
-      return { success: true, newAppointment: newApt };
-    },
-    []
-  );
+  const rescheduleAppointment = useCallback((id: string, newDate: string, newStartTime: string) => {
+    const apt = state.appointments.find((a) => a.id === id);
+    if (!apt) return { success: false, error: 'Appointment not found' };
+    const service = state.services.find((s) => s.id === apt.serviceId);
+    const duration = service?.durationMinutes ?? state.settings.defaultSlotDurationMinutes;
+    const endTime = calculateEndTime(newStartTime, duration);
+    if (!isSlotAvailable(apt.dentistId, newDate, newStartTime, duration, id)) {
+      return { success: false, error: 'Slot unavailable' };
+    }
+    const newApt: Appointment = {
+      id: createUniqueId('apt'),
+      appointmentNumber: `APT-${newDate.replace(/-/g, '')}-${String(
+        state.appointments.filter((a) => a.date === newDate).length + 1
+      ).padStart(3, '0')}`,
+      patientId: apt.patientId,
+      dentistId: apt.dentistId,
+      serviceId: apt.serviceId,
+      date: newDate,
+      startTime: newStartTime,
+      endTime,
+      status: 'Confirmed',
+      bookingSource: apt.bookingSource,
+      notes: apt.notes,
+      rescheduledFromId: apt.id,
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+    };
+    apt.status = 'Rescheduled';
+    apt.updatedAt = nowISO();
+    state.appointments.push(newApt);
+    notify();
+    callService(getServices().appointments.reschedule(id, newDate, newStartTime));
+    audit('APPOINTMENT_RESCHEDULED', 'appointment', id, 'Rescheduled', newApt.appointmentNumber);
+    return { success: true, newAppointment: newApt };
+  }, []);
 
-  const markNoShow = useCallback(
-    (id: string, reason: string) => {
-      const apt = state.appointments.find((a) => a.id === id);
-      if (!apt) return { success: false, patientRequiresReview: false };
-      const beforeStatus = apt.status;
-      apt.status = 'No-Show';
-      apt.noShowReason = reason;
-      apt.noShowAt = nowISO();
-      apt.updatedAt = nowISO();
-      const patient = state.patients.find((p) => p.id === apt.patientId);
-      if (patient) {
-        patient.noShowCount += 1;
-        if (
-          patient.noShowCount >= state.settings.maxNoShowsBeforeLock &&
-          state.settings.requireStaffReviewOnNoShow
-        ) {
-          patient.requiresStaffReviewForBooking = true;
-        }
+  const markNoShow = useCallback((id: string, reason: string) => {
+    const apt = state.appointments.find((a) => a.id === id);
+    if (!apt) return { success: false, patientRequiresReview: false };
+    const beforeStatus = apt.status;
+    apt.status = 'No-Show';
+    apt.noShowReason = reason;
+    apt.noShowAt = nowISO();
+    apt.updatedAt = nowISO();
+    const patient = state.patients.find((p) => p.id === apt.patientId);
+    if (patient) {
+      patient.noShowCount += 1;
+      if (
+        patient.noShowCount >= state.settings.maxNoShowsBeforeLock &&
+        state.settings.requireStaffReviewOnNoShow
+      ) {
+        patient.requiresStaffReviewForBooking = true;
       }
-      notify();
-      callService(getServices().appointments.markNoShow(id, reason));
-      audit('NO_SHOW_RECORDED', 'appointment', id, beforeStatus, 'No-Show');
-      return {
-        success: true,
-        patientRequiresReview: patient?.requiresStaffReviewForBooking ?? false,
-      };
-    },
-    []
-  );
+    }
+    notify();
+    callService(getServices().appointments.markNoShow(id, reason));
+    audit('NO_SHOW_RECORDED', 'appointment', id, beforeStatus, 'No-Show');
+    return {
+      success: true,
+      patientRequiresReview: patient?.requiresStaffReviewForBooking ?? false,
+    };
+  }, []);
 
   const createEmergencyAppointment = useCallback(
     (data: {
@@ -734,26 +746,23 @@ export function useDentalServices() {
     []
   );
 
-  const joinWaitlist = useCallback(
-    (data: Omit<WaitlistEntry, 'id' | 'createdAt'>) => {
-      const entry: WaitlistEntry = { ...data, id: createUniqueId('wl'), createdAt: nowISO() };
-      state.waitlist.push(entry);
-      notify();
-      const createReq: CreateWaitlistEntryRequest = {
-        patientId: data.patientId,
-        preferredDentistId: data.preferredDentistId,
-        serviceId: data.serviceId,
-        preferredDate: data.preferredDate,
-        preferredTimeRange: data.preferredTimeRange,
-        priority: data.priority,
-        notes: data.notes,
-      };
-      callService(getServices().waitlist.join(createReq));
-      audit('WAITLIST_JOINED', 'waitlist', entry.id);
-      return entry;
-    },
-    []
-  );
+  const joinWaitlist = useCallback((data: Omit<WaitlistEntry, 'id' | 'createdAt'>) => {
+    const entry: WaitlistEntry = { ...data, id: createUniqueId('wl'), createdAt: nowISO() };
+    state.waitlist.push(entry);
+    notify();
+    const createReq: CreateWaitlistEntryRequest = {
+      patientId: data.patientId,
+      preferredDentistId: data.preferredDentistId,
+      serviceId: data.serviceId,
+      preferredDate: data.preferredDate,
+      preferredTimeRange: data.preferredTimeRange,
+      priority: data.priority,
+      notes: data.notes,
+    };
+    callService(getServices().waitlist.join(createReq));
+    audit('WAITLIST_JOINED', 'waitlist', entry.id);
+    return entry;
+  }, []);
 
   const cancelWaitlistEntry = useCallback((id: string) => {
     const entry = state.waitlist.find((w) => w.id === id);
@@ -765,21 +774,21 @@ export function useDentalServices() {
     }
   }, []);
 
-  const leaveWaitlist = useCallback((id: string) => {
-    cancelWaitlistEntry(id);
-  }, [cancelWaitlistEntry]);
-
-  const scheduleFollowUpReminder = useCallback(
-    (appointmentId: string): Appointment | null => {
-      const apt = state.appointments.find((a) => a.id === appointmentId);
-      if (!apt) return null;
-      apt.followUpReminderScheduledFor = nowISO();
-      notify();
-      audit('FOLLOW_UP_SCHEDULED', 'appointment', appointmentId);
-      return apt;
+  const leaveWaitlist = useCallback(
+    (id: string) => {
+      cancelWaitlistEntry(id);
     },
-    []
+    [cancelWaitlistEntry]
   );
+
+  const scheduleFollowUpReminder = useCallback((appointmentId: string): Appointment | null => {
+    const apt = state.appointments.find((a) => a.id === appointmentId);
+    if (!apt) return null;
+    apt.followUpReminderScheduledFor = nowISO();
+    notify();
+    audit('FOLLOW_UP_SCHEDULED', 'appointment', appointmentId);
+    return apt;
+  }, []);
 
   const processScheduledReminders = useCallback((): number => {
     let sent = 0;
@@ -793,25 +802,18 @@ export function useDentalServices() {
     return sent;
   }, []);
 
-  const sendNotification = useCallback(
-    (notif: Omit<AppNotification, 'id' | 'sentAt' | 'read'>) => {
-      const notification: AppNotification = {
-        ...notif,
-        id: createUniqueId('notif'),
-        sentAt: nowISO(),
-        read: false,
-      };
-      state.notifications.push(notification);
-      notify();
-      audit(
-        'NOTIFICATION_SENT',
-        'appointment',
-        notification.relatedAppointmentId ?? notification.id
-      );
-      return notification;
-    },
-    []
-  );
+  const sendNotification = useCallback((notif: Omit<AppNotification, 'id' | 'sentAt' | 'read'>) => {
+    const notification: AppNotification = {
+      ...notif,
+      id: createUniqueId('notif'),
+      sentAt: nowISO(),
+      read: false,
+    };
+    state.notifications.push(notification);
+    notify();
+    audit('NOTIFICATION_SENT', 'appointment', notification.relatedAppointmentId ?? notification.id);
+    return notification;
+  }, []);
 
   const saveConsultation = useCallback(
     (data: Omit<Consultation, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -1027,6 +1029,7 @@ export function useDentalServices() {
     getAuditLogs,
     getSettings,
     getAuthStatus,
+    getLoadError,
     getCurrentUser,
     isAuthenticated,
     getPatientById,

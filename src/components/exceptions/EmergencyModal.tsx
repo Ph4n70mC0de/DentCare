@@ -3,7 +3,6 @@ import { AlertCircle, Siren, CheckCircle2, Users } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoSelect } from '../common/NeoSelect';
-import { NeoInput } from '../common/NeoInput';
 import { useDentalServices } from '../../services/useDentalServices';
 import { Appointment } from '../../types';
 
@@ -14,7 +13,8 @@ interface EmergencyModalProps {
 }
 
 export const EmergencyModal: React.FC<EmergencyModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const { patients, dentists, services, settings, createEmergencyAppointment } = useDentalServices();
+  const { patients, dentists, services, settings, createEmergencyAppointment } =
+    useDentalServices();
 
   const [patientId, setPatientId] = useState<string>(patients[0]?.id || '');
   const [dentistId, setDentistId] = useState<string>(dentists[0]?.id || '');

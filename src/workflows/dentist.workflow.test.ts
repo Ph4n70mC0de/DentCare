@@ -232,7 +232,7 @@ describe('Dentist Workflows', () => {
       dentalStore.updateAppointmentStatus(appointment.id, 'Checked-In');
       dentalStore.updateAppointmentStatus(appointment.id, 'In-Consultation');
 
-      const _consultation = dentalStore.saveConsultation({
+      const consultation = dentalStore.saveConsultation({
         appointmentId: appointment.id,
         dentistId: 'dentist-1',
         patientId: 'pat-001',

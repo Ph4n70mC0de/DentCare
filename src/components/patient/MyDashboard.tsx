@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   CalendarPlus,
-  CalendarCheck2,
   Stethoscope,
   Sparkles,
   Pill,
@@ -11,8 +10,6 @@ import {
   Smile,
   AlertTriangle,
   FileSpreadsheet,
-  Activity,
-  UserCheck,
   Check,
   HeartPulse,
   Calendar,
@@ -33,7 +30,6 @@ import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
-import { NeoSelect } from '../common/NeoSelect';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { NeoBadge } from '../common/NeoBadge';
 import { Appointment, WaitlistEntry } from '../../types';

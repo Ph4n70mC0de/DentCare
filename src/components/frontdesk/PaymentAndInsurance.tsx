@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   CreditCard,
   PhilippinePeso,
-  ShieldCheck,
   FileSpreadsheet,
   Receipt,
   Search,
@@ -10,22 +9,14 @@ import {
   AlertCircle,
   Clock,
   Printer,
-  Calendar,
   Building,
-  ArrowUpRight,
-  Filter,
-  Check,
-  FileText,
-  User,
-  Sparkles,
-  Download,
+  ShieldCheck,
 } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
-import { NeoBadge } from '../common/NeoBadge';
 import { NeoModal } from '../common/NeoModal';
-import { Appointment, Payment, PaymentMethod } from '../../types';
+import { Appointment, Payment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { PaymentModal } from './PaymentModal';
 
@@ -36,16 +27,8 @@ interface PaymentAndInsuranceProps {
 export const PaymentAndInsurance: React.FC<PaymentAndInsuranceProps> = ({
   onNavigateToDayFlow,
 }) => {
-  const {
-    appointments,
-    patients,
-    dentists,
-    services,
-    payments,
-    processPayment,
-    consultations,
-    settings,
-  } = useDentalServices();
+  const { appointments, patients, dentists, services, payments, consultations } =
+    useDentalServices();
 
   const today = getTodayDateString();
   const [activeTab, setActiveTab] = useState<'pending' | 'settled' | 'insurance' | 'cashier'>(
@@ -65,7 +48,7 @@ export const PaymentAndInsurance: React.FC<PaymentAndInsuranceProps> = ({
   const [claimStatusOverrides, setClaimStatusOverrides] = useState<Record<string, string>>({});
 
   // Cashier Drawer Balance state
-  const [drawerStartFloat, setDrawerStartFloat] = useState<number>(200);
+  const [drawerStartFloat] = useState<number>(200);
   const [countedCash, setCountedCash] = useState<string>('');
   const [shiftReconciled, setShiftReconciled] = useState<boolean>(false);
 

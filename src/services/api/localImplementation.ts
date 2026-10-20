@@ -141,15 +141,6 @@ function filterAndPaginate<T>(
   return paginate(result as T[], { page, pageSize });
 }
 
-// Async wrapper for synchronous store operations
-function _asyncResult<T>(value: T): Promise<T> {
-  return Promise.resolve(value);
-}
-
-function _asyncVoid(): Promise<void> {
-  return Promise.resolve();
-}
-
 // ============================================
 // LOCAL IMPLEMENTATIONS (All methods return Promises)
 // ============================================
@@ -222,7 +213,7 @@ export class LocalAppointmentService implements IAppointmentService {
     return dentalStore.updateAppointmentStatus(id, status, metadata);
   }
 
-  async cancel(id: string, reason: string): Promise<Appointment> {
+  async cancel(id: string): Promise<Appointment> {
     const appointment = dentalStore.getAppointments().find((a) => a.id === id);
     if (!appointment) throw new Error('Appointment not found after cancellation');
     return appointment;
@@ -351,7 +342,7 @@ export class LocalDentistService implements IDentistService {
     };
   }
 
-  async deleteSchedule(_id: string): Promise<void> {
+  async deleteSchedule(): Promise<void> {
     // Local store doesn't have this
   }
 }
