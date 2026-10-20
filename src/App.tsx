@@ -127,7 +127,17 @@ export default function App() {
         'dentist-records',
         'patient-book',
       ],
-      admin: ['admin-dashboard', 'admin-users', 'admin-services', 'admin-schedules', 'admin-waitlist', 'admin-audit', 'admin-reports', 'admin-settings', 'patient-book'],
+      admin: [
+        'admin-dashboard',
+        'admin-users',
+        'admin-services',
+        'admin-schedules',
+        'admin-waitlist',
+        'admin-audit',
+        'admin-reports',
+        'admin-settings',
+        'patient-book',
+      ],
     };
     const allowed = roleViews[activeUser.role];
     if (allowed && !allowed.includes(currentView)) {
@@ -177,7 +187,7 @@ export default function App() {
           currentView={currentView}
           onSelectView={(v) => setCurrentView(v)}
           isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)} 
+          onClose={() => setIsSidebarOpen(false)}
         />
 
         {/* Content Area */}
@@ -203,7 +213,7 @@ export default function App() {
           {currentView === 'patient-book' && activeUser.role !== 'patient' && (
             <BookingWizard
               initialPatientId={selectedPatientIdForBooking}
-              onCompleted={(apt) => {
+              onCompleted={() => {
                 setSelectedPatientIdForBooking(undefined);
                 if (activeUser.role === 'front_desk') {
                   setCurrentView('frontdesk-dashboard');
@@ -287,7 +297,7 @@ export default function App() {
               onNavigateToExceptions={() => setCurrentView('frontdesk-exceptions')}
               onNavigateToReports={() => setCurrentView('frontdesk-reports')}
               activeConsultationAptId={activeConsultationAptId}
-              onCompleteConsultation={(record) => {
+              onCompleteConsultation={() => {
                 setActiveConsultationAptId(undefined);
                 setCurrentView('dentist-dashboard');
               }}

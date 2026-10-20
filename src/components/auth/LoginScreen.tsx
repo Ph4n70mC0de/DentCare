@@ -11,11 +11,7 @@ interface LoginScreenProps {
   authError?: string | null;
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({
-  onLogin,
-  onLoading,
-  authError,
-}) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onLoading, authError }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
@@ -40,9 +36,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#E8EEF5] text-slate-800 font-sans antialiased px-4 sm:px-6 lg:px-8">
-      <NeoCard
-        className="w-full max-w-md p-8 sm:p-10 shadow-2xl border border-slate-200/50"
-      >
+      <NeoCard className="w-full max-w-md p-8 sm:p-10 shadow-2xl border border-slate-200/50">
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="w-14 h-14 rounded-2xl neo-raised flex items-center justify-center bg-blue-600 text-white mb-4 shrink-0">
             <User className="w-7 h-7" />
@@ -97,8 +91,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         <div className="mt-8 pt-6 border-t border-slate-200 text-center">
           <p className="text-xs text-slate-500 mb-3">
-            Seeded accounts: admin@dentcare.com / reception@dentcare.com /
-            dr.smith@dentcare.com / patient@dentcare.com
+            Seeded accounts: admin@dentcare.com / reception@dentcare.com / dr.smith@dentcare.com /
+            patient@dentcare.com
           </p>
           <ShieldCheck className="w-4 h-4 text-slate-400 mx-auto mb-2" />
           <p className="text-[10px] text-slate-400 uppercase tracking-wider">

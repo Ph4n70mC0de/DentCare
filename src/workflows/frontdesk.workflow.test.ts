@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { dentalStore } from '../services/store';
-import { getTodayDateString } from '../data/seedData';
 
 // Mock localStorage
 const localStorageMock = {

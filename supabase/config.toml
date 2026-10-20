@@ -1,0 +1,23 @@
+project_id = "dentcare"
+version = "0.1.0"
+
+[supabase]
+[db]
+major_version = 16
+
+[auth]
+external_email_enabled = false
+email_autoconfirm = false
+smtp_admin_email = "care@dentcare-clinic.com"
+
+[storage]
+enabled = true
+
+[oauth]
+enabled = false
+
+[realtime]
+enabled = false
+
+[analytics]
+enabled = false

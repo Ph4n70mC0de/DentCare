@@ -2,15 +2,11 @@ import React, { useState, useMemo } from 'react';
 import {
   Users,
   Search,
-  Plus,
   Download,
   UserPlus,
   Phone,
   Mail,
-  MapPin,
   Calendar,
-  Clock,
-  ShieldAlert,
   AlertTriangle,
   HeartPulse,
   Pill,
@@ -23,11 +19,9 @@ import {
   RotateCcw,
   Trash2,
   Eye,
-  ArrowRight,
   CalendarPlus,
   LayoutGrid,
   List,
-  Sparkles,
   UserCheck,
   Stethoscope,
   X,
@@ -40,7 +34,7 @@ import { NeoSelect } from '../common/NeoSelect';
 import { NeoBadge } from '../common/NeoBadge';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { NeoModal } from '../common/NeoModal';
-import { Patient, Appointment, Payment } from '../../types';
+import { Patient } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 
 interface PatientDirectoryProps {
@@ -53,22 +47,10 @@ interface PatientDirectoryProps {
 export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
   onStartBooking,
   onNavigateToWaitingRoom,
-  onNavigateToSchedule,
   onStartConsultation,
 }) => {
-  const {
-    patients,
-    dentists,
-    services,
-    appointments,
-    consultations,
-    payments,
-    settings,
-    registerPatient,
-    updatePatient,
-    updateAppointmentStatus,
-    sendNotification,
-  } = useDentalServices();
+  const { patients, services, appointments, settings, updateAppointmentStatus } =
+    useDentalServices();
 
   const today = getTodayDateString();
 
@@ -515,7 +497,6 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
             const todayApt = patientApts.find(
               (a) => a.date === today && ['Confirmed', 'Pending', 'Requested'].includes(a.status)
             );
-            const pastConsultations = consultations.filter((c) => c.patientId === patient.id);
             const age = getAge(patient.dateOfBirth);
 
             const hasMedicalAlerts =
@@ -930,7 +911,7 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
   onUpdatePatient,
   onStartConsultation,
 }) => {
-  const { appointments, dentists, services, consultations, payments, settings, updatePatient } =
+  const { appointments, dentists, services, consultations, payments, updatePatient } =
     useDentalServices();
 
   const patientApts = appointments.filter((a) => a.patientId === patient.id);

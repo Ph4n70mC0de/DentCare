@@ -18,10 +18,7 @@ import {
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
-import { NeoInput } from '../common/NeoInput';
-import { NeoSelect } from '../common/NeoSelect';
 import { NeoStatusPill } from '../common/NeoStatusPill';
-import { NeoBadge } from '../common/NeoBadge';
 import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { CheckInModal } from './CheckInModal';
@@ -43,7 +40,8 @@ export const AppointmentDayFlow: React.FC<AppointmentDayFlowProps> = ({
   onStartBooking,
   onStartConsultation,
 }) => {
-  const { appointments, patients, dentists, services, updateAppointmentStatus } = useDentalServices();
+  const { appointments, patients, dentists, services, updateAppointmentStatus } =
+    useDentalServices();
 
   const today = getTodayDateString();
   const [selectedDate, setSelectedDate] = useState<string>(today);

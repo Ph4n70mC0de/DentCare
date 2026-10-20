@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { dentalStore } from '../services/store';
-import { getTodayDateString } from '../data/seedData';
 
 // Mock localStorage
 const localStorageMock = {
@@ -165,7 +164,7 @@ describe('Shared Workflows - Edge Cases & Error Handling', () => {
           startTime: '09:00',
         });
         results.push(apt);
-      } catch (_e) {
+      } catch {
         results.push(null);
       }
     }

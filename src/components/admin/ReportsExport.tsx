@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Download, FileSpreadsheet, FileText } from 'lucide-react';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
@@ -13,8 +13,6 @@ interface ReportsExportProps {
   waitlist: WaitlistEntry[];
 }
 
-type ReportType = 'appointments' | 'payments' | 'audit' | 'patients' | 'waitlist';
-
 export const ReportsExport: React.FC<ReportsExportProps> = ({
   appointments,
   patients,
@@ -23,7 +21,6 @@ export const ReportsExport: React.FC<ReportsExportProps> = ({
   auditLogs,
   waitlist,
 }) => {
-
   const exportCSV = (headers: string[], rows: string[][], filename: string) => {
     const csvContent =
       'data:text/csv;charset=utf-8,' +

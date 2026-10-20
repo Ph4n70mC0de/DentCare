@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  CreditCard,
-  CheckCircle2,
-  Receipt,
-  ShieldCheck,
-  Printer,
-  CalendarPlus,
-  Download,
-} from 'lucide-react';
+import { CreditCard, CheckCircle2, ShieldCheck, Printer, CalendarPlus } from 'lucide-react';
 import { NeoModal } from '../common/NeoModal';
 import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';

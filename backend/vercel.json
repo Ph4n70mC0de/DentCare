@@ -1,0 +1,5 @@
+[build]
+  command = "echo 'backend build: no-op'"
+  functions = "backend/index.py"
+[routes]
+  { src = "/api/v1/(.*)", dest = "backend/index.py" }

@@ -1,0 +1,35 @@
+name: Database Migrations & RLS Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  supabase:
+    name: Supabase Migrations & RLS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Supabase CLI
+        uses: supabase/cli@v0.1
+
+      - name: Start local Supabase stack
+        run: supabase start
+
+      - name: Apply migrations
+        run: supabase db reset
+
+      - name: Run RLS / SQL integration tests
+        run: supabase test db --file supabase/tests/rls_test.sql
+
+      - name: Stop local Supabase stack
+        run: supabase stop
+        if: always()

@@ -7,10 +7,8 @@ import {
   AlertTriangle,
   Siren,
   Search,
-  Filter,
   CheckCircle2,
   CalendarPlus,
-  ArrowRight,
   UserX,
   FileSpreadsheet,
   CalendarClock,
@@ -24,8 +22,7 @@ import { NeoButton } from '../common/NeoButton';
 import { NeoInput } from '../common/NeoInput';
 import { NeoSelect } from '../common/NeoSelect';
 import { NeoStatusPill } from '../common/NeoStatusPill';
-import { NeoBadge } from '../common/NeoBadge';
-import { Appointment, AppointmentStatus } from '../../types';
+import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';
 import { CheckInModal } from './CheckInModal';
 import { PaymentModal } from './PaymentModal';
@@ -56,7 +53,7 @@ export const ReceptionOverview: React.FC<ReceptionOverviewProps> = ({
   onNavigateToExceptions,
   onNavigateToReports,
 }) => {
-  const { appointments, patients, dentists, services, updateAppointmentStatus } = useDentalServices();
+  const { appointments, patients, dentists, services } = useDentalServices();
 
   const today = getTodayDateString();
 

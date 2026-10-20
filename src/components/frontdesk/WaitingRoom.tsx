@@ -1,21 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Clock,
-  User,
-  CheckCircle2,
-  AlertTriangle,
-  Siren,
-  Eye,
-  EyeOff,
-  UserX,
-  Stethoscope,
-  ArrowRight,
-  Volume2,
-} from 'lucide-react';
+import { Clock, User, Siren, Eye, EyeOff, UserX, Stethoscope, Volume2 } from 'lucide-react';
 import { useDentalServices } from '../../services/useDentalServices';
 import { NeoCard } from '../common/NeoCard';
 import { NeoButton } from '../common/NeoButton';
-import { NeoBadge } from '../common/NeoBadge';
 import { NeoStatusPill } from '../common/NeoStatusPill';
 import { Appointment } from '../../types';
 import { getTodayDateString } from '../../data/seedData';

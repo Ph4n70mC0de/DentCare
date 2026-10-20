@@ -1,5 +1,4 @@
-import { getTodayDateString } from '../../data/seedData';
-import { Appointment, WaitlistEntry } from '../../types';
+import { Appointment } from '../../types';
 
 export const getTomorrowDate = (): string => {
   const d = new Date();
@@ -24,7 +23,7 @@ LOCATION:${settings.clinicAddress}
 DTSTART:${apt.date.replace(/-/g, '')}T${apt.startTime.replace(':', '')}00
 DTEND:${apt.date.replace(/-/g, '')}T${apt.endTime.replace(':', '')}00
 END:VEVENT
-END:VCALENDAR`; 
+END:VCALENDAR`;
 
   const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
   const url = window.URL.createObjectURL(blob);

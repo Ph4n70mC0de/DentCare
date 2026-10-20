@@ -3,7 +3,6 @@
 
 import type {
   User,
-  UserRole,
   Patient,
   Dentist,
   DentalService,
@@ -39,7 +38,6 @@ import type {
   CreateWaitlistEntryRequest,
   CreateConsultationRequest,
   CreatePaymentRequest,
-  MarkNotificationsReadRequest,
   UpdateSettingsRequest,
   RevenueSummary,
   UpdatePatientRequest,
@@ -96,7 +94,7 @@ export class ApiAuthService implements IAuthService {
     return [];
   }
 
-  setActiveUser(userId: string): void {
+  setActiveUser(): void {
     // No-op in API mode
   }
 
@@ -225,7 +223,7 @@ export class ApiPatientService implements IPatientService {
     return apiClient.updatePatient(id, data);
   }
 
-  async confirmBookingEligibility(patientId: string): Promise<Patient | null> {
+  async confirmBookingEligibility(): Promise<Patient | null> {
     return null;
   }
 }

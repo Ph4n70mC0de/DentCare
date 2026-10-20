@@ -21,9 +21,7 @@ interface AdminDashboardProps {
   onNavigateToReports?: () => void;
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({
-  currentView,
-}) => {
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentView }) => {
   const {
     appointments,
     patients,
