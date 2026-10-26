@@ -1,8 +1,8 @@
 """Auth router: login / logout / me (cookie-backed session per ADR-001)."""
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Response
 
-from app.core.security import create_session_token, decode_session_token, verify_password
+from app.core.security import create_session_token
 from app.core.settings import settings
 from app.db.session import get_connection
 from app.schemas.auth import LoginRequest, LoginResponse, UserProfile

@@ -1,7 +1,6 @@
 """Appointment request/response schemas."""
 
 from datetime import date, time
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -12,8 +11,8 @@ class CreateAppointmentRequest(BaseModel):
     service_id: str
     date: date
     start_time: time
-    notes: Optional[str] = None
-    idempotency_key: Optional[str] = None
+    notes: str | None = None
+    idempotency_key: str | None = None
 
 
 class AppointmentResponse(BaseModel):

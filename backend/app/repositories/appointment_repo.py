@@ -39,10 +39,10 @@ class AppointmentRepository:
                 cur.execute(
                     """
                     insert into public.appointments
-                      (appointment_number, patient_id, dentist_id, service_id, date, start_time, end_time, status, booking_source, notes, actor_id, idempotency_key)
+                      (appointment_number, patient_id, dentist_id, service_id, date, start_time, end_time, status, booking_source, notes, actor_id, idempotency_key)  # noqa: E501
                     values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     returning id, appointment_number
                     """,
-                    ("PENDING-NUMBER", patient_id, dentist_id, service_id, date, start_time, end_time, status, booking_source, notes, actor_id, idempotency_key),
+                    ("PENDING-NUMBER", patient_id, dentist_id, service_id, date, start_time, end_time, status, booking_source, notes, actor_id, idempotency_key),  # noqa: E501
                 )
                 return cur.fetchone()

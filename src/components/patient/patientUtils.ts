@@ -1,4 +1,4 @@
-import { Appointment } from '../../types';
+import { Appointment, DentalService, Dentist } from '../../types';
 
 export const getTomorrowDate = (): string => {
   const d = new Date();
@@ -53,9 +53,9 @@ export const getPatientAge = (dob: string): string => {
 };
 
 export const exportVisitsCSV = (
-  myAppointments: any[],
-  services: any[],
-  dentists: any[],
+  myAppointments: Appointment[],
+  services: DentalService[],
+  dentists: Dentist[],
   currentPatient: { patientNumber?: string }
 ) => {
   const headers = [

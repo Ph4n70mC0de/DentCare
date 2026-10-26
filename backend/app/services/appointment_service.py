@@ -1,9 +1,9 @@
 """Appointment business service: transactional, idempotent booking."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
-from app.core.exceptions import ConflictError, NotFoundError, ValidationError
+from app.core.exceptions import ConflictError, NotFoundError
 from app.db.session import get_connection
 from app.repositories.appointment_repo import AppointmentRepository
 
@@ -93,7 +93,7 @@ class AppointmentService:
                           (appointment_id, prior_status, new_status, actor_id, actor_role, reason, occurred_at)
                         values (%s, NULL, 'Confirmed', %s, 'front_desk', 'Appointment booked', %s)
                         """,
-                        (row[0], actor_id, datetime.now(timezone.utc)),
+                        (row[0], actor_id, datetime.now(UTC)),
                     )
 
                 conn.commit()
@@ -155,7 +155,7 @@ class AppointmentService:
                           (appointment_id, prior_status, new_status, actor_id, actor_role, reason, occurred_at)
                         values (%s, %s, %s, %s, %s, %s, %s)
                         """,
-                        (apt_uuid, prior_status, new_status, actor_id, actor_role, reason, datetime.now(timezone.utc)),
+                        (apt_uuid, prior_status, new_status, actor_id, actor_role, reason, datetime.now(UTC)),
                     )
 
                 conn.commit()

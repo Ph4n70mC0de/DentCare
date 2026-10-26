@@ -35,8 +35,6 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
   const service = services.find((s) => s.id === originalAppointment?.serviceId);
   const consultation = consultations.find((c) => c.appointmentId === originalAppointment?.id);
 
-  if (!originalAppointment) return null;
-
   // Default follow-up date (e.g. timeframe in weeks or default 2 weeks)
   const defaultOffset = (consultation?.followUpRecommendation?.timeframeWeeks || 2) * 7;
 
@@ -46,6 +44,8 @@ export const FollowUpModal: React.FC<FollowUpModalProps> = ({
     consultation?.followUpRecommendation?.notes || 'Recommended clinical follow-up examination'
   );
   const [createdApt, setCreatedApt] = useState<Appointment | null>(null);
+
+  if (!originalAppointment) return null;
 
   const availableSlots = dentist
     ? getAvailableSlotsForDate(dentist.id, date, service?.durationMinutes || 30)

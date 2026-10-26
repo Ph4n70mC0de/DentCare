@@ -47,7 +47,6 @@ def test_state_machine_transitions(prior, new, allowed):
     reason="DENTCARE_TEST_DB not set; requires live test Supabase",
 )
 def test_concurrent_booking_no_double_booking():
-    from uuid import uuid4
 
     service = AppointmentService()
     dentist_id = str(uuid4())

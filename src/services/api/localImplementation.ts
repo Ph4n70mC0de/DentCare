@@ -379,7 +379,7 @@ export class LocalServiceService implements IServiceService {
     return dentalStore.getServices().find((s) => s.id === id) ?? null;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(_id: string): Promise<void> {
     // Local store doesn't have delete
   }
 }

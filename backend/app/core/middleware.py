@@ -1,7 +1,7 @@
 """Request ID and error-handling middleware."""
 
 import uuid
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -29,7 +29,7 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
             request_id = getattr(request.state, "request_id", None)
             logger.warning("api_error", code=exc.code, status=exc.status_code, request_id=request_id, details=exc.details)
             return _error_response(exc.status_code, exc.code, exc.message, exc.details, request_id)
-        except Exception as exc:  # noqa: BLE001 - last-resort boundary, never leak internals
+        except Exception:  # noqa: BLE001 - last-resort boundary, never leak internals
             request_id = getattr(request.state, "request_id", None)
             logger.exception("unhandled_error", request_id=request_id)
             return _error_response(500, "INTERNAL_ERROR", "An unexpected error occurred", None, request_id)

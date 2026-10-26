@@ -395,7 +395,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <NeoSelect
               value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value as any)}
+              onChange={(e) => setFilterCategory(e.target.value as never)}
             >
               <option value="all">All Patients ({totalCount})</option>
               <option value="alerts">Medical / Allergy Alerts ({alertCount})</option>
@@ -405,7 +405,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
               <option value="female">Female Patients</option>
             </NeoSelect>
 
-            <NeoSelect value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+            <NeoSelect value={sortBy} onChange={(e) => setSortBy(e.target.value as never)}>
               <option value="name-asc">Sort: Name (A to Z)</option>
               <option value="name-desc">Sort: Name (Z to A)</option>
               <option value="id-desc">Sort: Patient ID (Newest)</option>
@@ -895,6 +895,7 @@ export const PatientDirectory: React.FC<PatientDirectoryProps> = ({
 interface PatientDetailModalProps {
   patient: Patient;
   activeTab: 'demographics' | 'alerts' | 'appointments' | 'clinical' | 'billing';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSelectTab: (tab: any) => void;
   onClose: () => void;
   onStartBooking?: (patientId: string) => void;
@@ -1052,7 +1053,7 @@ const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => onSelectTab(tab.id as any)}
+              onClick={() => onSelectTab(tab.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === tab.id
                   ? 'neo-raised bg-[#E8EEF5] text-blue-700 font-extrabold'
@@ -1560,7 +1561,7 @@ const PatientEditModal: React.FC<PatientEditModalProps> = ({ patient, onClose, o
           <NeoSelect
             label="Gender / Sex"
             value={sex}
-            onChange={(e) => setSex(e.target.value as any)}
+            onChange={(e) => setSex(e.target.value as never)}
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -1780,7 +1781,7 @@ const PatientRegistrationModal: React.FC<PatientRegistrationModalProps> = ({
           <NeoSelect
             label="Gender / Sex *"
             value={sex}
-            onChange={(e) => setSex(e.target.value as any)}
+            onChange={(e) => setSex(e.target.value as never)}
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>

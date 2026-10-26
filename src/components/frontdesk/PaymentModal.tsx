@@ -25,12 +25,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const { patients, dentists, services, processPayment, consultations, settings } =
     useDentalServices();
 
-  if (!appointment) return null;
-
-  const patient = patients.find((p) => p.id === appointment.patientId);
-  const dentist = dentists.find((d) => d.id === appointment.dentistId);
-  const service = services.find((s) => s.id === appointment.serviceId);
-  const consultation = consultations.find((c) => c.appointmentId === appointment.id);
+  const patient = appointment ? patients.find((p) => p.id === appointment.patientId) : undefined;
+  const dentist = appointment ? dentists.find((d) => d.id === appointment.dentistId) : undefined;
+  const service = appointment ? services.find((s) => s.id === appointment.serviceId) : undefined;
+  const consultation = appointment
+    ? consultations.find((c) => c.appointmentId === appointment.id)
+    : undefined;
 
   // Billing State
   const basePrice = service ? service.price : 120;
@@ -44,6 +44,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   );
 
   const [paymentResult, setPaymentResult] = useState<Payment | null>(null);
+
+  if (!appointment) return null;
 
   // Calculations
   const afterDiscount = Math.max(0, subtotal - discountAmount);
