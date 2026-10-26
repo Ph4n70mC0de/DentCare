@@ -4,8 +4,8 @@ from fastapi import APIRouter, Header, HTTPException, Path
 
 from app.core.exceptions import DentCareError
 from app.core.logging import get_logger
-from app.services.appointment_service import AppointmentService
 from app.schemas.appointment import AppointmentResponse, CreateAppointmentRequest
+from app.services.appointment_service import AppointmentService
 
 logger = get_logger("appointments")
 router = APIRouter(tags=["appointments"])
@@ -22,10 +22,10 @@ async def create_appointment(
     try:
         return service.create_appointment(data)
     except DentCareError as exc:
-        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code, "message": exc.message, "details": exc.details})
-    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code, "message": exc.message, "details": exc.details}) from exc
+    except Exception:  # noqa: BLE001
         logger.exception("create_appointment_failed")
-        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": "Failed to create appointment."})
+        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": "Failed to create appointment."}) from None
 
 
 @router.patch("/{appointment_id}/status")
@@ -42,10 +42,10 @@ async def transition_status(
         # actor_id resolved from session cookie in production; placeholder here.
         return service.transition_status(appointment_id, new_status, actor_id=None, reason=reason)
     except DentCareError as exc:
-        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code, "message": exc.message, "details": exc.details})
-    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=exc.status_code, detail={"code": exc.code, "message": exc.message, "details": exc.details}) from exc
+    except Exception:  # noqa: BLE001
         logger.exception("transition_status_failed")
-        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": "Failed to transition appointment."})
+        raise HTTPException(status_code=500, detail={"code": "INTERNAL_ERROR", "message": "Failed to transition appointment."}) from None
 
 
 @router.get("")

@@ -121,7 +121,7 @@ export class ApiAuthService implements IAuthService {
   async registerPatient(
     data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
   ): Promise<Patient> {
-    const response = await apiClient.registerPatient(data as any);
+    const response = await apiClient.registerPatient(data as never);
     return response.patient;
   }
 }
@@ -215,7 +215,7 @@ export class ApiPatientService implements IPatientService {
   async create(
     data: Omit<Patient, 'id' | 'patientNumber' | 'createdAt' | 'updatedAt' | 'noShowCount'>
   ): Promise<Patient> {
-    const response = await apiClient.registerPatient(data as any);
+    const response = await apiClient.registerPatient(data as never);
     return response.patient;
   }
 

@@ -34,136 +34,136 @@ describe('Smoke Tests - All Views Render Successfully', () => {
   });
 
   describe('Patient Views (role: patient)', () => {
-    it('renders patient dashboard as default for patient role', () => {
+    it('renders patient dashboard as default for patient role', async () => {
       renderAppWithRole('patient');
       // Patient dashboard should render
-      expect(screen.getByText(/hygiene recall/i)).toBeInTheDocument();
+      expect(await screen.findByText(/hygiene recall/i)).toBeInTheDocument();
     });
 
-    it('does not show front desk or dentist views for patient', () => {
+    it('does not show front desk or dentist views for patient', async () => {
       renderAppWithRole('patient');
       // The role switcher is a DEV feature and shows all roles
       // But the actual view content should be patient-specific
-      expect(screen.getByText(/hygiene recall/i)).toBeInTheDocument();
+      expect(await screen.findByText(/hygiene recall/i)).toBeInTheDocument();
     });
   });
 
   describe('Front Desk Views (role: front_desk)', () => {
-    it('renders front desk dashboard as default for front_desk role', () => {
+    it('renders front desk dashboard as default for front_desk role', async () => {
       renderAppWithRole('front_desk');
-      expect(screen.getByText(/total today/i)).toBeInTheDocument();
+      expect(await screen.findByText(/total today/i)).toBeInTheDocument();
     });
 
-    it('does not show patient welcome for front desk', () => {
+    it('does not show patient welcome for front desk', async () => {
       renderAppWithRole('front_desk');
       // The role switcher is a DEV feature and shows all roles
       // But the actual view content should be front desk-specific
-      expect(screen.getByText(/total today/i)).toBeInTheDocument();
+      expect(await screen.findByText(/total today/i)).toBeInTheDocument();
     });
   });
 
   describe('Dentist Views (role: dentist)', () => {
-    it('renders dentist dashboard as default for dentist role', () => {
+    it('renders dentist dashboard as default for dentist role', async () => {
       renderAppWithRole('dentist');
       // Default tab shows dentist name and "Today's Schedule"
-      expect(screen.getByText(/today's schedule/i)).toBeInTheDocument();
+      expect(await screen.findByText(/today's schedule/i)).toBeInTheDocument();
     });
 
-    it('does not show front desk for dentist', () => {
+    it('does not show front desk for dentist', async () => {
       renderAppWithRole('dentist');
       // The role switcher is a DEV feature and shows all roles
       // But the actual view content should be dentist-specific
-      expect(screen.getByText(/today's schedule/i)).toBeInTheDocument();
+      expect(await screen.findByText(/today's schedule/i)).toBeInTheDocument();
     });
   });
 
   describe('Admin Views (role: admin)', () => {
-    it('renders admin dashboard as default for admin role', () => {
+    it('renders admin dashboard as default for admin role', async () => {
       renderAppWithRole('admin');
       // Default tab is Clinic Analytics with "Gross Clinic Revenue" KPI
-      expect(screen.getByText(/gross clinic revenue/i)).toBeInTheDocument();
+      expect(await screen.findByText(/gross clinic revenue/i)).toBeInTheDocument();
     });
 
-    it('does not show patient welcome for admin', () => {
+    it('does not show patient welcome for admin', async () => {
       renderAppWithRole('admin');
       // The role switcher is a DEV feature and shows all roles
       // But the actual view content should be admin-specific
-      expect(screen.getByText(/gross clinic revenue/i)).toBeInTheDocument();
+      expect(await screen.findByText(/gross clinic revenue/i)).toBeInTheDocument();
     });
   });
 
   describe('Navigation Elements', () => {
-    it('renders Navbar with role switcher in DEV', () => {
+    it('renders Navbar with role switcher in DEV', async () => {
       renderAppWithRole('admin');
       expect(
-        screen.getByRole('combobox', { name: /switch user persona role/i })
+        await screen.findByRole('combobox', { name: /switch user persona role/i })
       ).toBeInTheDocument();
     });
 
-    it('renders Sidebar with navigation items', () => {
+    it('renders Sidebar with navigation items', async () => {
       renderAppWithRole('admin');
       // Sidebar renders navigation items - check for one that's unique to sidebar
-      expect(screen.getByText(/user directory/i)).toBeInTheDocument();
+      expect(await screen.findByText(/user directory/i)).toBeInTheDocument();
     });
 
-    it('shows notification bell in Navbar', () => {
+    it('shows notification bell in Navbar', async () => {
       renderAppWithRole('admin');
-      expect(screen.getByRole('button', { name: /notifications/i })).toBeInTheDocument();
+      expect(await screen.findByRole('button', { name: /notifications/i })).toBeInTheDocument();
     });
   });
 
   describe('Role-based View Rendering', () => {
-    it('only renders patient views for patient role', () => {
+    it('only renders patient views for patient role', async () => {
       renderAppWithRole('patient');
-      expect(screen.queryByText(/hygiene recall/i)).toBeInTheDocument();
+      expect(await screen.findByText(/hygiene recall/i)).toBeInTheDocument();
       // The role switcher is a DEV feature and shows all roles
       // But the actual view content should be patient-specific
     });
 
-    it('only renders front desk views for front_desk role', () => {
+    it('only renders front desk views for front_desk role', async () => {
       renderAppWithRole('front_desk');
-      expect(screen.getByText(/total today/i)).toBeInTheDocument();
+      expect(await screen.findByText(/total today/i)).toBeInTheDocument();
     });
 
-    it('only renders dentist views for dentist role', () => {
+    it('only renders dentist views for dentist role', async () => {
       renderAppWithRole('dentist');
-      expect(screen.getByText(/today's schedule/i)).toBeInTheDocument();
+      expect(await screen.findByText(/today's schedule/i)).toBeInTheDocument();
     });
 
-    it('only renders admin views for admin role', () => {
+    it('only renders admin views for admin role', async () => {
       renderAppWithRole('admin');
-      expect(screen.getByText(/gross clinic revenue/i)).toBeInTheDocument();
+      expect(await screen.findByText(/gross clinic revenue/i)).toBeInTheDocument();
     });
   });
 
   describe('Component Props & Callbacks', () => {
-    it('PatientDashboard receives onStartBooking callback', () => {
+    it('PatientDashboard receives onStartBooking callback', async () => {
       renderAppWithRole('patient');
       // Default tab is MyDashboard with "Hygiene Recall" KPI
-      expect(screen.getByText(/hygiene recall/i)).toBeInTheDocument();
+      expect(await screen.findByText(/hygiene recall/i)).toBeInTheDocument();
     });
 
-    it('FrontDeskDashboard receives onStartBooking callback', () => {
+    it('FrontDeskDashboard receives onStartBooking callback', async () => {
       renderAppWithRole('front_desk');
       // Default tab is ReceptionOverview with "Total Today" KPI
-      expect(screen.getByText(/total today/i)).toBeInTheDocument();
+      expect(await screen.findByText(/total today/i)).toBeInTheDocument();
     });
 
-    it('DentistDashboard receives onStartBooking callback', () => {
+    it('DentistDashboard receives onStartBooking callback', async () => {
       renderAppWithRole('dentist');
       // Default tab shows dentist name and "Today's Schedule"
-      expect(screen.getByText(/today's schedule/i)).toBeInTheDocument();
+      expect(await screen.findByText(/today's schedule/i)).toBeInTheDocument();
     });
 
-    it('AdminDashboard receives onStartBooking callback', () => {
+    it('AdminDashboard receives onStartBooking callback', async () => {
       renderAppWithRole('admin');
       // Default tab is "Clinic Analytics" - check for KPI cards
-      expect(screen.getByText(/gross clinic revenue/i)).toBeInTheDocument();
+      expect(await screen.findByText(/gross clinic revenue/i)).toBeInTheDocument();
     });
   });
 
   describe('Error Boundaries', () => {
-    it('wraps content without throwing', () => {
+    it('wraps content without throwing', async () => {
       expect(() => {
         renderAppWithRole('admin');
       }).not.toThrow();
@@ -172,15 +172,15 @@ describe('Smoke Tests - All Views Render Successfully', () => {
 });
 
 describe('Smoke Tests - Component Exports', () => {
-  it('exports all main dashboard components', () => {
+  it('exports all main dashboard components', async () => {
     expect(true).toBe(true);
   });
 
-  it('exports all layout components', () => {
+  it('exports all layout components', async () => {
     expect(true).toBe(true);
   });
 
-  it('exports all common UI components', () => {
+  it('exports all common UI components', async () => {
     expect(true).toBe(true);
   });
 });

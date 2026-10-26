@@ -5,14 +5,13 @@ SSL required, prepared statements disabled where the driver requires it.
 Migrations run on a separate path that supports full session semantics.
 """
 
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Generator
 
-import psycopg
 from psycopg_pool import ConnectionPool
 
-from app.core.settings import settings
 from app.core.logging import get_logger
+from app.core.settings import settings
 
 logger = get_logger("db")
 

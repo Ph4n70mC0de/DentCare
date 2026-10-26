@@ -295,7 +295,6 @@ export const ExceptionFlows: React.FC<ExceptionFlowsProps> = ({ onStartBooking }
               emergencyAppointments.map((apt) => {
                 const pat = patients.find((p) => p.id === apt.patientId);
                 const dent = dentists.find((d) => d.id === apt.dentistId);
-                const srv = services.find((s) => s.id === apt.serviceId);
 
                 return (
                   <div

@@ -188,7 +188,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
 
       setSelectedPatient(newPat);
       setStep(3); // Continue directly to service selection
-    } catch (err: unknown) {
+    } catch {
       setErrorMsg('Registration failed. Please check your details.');
     }
   };

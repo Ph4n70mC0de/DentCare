@@ -3,7 +3,7 @@
 Sensitive token material is never logged. Passwords are hashed with bcrypt.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from jose import jwt
@@ -26,7 +26,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def create_session_token(user_id: str, role: str) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     expires = now + timedelta(seconds=settings.session_ttl_seconds)
     payload: dict[str, Any] = {
         "sub": user_id,

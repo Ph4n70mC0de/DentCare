@@ -1,11 +1,25 @@
 """Application wiring: FastAPI app, middleware, routers, exception handling."""
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
+from app.api.v1.routers import (
+    appointments,
+    audit,
+    auth,
+    consultations,
+    dentists,
+    health,
+    notifications,
+    patients,
+    payments,
+    reports,
+    schedules,
+    services,
+    settings,
+    waitlist,
+)
 from app.core.logging import configure_logging
-from app.core.middleware import RequestIDMiddleware, ErrorHandlerMiddleware
-from app.api.v1.routers import health, auth, appointments, patients, dentists, services, schedules, waitlist, consultations, payments, notifications, audit, settings, reports
+from app.core.middleware import ErrorHandlerMiddleware, RequestIDMiddleware
 
 configure_logging()
 
