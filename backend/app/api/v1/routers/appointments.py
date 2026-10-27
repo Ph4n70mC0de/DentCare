@@ -1,5 +1,7 @@
 """Appointment router: create/list/transition with idempotency and conflict handling."""
 
+from types import SimpleNamespace
+
 from fastapi import APIRouter, Header, HTTPException, Path
 
 from app.core.exceptions import DentCareError
@@ -20,7 +22,7 @@ async def create_appointment(
     data = payload.model_dump()
     data["idempotency_key"] = idempotency_key
     try:
-        return service.create_appointment(data)
+        return service.create_appointment(SimpleNamespace(**data))
     except DentCareError as exc:
         raise HTTPException(status_code=exc.status_code, detail={"code": exc.code, "message": exc.message, "details": exc.details}) from exc
     except Exception:  # noqa: BLE001

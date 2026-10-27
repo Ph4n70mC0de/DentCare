@@ -6,7 +6,17 @@
 
 \set ON_ERROR_STOP on
 
--- Helper assertion: expect zero rows visible to current role.
+-- Assert fixture rows exist (fail if seed.sql not applied).
+do $$
+begin
+  if not exists (select 1 from public.patients where id = '33333333-3333-3333-3333-333333333301') then
+    raise exception 'Missing seed fixtures: patient A not found';
+  end if;
+  if not exists (select 1 from public.patients where id = '33333333-3333-3333-3333-333333333302') then
+    raise exception 'Missing seed fixtures: patient B not found';
+  end if;
+end;
+$$;
 create or replace procedure public.assert_no_rows(query text)
 language plpgsql as $$
 declare

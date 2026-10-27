@@ -535,15 +535,15 @@ create index idx_auth_sessions_token_hash on public.auth_sessions(token_hash);
 -- Supabase auth JWT claims). Policies below use auth.uid() where Supabase Auth is the issuer,
 -- and a fallback to a role snapshot where FastAPI forwards the actor.
 create or replace function public.current_user_role()
-returns user_role as $$
+returns text as $$
 declare
   v text;
 begin
   select current_setting('app.current_user_role', true) into v;
-  if v is null then
-    return 'patient';
+  if v is null or v = '' then
+    return null;
   end if;
-  return v::user_role;
+  return v;
 end;
 $$ language plpgsql strict;
 
@@ -589,17 +589,17 @@ create policy "dentists_staff_write" on public.dentists
 
 -- dental_services: all authenticated read; staff write.
 create policy "dental_services_read" on public.dental_services
-  for select using (true);
+  for select using (auth.uid() is not null);
 create policy "dental_services_staff_write" on public.dental_services
   for all using (public.current_user_role() in ('front_desk', 'admin'));
 
 -- dentist_schedules / blocked_schedules: staff manage; authenticated read.
 create policy "dentist_schedules_read" on public.dentist_schedules
-  for select using (true);
+  for select using (auth.uid() is not null);
 create policy "dentist_schedules_staff_write" on public.dentist_schedules
   for all using (public.current_user_role() in ('front_desk', 'admin'));
 create policy "blocked_schedules_read" on public.blocked_schedules
-  for select using (true);
+  for select using (auth.uid() is not null);
 create policy "blocked_schedules_staff_write" on public.blocked_schedules
   for all using (public.current_user_role() in ('front_desk', 'admin'));
 
@@ -669,7 +669,7 @@ create policy "audit_logs_staff" on public.audit_logs
 
 -- clinic_settings: authenticated read; admin write.
 create policy "clinic_settings_read" on public.clinic_settings
-  for select using (true);
+  for select using (auth.uid() is not null);
 create policy "clinic_settings_admin_write" on public.clinic_settings
   for all using (public.current_user_role() = 'admin');
 

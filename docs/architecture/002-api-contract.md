@@ -32,7 +32,13 @@ Derived from `src/services/api/types.ts` (login, register patient, appointment C
 ## OpenAPI / contract tests
 Generate OpenAPI from FastAPI and derive TypeScript client types. Contract tests must assert request/response shape, status codes, pagination, error envelope, and timezone formats against this document.
 
-## Related records
+## Provider and delivery status (2026-10-27)
+
+- Authentication profile path: `GET /auth/me` (frontend and backend aligned).
+- Payment processing: no live payment processor configured; payment endpoints record payment state only. Never collect/store raw card numbers or CVV.
+- SMS/email delivery: simulated in-app records only until a provider is configured. External delivery is NOT CONFIGURED; do not report real delivery.
+- Audit/settings/reports: admin-authorized; exports logged; audit rows immutable.
+
 - ADR-001 Auth/database strategy
 - DC-005 Appointment workflow specification
 - `src/services/api/interfaces.ts`, `src/services/api/types.ts`
