@@ -6,6 +6,20 @@
 -- Extension required for exclusion constraints with range types.
 create extension if not exists btree_gist;
 
+-- Immutable helper to build the appointment time range for the exclusion constraint.
+create or replace function public.appointment_time_range(
+  p_date date,
+  p_start time,
+  p_end time
+) returns tstzrange language sql immutable as $$
+  select tstzrange(
+    timezone('UTC', (p_date || ' ' || p_start)::timestamp),
+    timezone('UTC', (p_date || ' ' || p_end)::timestamp),
+    '[)'
+  );
+$$;
+
+;
 -- Exclusion constraint: no two active appointments may overlap in time for
 -- the same dentist on the same date. Active statuses are treated as booked
 -- slots; Cancelled and No-Show do not block.
@@ -14,11 +28,7 @@ alter table public.appointments
   exclude using gist (
     dentist_id with =,
     (date) with =,
-    tstzrange(
-      timezone('UTC', (date || ' ' || start_time)::timestamp),
-      timezone('UTC', (date || ' ' || end_time)::timestamp),
-      '[)'
-    ) with &&
+    public.appointment_time_range(date, start_time, end_time) with &&
   )
   where (status <> 'Cancelled' and status <> 'No-Show');
 
