@@ -61,8 +61,7 @@ export default function App() {
   const handleRoleSwitch = (role: UserRole, targetView?: string) => {
     // DEV ONLY: Role switching is only available in development
     if (import.meta.env.PROD) {
-      console.warn('[handleRoleSwitch] Role switching is disabled in production');
-      return;
+      throw new Error('[handleRoleSwitch] Role switching is disabled in production');
     }
 
     const u = users.find((user) => user.role === role);
