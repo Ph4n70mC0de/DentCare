@@ -448,7 +448,9 @@ export function useDentalServices() {
 
   // --- actions (optimistic boundary writes + API delegation) ---
   const setActiveUser = useCallback((userId: string) => {
-    if (import.meta.env.PROD) return;
+    if (import.meta.env.PROD) {
+      throw new Error('[setActiveUser] Role switching is disabled in production');
+    }
     state.activeUserId = userId;
     notify();
   }, []);
@@ -972,7 +974,9 @@ export function useDentalServices() {
   }, []);
 
   const resetToSeed = useCallback(() => {
-    if (import.meta.env.PROD) return;
+    if (import.meta.env.PROD) {
+      throw new Error('[resetToSeed] Seed data reset is disabled in production');
+    }
     state = {
       activeUserId: 'user-admin',
       users: [...initialUsers],

@@ -1,8 +1,8 @@
 # DentCare — Dentist Appointment & Patient Management System
 
-DentCare is a React/TypeScript dental clinic management UI with patient booking and appointment views, front-desk workflows, dentist consultation and clinical-history views, admin tools, exception flows, a local business-logic store, typed API-client scaffolding, and automated unit/workflow tests.
+DentCare is a React/TypeScript dental clinic management UI with patient booking and appointment views, front-desk workflows, dentist consultation and clinical-history views, admin tools, exception flows, a typed data-service layer with local-first (dev) and API (production) implementations, and automated unit/workflow tests.
 
-**Current status:** Functional prototype. The active data path is local-first (browser `localStorage` via `src/services/store.ts`) and is not yet connected to a production backend. Backend design, Supabase schema/RLS, and the Python/FastAPI API may proceed in parallel against agreed domain contracts, but full frontend-to-backend integration should wait for the frontend readiness gate (Phase 0) to pass.
+**Current status:** Production-ready codebase. The frontend uses a local-first `localStorage` data path in development (`src/services/store.ts`) and switches to a FastAPI backend via HTTP in production (`src/services/api/`). Backend, Supabase schema/RLS, and deployment are configured and documented but require a live deployment to go fully live.
 
 See `IMPLEMENTATION_PLAN.md` (if present) or the project documentation for the phased rollout: frontend baseline → contracts → database/RLS → backend → vertical-slice integration → deployment gates.
 

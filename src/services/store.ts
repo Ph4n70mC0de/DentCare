@@ -198,8 +198,7 @@ class DentalDataStore {
   public setActiveUser(userId: string): void {
     // DEV ONLY: Role switching is only available in development
     if (import.meta.env.PROD) {
-      console.warn('[setActiveUser] Role switching is disabled in production');
-      return;
+      throw new Error('[setActiveUser] Role switching is disabled in production');
     }
 
     const user = this.users.find((u) => u.id === userId);
@@ -222,8 +221,7 @@ class DentalDataStore {
   public resetToSeed(): void {
     // DEV ONLY: Reset to seed data is only available in development
     if (import.meta.env.PROD) {
-      console.warn('[resetToSeed] Seed data reset is disabled in production');
-      return;
+      throw new Error('[resetToSeed] Seed data reset is disabled in production');
     }
     this.users = initialUsers;
     this.patients = initialPatients;
