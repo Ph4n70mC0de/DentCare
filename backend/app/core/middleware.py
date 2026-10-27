@@ -1,13 +1,16 @@
 """Request ID and error-handling middleware."""
 
+import json
 import uuid
 from collections.abc import Callable
+from datetime import UTC, datetime
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.core.exceptions import DentCareError
 from app.core.logging import get_logger
+from app.core.settings import settings
 
 logger = get_logger("middleware")
 
@@ -18,6 +21,30 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
         request.state.request_id = request_id
         response: Response = await call_next(request)
         response.headers["x-request-id"] = request_id
+        return response
+
+
+class OriginCheckMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+            origin = request.headers.get("origin")
+            referer = request.headers.get("referer")
+            allowed = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+            if origin is not None and origin not in allowed:
+                return _error_response(403, "CSRF_REJECTED", "Origin not allowed.", None, getattr(request.state, "request_id", None))
+            if origin is None and referer is not None:
+                if not any(referer.startswith(o) for o in allowed):
+                    return _error_response(403, "CSRF_REJECTED", "Referer not allowed.", None, getattr(request.state, "request_id", None))
+        return await call_next(request)
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        response: Response = await call_next(request)
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
         return response
 
 
@@ -36,8 +63,7 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
 
 
 def _error_response(status_code: int, code: str, message: str, details: dict | None, request_id: str | None) -> Response:
-    import json
-    body: dict = {"code": code, "message": message, "statusCode": status_code}
+    body: dict = {"code": code, "message": message, "statusCode": status_code, "timestamp": datetime.now(UTC).isoformat()}
     if details:
         body["details"] = details
     if request_id:
