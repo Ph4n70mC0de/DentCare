@@ -67,7 +67,7 @@ create table public.user_profiles (
 
 alter table public.user_profiles enable row level security;
 
-create trigger public.set_updated_at_user_profiles
+create trigger set_updated_at_user_profiles
 before update on public.user_profiles
 for each row
 execute procedure public.set_updated_at();
@@ -99,7 +99,7 @@ create table public.patients (
 
 alter table public.patients enable row level security;
 
-create trigger public.set_updated_at_patients
+create trigger set_updated_at_patients
 before update on public.patients
 for each row
 execute procedure public.set_updated_at();
@@ -127,7 +127,7 @@ create table public.dentists (
 
 alter table public.dentists enable row level security;
 
-create trigger public.set_updated_at_dentists
+create trigger set_updated_at_dentists
 before update on public.dentists
 for each row
 execute procedure public.set_updated_at();
@@ -152,7 +152,7 @@ create table public.dental_services (
 
 alter table public.dental_services enable row level security;
 
-create trigger public.set_updated_at_dental_services
+create trigger set_updated_at_dental_services
 before update on public.dental_services
 for each row
 execute procedure public.set_updated_at();
@@ -176,7 +176,7 @@ create table public.dentist_schedules (
 
 alter table public.dentist_schedules enable row level security;
 
-create trigger public.set_updated_at_dentist_schedules
+create trigger set_updated_at_dentist_schedules
 before update on public.dentist_schedules
 for each row
 execute procedure public.set_updated_at();
@@ -240,7 +240,7 @@ create table public.appointments (
 
 alter table public.appointments enable row level security;
 
-create trigger public.set_updated_at_appointments
+create trigger set_updated_at_appointments
 before update on public.appointments
 for each row
 execute procedure public.set_updated_at();
@@ -322,7 +322,7 @@ create table public.consultations (
 
 alter table public.consultations enable row level security;
 
-create trigger public.set_updated_at_consultations
+create trigger set_updated_at_consultations
 before update on public.consultations
 for each row
 execute procedure public.set_updated_at();
@@ -488,7 +488,7 @@ create table public.clinic_settings (
 
 alter table public.clinic_settings enable row level security;
 
-create trigger public.set_updated_at_clinic_settings
+create trigger set_updated_at_clinic_settings
 before update on public.clinic_settings
 for each row
 execute procedure public.set_updated_at();

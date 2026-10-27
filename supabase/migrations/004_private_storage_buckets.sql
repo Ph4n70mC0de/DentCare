@@ -4,7 +4,8 @@
 -- endpoint. Never place patient files in a public bucket.
 
 insert into storage.buckets (id, name, public)
-values ('clinical-documents', 'clinical-documents', false);
+values ('clinical-documents', 'clinical-documents', false)
+on conflict (id) do nothing;
 
 -- RLS on storage.objects: patients read own uploads; staff read/write per role.
 -- Supabase storage RLS uses auth.uid() and bucket name/bucket_id.
@@ -13,7 +14,7 @@ on storage.objects
 for select
 using (
   bucket_id = 'clinical-documents' and
-  (storage.folder(name))[1] = auth.uid()::text
+  (storage.foldername(name))[1] = auth.uid()::text
 );
 
 create policy "clinical_documents_staff_manage"
@@ -34,7 +35,7 @@ on storage.objects
 for insert
 with check (
   bucket_id = 'clinical-documents' and
-  (storage.folder(name))[1] = auth.uid()::text
+  (storage.foldername(name))[1] = auth.uid()::text
 );
 
 -- Anonymous: no access to clinical documents bucket.
