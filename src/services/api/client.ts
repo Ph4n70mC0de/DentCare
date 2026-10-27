@@ -367,7 +367,7 @@ export class ApiClient {
   }
 
   async getProfile(): Promise<UserProfile> {
-    return this.get<UserProfile>('/auth/profile');
+    return this.get<UserProfile>('/auth/me');
   }
 
   async registerPatient(data: RegisterPatientRequest): Promise<RegisterPatientResponse> {

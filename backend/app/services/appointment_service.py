@@ -40,7 +40,7 @@ class AppointmentService:
         patient_id = UUID(data.patient_id)
         service_id = UUID(data.service_id)
 
-        duration = 45  # default slot; in future, read from dental_services
+        duration = 45  # default slot; overridden by selected service duration
         end_time = (datetime.combine(data.date, data.start_time) + timedelta(minutes=duration)).time()
 
         with get_connection() as conn:
@@ -54,11 +54,14 @@ class AppointmentService:
                     cur.execute("select 1 from public.patients where id = %s", (patient_id,))
                     if cur.fetchone() is None:
                         raise NotFoundError(code="PATIENT_NOT_FOUND", message="Patient not found.")
-                    cur.execute("select 1 from public.dental_services where id = %s and active = true", (service_id,))
-                    if cur.fetchone() is None:
+                    cur.execute("select duration_minutes from public.dental_services where id = %s and active = true", (service_id,))
+                    svc_row = cur.fetchone()
+                    if svc_row is None:
                         raise NotFoundError(code="SERVICE_NOT_FOUND", message="Service not found or inactive.")
+                    duration = int(svc_row[0]) if svc_row[0] is not None else 45
 
                     # Re-check slot availability inside the transaction.
+                    end_time = (datetime.combine(data.date, data.start_time) + timedelta(minutes=duration)).time()
                     if not repo.slot_available(dentist_id, data.date, data.start_time, end_time):
                         raise ConflictError(code="SLOT_UNAVAILABLE", message="Selected slot is no longer available.")
 
@@ -70,7 +73,7 @@ class AppointmentService:
                         values (%s, %s, %s, %s, %s, %s, %s, 'Confirmed', 'walk_in', %s, %s)
                         returning id, appointment_number, patient_id, dentist_id, service_id, date, start_time, end_time, status
                         """,
-                        (f"DC-{data.date.strftime('%Y')}-{uuid4().hex[:4].upper()}", patient_id, dentist_id, service_id,
+                        (f"DC-{data.date.strftime('%Y')}-{uuid4().hex[:8].upper()}", patient_id, dentist_id, service_id,
                          data.date, data.start_time, end_time, data.notes, data.idempotency_key),
                     )
                     row = cur.fetchone()
@@ -170,17 +173,21 @@ class AppointmentService:
         return {"id": appointment_id, "prior_status": prior_status, "new_status": new_status}
 
     def _check_idempotency(self, key: str, actor_id: UUID | None, operation: str) -> None:
+        import hashlib
+        key_hash = hashlib.sha256(key.encode()).hexdigest()
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     "select 1 from public.idempotency_keys where key_hash = %s and operation = %s",
-                    (key, operation),
+                    (key_hash, operation),
                 )
                 if cur.fetchone() is not None:
                     raise ConflictError(code="IDEMPOTENCY_CONFLICT", message="Request already processed.")
 
     def _record_idempotency(self, key: str, actor_id: UUID | None, operation: str, result: dict) -> None:
+        import hashlib
         import json
+        key_hash = hashlib.sha256(key.encode()).hexdigest()
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
@@ -188,6 +195,6 @@ class AppointmentService:
                     insert into public.idempotency_keys (key_hash, actor_id, operation, result_jsonb, status_code)
                     values (%s, %s, %s, %s, 200)
                     """,
-                    (key, actor_id, operation, json.dumps(result)),
+                    (key_hash, actor_id, operation, json.dumps(result)),
                 )
                 conn.commit()

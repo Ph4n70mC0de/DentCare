@@ -1,7 +1,7 @@
 # ADR-001: Authentication, Session, and Database Access Strategy
 
 ## Status
-Proposed
+Accepted (2026-10-27)
 
 ## Date
 2026-10-20
