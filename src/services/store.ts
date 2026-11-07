@@ -127,7 +127,7 @@ class DentalDataStore {
     );
     this.auditLogs = loadFromStorage<AuditLog[]>(STORAGE_KEYS.AUDIT_LOGS, initialAuditLogs);
     this.settings = loadFromStorage<SystemSettings>(STORAGE_KEYS.SETTINGS, initialSettings);
-    this.activeUserId = loadFromStorage<string>(STORAGE_KEYS.ACTIVE_USER_ID, 'user-admin');
+    this.activeUserId = loadFromStorage<string>(STORAGE_KEYS.ACTIVE_USER_ID, '');
     this.processScheduledReminders();
   }
 
@@ -190,17 +190,13 @@ class DentalDataStore {
     return this.activeUserId;
   }
 
-  public getActiveUser(): User {
+  public getActiveUser(): User | null {
+    if (!this.activeUserId) return null;
     const user = this.users.find((u) => u.id === this.activeUserId);
-    return user || this.users[0];
+    return user || null;
   }
 
   public setActiveUser(userId: string): void {
-    // DEV ONLY: Role switching is only available in development
-    if (import.meta.env.PROD) {
-      throw new Error('[setActiveUser] Role switching is disabled in production');
-    }
-
     const user = this.users.find((u) => u.id === userId);
     if (user) {
       this.activeUserId = userId;
@@ -219,10 +215,6 @@ class DentalDataStore {
   }
 
   public resetToSeed(): void {
-    // DEV ONLY: Reset to seed data is only available in development
-    if (import.meta.env.PROD) {
-      throw new Error('[resetToSeed] Seed data reset is disabled in production');
-    }
     this.users = initialUsers;
     this.patients = initialPatients;
     this.dentists = initialDentists;

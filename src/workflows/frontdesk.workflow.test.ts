@@ -74,7 +74,7 @@ describe('Front Desk Workflows', () => {
     });
 
     it('rejects booking eligibility confirmation from non-front-desk', () => {
-      dentalStore.setActiveUser('user-patient-1');
+      dentalStore.setActiveUser('user-demo');
       const result = dentalStore.confirmPatientBookingEligibility('pat-005');
       expect(result).toBeNull();
     });

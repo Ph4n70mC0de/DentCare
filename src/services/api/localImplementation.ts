@@ -162,10 +162,13 @@ export class LocalAuthService implements IAuthService {
     dentalStore.setActiveUser(userId);
   }
 
-  async login(email: string, _password: string): Promise<User> {
+  async login(email: string, password: string): Promise<User> {
     const users = dentalStore.getUsers();
     const user = users.find((u) => u.email === email);
     if (!user) throw new Error('Invalid credentials');
+    if (user.password && user.password !== password) {
+      throw new Error('Invalid credentials');
+    }
     dentalStore.setActiveUser(user.id);
     return user;
   }

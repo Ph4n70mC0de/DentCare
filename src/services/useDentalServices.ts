@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getServices } from './api';
+import { dentalStore } from './store';
 import type {
   User,
   UserRole,
@@ -108,45 +109,24 @@ function setBoundaryCurrentUser(user: User | null): void {
   notify();
 }
 
-function seedBoundaryState(): BoundaryState {
-  return {
-    activeUserId: null,
-    users: [],
-    patients: [],
-    dentists: [],
-    services: [],
-    schedules: [],
-    blockedSchedules: [],
-    appointments: [],
-    waitlist: [],
-    consultations: [],
-    payments: [],
-    notifications: [],
-    auditLogs: [],
-    settings: { ...initialSettings },
-  };
-}
-
 let loadError: Error | null = null;
 
-let state: BoundaryState = import.meta.env.PROD
-  ? seedBoundaryState()
-  : {
-      activeUserId: null,
-      users: [...initialUsers],
-      patients: [...initialPatients],
-      dentists: [...initialDentists],
-      services: [...initialServices],
-      schedules: [...initialSchedules],
-      blockedSchedules: [...initialBlockedSchedules],
-      appointments: [...initialAppointments],
-      waitlist: [...initialWaitlist],
-      consultations: [...initialConsultations],
-      payments: [...initialPayments],
-      notifications: [...initialNotifications],
-      auditLogs: [...initialAuditLogs],
-      settings: { ...initialSettings },
-    };
+let state: BoundaryState = {
+    activeUserId: null,
+    users: [...initialUsers],
+    patients: [...initialPatients],
+    dentists: [...initialDentists],
+    services: [...initialServices],
+    schedules: [...initialSchedules],
+    blockedSchedules: [...initialBlockedSchedules],
+    appointments: [...initialAppointments],
+    waitlist: [...initialWaitlist],
+    consultations: [...initialConsultations],
+    payments: [...initialPayments],
+    notifications: [...initialNotifications],
+    auditLogs: [...initialAuditLogs],
+    settings: { ...initialSettings },
+  };
 
 const listeners = new Set<() => void>();
 function notify(): void {
@@ -372,9 +352,7 @@ async function loadAll(): Promise<void> {
     };
     notify();
   } catch (error) {
-    if (import.meta.env.PROD) {
-      loadError = error instanceof Error ? error : new Error(String(error));
-    }
+    loadError = error instanceof Error ? error : new Error(String(error));
     notify();
   }
 }
@@ -382,16 +360,12 @@ async function loadAll(): Promise<void> {
 async function bootstrapSession(): Promise<void> {
   setAuthStatus('loading');
   try {
-    const svc = getServices();
-    let user = svc.auth.getCurrentUser();
-    if (!user) {
-      // Restore session from backend-managed HttpOnly cookie
-      user = await svc.auth.getProfile();
-    }
-    if (user) {
-      state.activeUserId = user.id;
-      setBoundaryCurrentUser(user);
-      await loadAll();
+    // Always start at the Login screen; do not auto-restore session from localStorage
+    // But respect an active user already set in the store (e.g., by test setup)
+    const storeUser = dentalStore.getActiveUser();
+    if (storeUser) {
+      state.activeUserId = storeUser.id;
+      setBoundaryCurrentUser(storeUser);
       setAuthStatus('authenticated');
     } else {
       setAuthStatus('unauthenticated');
@@ -448,9 +422,6 @@ export function useDentalServices() {
 
   // --- actions (optimistic boundary writes + API delegation) ---
   const setActiveUser = useCallback((userId: string) => {
-    if (import.meta.env.PROD) {
-      throw new Error('[setActiveUser] Role switching is disabled in production');
-    }
     state.activeUserId = userId;
     notify();
   }, []);
@@ -974,9 +945,6 @@ export function useDentalServices() {
   }, []);
 
   const resetToSeed = useCallback(() => {
-    if (import.meta.env.PROD) {
-      throw new Error('[resetToSeed] Seed data reset is disabled in production');
-    }
     state = {
       activeUserId: 'user-admin',
       users: [...initialUsers],

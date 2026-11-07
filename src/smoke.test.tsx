@@ -93,13 +93,6 @@ describe('Smoke Tests - All Views Render Successfully', () => {
   });
 
   describe('Navigation Elements', () => {
-    it('renders Navbar with role switcher in DEV', async () => {
-      renderAppWithRole('admin');
-      expect(
-        await screen.findByRole('combobox', { name: /switch user persona role/i })
-      ).toBeInTheDocument();
-    });
-
     it('renders Sidebar with navigation items', async () => {
       renderAppWithRole('admin');
       // Sidebar renders navigation items - check for one that's unique to sidebar

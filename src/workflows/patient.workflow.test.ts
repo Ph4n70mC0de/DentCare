@@ -163,7 +163,7 @@ describe('Patient Workflows', () => {
       expect(patient?.requiresStaffReviewForBooking).toBe(true);
 
       // Try to book as patient (not front_desk/admin)
-      dentalStore.setActiveUser('user-patient-3'); // pat-005's user
+      dentalStore.setActiveUser('user-demo');
 
       expect(() =>
         dentalStore.createAppointment({

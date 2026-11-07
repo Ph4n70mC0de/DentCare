@@ -87,7 +87,7 @@ describe('Data Integrity — Unique ID Generation', () => {
     // Two appointments created back-to-back; each must remain individually addressable.
     const first = dentalStore.createAppointment({
       patientId: 'pat-001',
-      dentistId: 'dentist-2',
+      dentistId: 'dentist-1',
       serviceId: 'serv-1',
       date: '2026-12-24',
       startTime: '09:00',
@@ -95,7 +95,7 @@ describe('Data Integrity — Unique ID Generation', () => {
 
     const second = dentalStore.createAppointment({
       patientId: 'pat-002',
-      dentistId: 'dentist-2',
+      dentistId: 'dentist-1',
       serviceId: 'serv-1',
       date: '2026-12-24',
       startTime: '10:00',

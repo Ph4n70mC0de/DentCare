@@ -7,6 +7,7 @@ export interface User {
   email: string;
   phone: string;
   status: 'active' | 'inactive';
+  password?: string;
   createdAt: string;
   updatedAt: string;
   lastLoginAt?: string;

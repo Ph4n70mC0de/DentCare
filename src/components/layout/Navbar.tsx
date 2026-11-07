@@ -110,27 +110,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Right: Role Switcher & User Meta */}
+        {/* Right: User Meta */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Quick Role Switcher Pill - DEV ONLY */}
-          {isDev && (
-            <div className="flex items-center gap-1.5 neo-inset-sm px-2.5 py-1 rounded-xl text-xs">
-              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider hidden sm:inline">
-                Role:
-              </span>
-              <select
-                value={activeUser.role}
-                onChange={(e) => handleRoleChange(e.target.value as UserRole)}
-                className="bg-transparent font-bold text-slate-700 text-xs outline-none cursor-pointer hover:text-blue-700"
-                aria-label="Switch User Persona Role"
-              >
-                <option value="patient">👤 Patient</option>
-                <option value="front_desk">🛎️ Front Desk</option>
-                <option value="dentist">🩺 Dentist</option>
-                <option value="admin">🛡️ Admin</option>
-              </select>
-            </div>
-          )}
 
           {isDev && (
             <button

@@ -90,14 +90,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onLoading, au
         </form>
 
         <div className="mt-8 pt-6 border-t border-slate-200 text-center">
-          <p className="text-xs text-slate-500 mb-3">
-            Seeded accounts: admin@dentcare.com / reception@dentcare.com / dr.smith@dentcare.com /
-            patient@dentcare.com
-          </p>
-          <ShieldCheck className="w-4 h-4 text-slate-400 mx-auto mb-2" />
-          <p className="text-[10px] text-slate-400 uppercase tracking-wider">
-            Role is server-authorized on sign-in
-          </p>
+          <p className="text-xs text-slate-500 mb-3">Sign in to your DentCare account to continue</p>
+          <table className="w-full text-[10px] text-slate-500 leading-[1.5]">
+            <tbody>
+              <tr>
+                <td className="w-1/2">Admin: admin@dentcare.com / admin123</td>
+                <td className="w-1/2">Front Desk: reception@dentcare.com / desk123</td>
+              </tr>
+              <tr>
+                <td className="w-1/2">Dentist: marcus.vance@dentcare.com / dentist123</td>
+                <td className="w-1/2">Patient: patient@dentcare.com / patient123</td>
+              </tr>
+            </tbody>
+          </table>
+          <ShieldCheck className="w-4 h-4 text-slate-400 mx-auto mb-2 mt-3" />
         </div>
       </NeoCard>
     </div>

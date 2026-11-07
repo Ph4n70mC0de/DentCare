@@ -197,8 +197,8 @@ export interface Services {
 export type ServiceMode = 'local' | 'api';
 
 export function getServiceMode(): ServiceMode {
-  // Use local storage in development, API in production
-  return import.meta.env.PROD ? 'api' : 'local';
+  // Always use local storage (development). No backend dependency.
+  return 'local';
 }
 
 export function isLocalMode(): boolean {

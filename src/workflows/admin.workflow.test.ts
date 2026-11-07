@@ -22,11 +22,11 @@ describe('Administrator Workflows', () => {
   describe('Staff Management', () => {
     it('manages users (list all)', () => {
       const users = dentalStore.getUsers();
-      expect(users.length).toBe(7); // 1 admin, 1 front_desk, 2 dentists, 3 patients
+      expect(users.length).toBe(4); // 1 admin, 1 front_desk, 1 dentist, 1 patient (demo)
       expect(users.filter((u) => u.role === 'admin').length).toBe(1);
       expect(users.filter((u) => u.role === 'front_desk').length).toBe(1);
-      expect(users.filter((u) => u.role === 'dentist').length).toBe(2);
-      expect(users.filter((u) => u.role === 'patient').length).toBe(3);
+      expect(users.filter((u) => u.role === 'dentist').length).toBe(1);
+      expect(users.filter((u) => u.role === 'patient').length).toBe(1);
     });
 
     it('verifies role changes and permission boundaries', () => {
@@ -40,7 +40,7 @@ describe('Administrator Workflows', () => {
       dentalStore.setActiveUser('user-dentist-1');
       expect(dentalStore.getActiveUser().role).toBe('dentist');
 
-      dentalStore.setActiveUser('user-patient-1');
+      dentalStore.setActiveUser('user-demo');
       expect(dentalStore.getActiveUser().role).toBe('patient');
     });
 

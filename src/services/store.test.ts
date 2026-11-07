@@ -35,7 +35,7 @@ describe('DentalDataStore', () => {
 
     it('returns initial dentists', () => {
       const dentists = dentalStore.getDentists();
-      expect(dentists.length).toBe(2);
+      expect(dentists.length).toBe(1);
     });
 
     it('returns initial services', () => {
