@@ -152,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {onLogout && (
             <button
               onClick={onLogout}
-              className="neo-btn p-2 rounded-xl text-slate-500 hover:text-red-600 transition-all cursor-pointer hidden sm:flex items-center justify-center"
+              className="neo-btn p-2 rounded-xl text-slate-500 hover:text-red-600 transition-all cursor-pointer flex items-center justify-center"
               aria-label="Sign out"
               title="Sign out"
             >

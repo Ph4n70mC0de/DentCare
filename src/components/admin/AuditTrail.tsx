@@ -67,7 +67,7 @@ export const AuditTrail: React.FC<AuditTrailProps> = ({ auditLogs }) => {
         </div>
       </div>
 
-      <div className="max-h-[500px] overflow-y-auto">
+      <div className="max-h-[500px] overflow-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead className="sticky top-0 bg-[#E8EEF5] border-b border-slate-300/40 z-10 text-[10px] uppercase font-bold text-slate-500">
             <tr>
