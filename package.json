@@ -39,7 +39,7 @@
     "@types/node": "^22.14.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitest/coverage-v8": "^5.0.4",
+    "@vitest/coverage-v8": "^5.1.0",
     "@vitest/ui": "^5.0.4",
     "esbuild": "^0.28.0",
     "eslint": "^9.39.5",
